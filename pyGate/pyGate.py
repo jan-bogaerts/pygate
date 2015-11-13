@@ -10,6 +10,7 @@ config.load()
 cloud = Cloud()
 cloud.connect(config)
 modules.load(config.modules, cloud)
+modules.syncDevices(cloud)
 modules.run()
 while True:
     time.sleep(3)
