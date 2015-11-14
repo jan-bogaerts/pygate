@@ -5,6 +5,12 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "pyGate", "pyGate\pyGate.pyproj", "{C8D22FFE-1BF4-4F22-8D77-B836545D63DE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{3B8A25F8-F73A-46C2-8C84-08D6CE548859}"
+	ProjectSection(SolutionItems) = preProject
+		config\beaglePins.config = config\beaglePins.config
+		config\gateway.config = config\gateway.config
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

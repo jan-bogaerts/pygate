@@ -1,27 +1,38 @@
-﻿class Cloud(object):
-    """provides access to the cloud"""
+﻿import logging
+import att_iot_gateway as IOT                              #provide cloud support
 
-    def connect(self, config):
-        """set up the connection with the cloud from the specified configuration"""
 
-    def addAsset(self, id, deviceId, name, description, isActuator, assetType, style = "Undefined"):
-        """add asset"""
+def connect(config, callback):
+    """set up the connection with the cloud from the specified configuration
+    callback: the callback function for actuator commands
+                    format: onActuate(device, actuator, value)"""
+    IOT.on_message = on_message
 
-    def addDevice(self, deviceId, name, description):
-        """add device"""
+def addAsset(module, deviceId, id, name, description, isActuator, assetType, style = "Undefined"):
+    """add asset"""
 
-    def getDevices(self):
-        """get all the devices listed for this gateway."""
+def addDevice(module, deviceId, name, description):
+    """add device"""
 
-    def deviceExists(self, deviceId):
-        """check if device exists"""
+def getDevices(self):
+    """get all the devices listed for this gateway."""
 
-    def deleteDevice(self, deviceId):
-        """delete device"""
 
-    def getAssetState(self, assetId, deviceId):
-        """get value of asset"""
+def deviceExists(module, deviceId):
+    """check if device exists"""
 
-    def getModuleName(self, value):
-        """extract the module name out of the string param."""
-        return value[:value.find('_')]
+def deleteDevice(module, deviceId):
+    """delete device"""
+
+def getAssetState(module, assetId, deviceId):
+    """get value of asset"""
+
+def send(module, device, actuator, value):
+    '''send value to the cloud
+    thread save: only 1 thread can send at a time'''
+
+def getModuleName(value):
+    """extract the module name out of the string param."""
+    return value[:value.find('_')]
+
+
