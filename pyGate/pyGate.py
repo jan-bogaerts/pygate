@@ -10,13 +10,12 @@ import modules
 import cloud
 
 
-def onActuate(device, actuator, value):
+def onActuate(module, device, actuator, value):
     '''called when an actuator command arrives from the cloud'''
-    devId = device.split('_')                       # device id contains module name
-    mod = modules.modules[devid[0]];
+    mod = modules.modules[module];
     if mod.onDeviceActuate:
         '''it's a gateway'''
-        mod.onDeviceActuate(devId[1], actuator, value)
+        mod.onDeviceActuate(device, actuator, value)
     elif mod.onActuate:
         '''it'sa regular device'''
         mod.onActuate(actuator, value)
@@ -25,6 +24,7 @@ def onActuate(device, actuator, value):
 config.load()
 cloud.connect(config, onActuate)
 modules.load(config.modules)
+modules.syncGatewayAssets()
 modules.syncDevices()
 modules.run()
 while True:

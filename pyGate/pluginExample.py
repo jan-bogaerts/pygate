@@ -1,4 +1,4 @@
-
+﻿
 
 def connectToGateway(cloud):
     '''optional
@@ -9,6 +9,12 @@ def syncDevices(existing):
     '''optional
        allows a module to synchronize it's device list. 
        existing: the list of devices that are already known in the cloud for this module.
+    '''
+
+def syncGatewayAssets():
+    '''
+    optional. Allows a module to synchronize with the cloud, all the assets that should come at the level
+    of the gateway.
     '''
 
 def run():

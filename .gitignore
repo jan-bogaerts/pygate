@@ -1,3 +1,4 @@
 *.pyproj
 .vs/
 pyGate/env/
+.idea/

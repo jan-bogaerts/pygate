@@ -17,9 +17,16 @@ def load(moduleNames):
             logging.info("connecting " +  key + "to gateway")
             mod.connectToGateway(key)
 
-def syncDevices(cloud):
+def syncGatewayAssets():
+    '''allows the modules to sync with the cloud, the assets that should come at the level of the gateway'''
+    for key, value in modules:
+        if value.syncGatewayAssets:
+            logging.info("syncing gateway assets for" +  key)
+            value.syncGatewayAssets()
+
+def syncDevices():
     """allow the modules to sync the devices with the cloud"""
-    deviceList = syncDeviceList(cloud)
+    deviceList = syncDeviceList()
     for key, value in modules:
         if value.syncDevices:
             logging.info("syncing devices for" +  key)

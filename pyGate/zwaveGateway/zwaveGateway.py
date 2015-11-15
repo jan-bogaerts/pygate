@@ -17,3 +17,7 @@ def syncDevices(existing):
 def run():
     ''' required
         main function of the plugin module'''
+
+
+def onDeviceActuate(device, actuator, value):
+    '''called when an actuator command is received'''
