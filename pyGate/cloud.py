@@ -1,8 +1,11 @@
 ﻿import logging
 import att_iot_gateway as IOT                              #provide cloud support
+import threading
 
 
 _pyGateCallback = None                                                          #callback for pyGate module, which hanldes distribution of the callback over the modules (and possible plugins)
+_httpLock = threading.Lock()                                                    # makes http request thread save (only 1 plugin can call http at a time, otherwise we get confused.
+_mqttLock = threading.Lock()                                                    # makes mqtt send requests thread save
 
 def onActuate(device, actuator, value):
     '''called by att_iot_gateway when actuator command is received'''
@@ -49,7 +52,7 @@ def _authenticate(config):
             logging.info('Authenticated')
             return True
         else:
-            print('failed to authenticate')
+            logging.error('failed to authenticate')
             return False
 
 def _getUid():
@@ -65,7 +68,7 @@ def _getUid():
     while len(result) < 12:                                                         # it could be that there were missing '0' in the front, add them manually.
         result = "0" + result
     result = result.upper()                                                         # make certain that it is upper case, easier to read, more standardized
-    print('mac address: ' + result)
+    logging.info('mac address: ' + result)
     return result
 
 def _storeConfig(config):
@@ -78,27 +81,76 @@ def _storeConfig(config):
 def addAsset(module, deviceId, id, name, description, isActuator, assetType, style = "Undefined"):
     """add asset"""
     devId = module + '_' + deviceId
-    IOT.addAsset(id, devId, name, description, isActuator, assetType, style)
+    _httpLock.acquire()
+    try:
+        IOT.addAsset(id, devId, name, description, isActuator, assetType, style)
+    finally:
+        _httpLock.release()
+
+def addGatewayAsset(module, id, name, description, isActuator, assetType, style = "Undefined"):
+    """add asset to gateway"""
+    id = module + '_' + id
+    _httpLock.acquire()
+    try:
+        IOT.addGatewayAsset(id, name, description, isActuator, assetType, style)
+    finally:
+        _httpLock.release()
 
 def addDevice(module, deviceId, name, description):
     """add device"""
+    devId = module + '_' + deviceId
+    _httpLock.acquire()
+    try:
+        IOT.addDevice(devId, name, description)
+    finally:
+        _httpLock.release()
 
 def getDevices(self):
-    """get all the devices listed for this gateway."""
+    """get all the devices listed for this gateway as a json structure."""
+    _httpLock.acquire()
+    try:
+        return IOT.getGateway(True)
+    finally:
+        _httpLock.release()
 
 
 def deviceExists(module, deviceId):
     """check if device exists"""
+    devId = module + '_' + deviceId
+    _httpLock.acquire()
+    try:
+        return IOT.deviceExists(devId)
+    finally:
+        _httpLock.release()
 
 def deleteDevice(module, deviceId):
     """delete device"""
+    devId = module + '_' + deviceId
+    _httpLock.acquire()
+    try:
+        return IOT.deleteDevice(devId)
+    finally:
+        _httpLock.release()
 
-def getAssetState(module, assetId, deviceId):
+def getAssetState(module, deviceId, assetId):
     """get value of asset"""
+    devId = module + '_' + deviceId
+    _httpLock.acquire()
+    try:
+        return IOT.getAssetState(assetId, devId)
+    finally:
+        _httpLock.release()
+
 
 def send(module, device, actuator, value):
     '''send value to the cloud
     thread save: only 1 thread can send at a time'''
+    devId = module + '_' + deviceId
+    _mqttLock.acquire()
+    try:
+        IOT.send(value, devId, actuator)
+    finally:
+        _mqttLock.release()
 
 def getModuleName(value):
     """extract the module name out of the string param."""

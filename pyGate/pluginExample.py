@@ -1,6 +1,6 @@
 ﻿
 
-def connectToGateway(cloud):
+def connectToGateway(moduleName):
     '''optional
         called when the system connects to the cloud.
     '''
