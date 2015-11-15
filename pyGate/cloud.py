@@ -155,3 +155,7 @@ def send(module, device, actuator, value):
 def getModuleName(value):
     """extract the module name out of the string param."""
     return value[:value.find('_')]
+
+def getDeviceId(value):
+    """extract the module name out of the string param."""
+    return value[value.find('_'):]

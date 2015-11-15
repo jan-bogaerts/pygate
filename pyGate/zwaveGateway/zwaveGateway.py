@@ -28,6 +28,14 @@ def syncDevices(existing):
        existing: the list of devices that are already known in the cloud for this module.
     '''
     _readyEvent.wait()
+    for node in _network.nodes:
+        found = next(x for x in existing if x['id'] == node.node_id)
+        if not found:
+            _addDevice(node)
+        else:
+            existing.remove(found)              # so we know at the end which ones have to be removed.
+    for dev in existing:                        # all the items that remain in the 'existing' list, are no longer devices in this network, so remove them
+        _gateway.deleteDevice(dev['id'])
 
 def syncGatewayAssets():
     '''
@@ -87,17 +95,56 @@ def _buildZWaveOptions():
 def _waitForAwake():
     '''waits until the zwave network is awakened'''
     time_started = 0
-    print "Waiting for network awaked"
+    logging.info("zwave: Waiting for network awaked")
     for i in range(0,300):
-        if network.state>=network.STATE_AWAKED:
-            print(" done")
+        if _network.state >= _network.STATE_AWAKED:
+            logging.info("zwave: network awake")
             break
         else:
-            sys.stdout.write(".")
-            sys.stdout.flush()
             time.sleep(1.0)
-    if network.state<network.STATE_AWAKED:
-        print "Network is not awake but continue anyway"
+    if _network.state < _network.STATE_AWAKED:
+        logging.error("zwave: Network is not awake but continue anyway")
+    logging.info("zwave: Use openzwave library : %s" % _network.controller.ozw_library_version)
+    logging.info("zwave: Use python library : %s" % _network.controller.python_library_version)
+    logging.info("zwave: Use ZWave library : %s" % _network.controller.library_description)
+    logging.info("zwave: Network home id : %s" % _network.home_id_str)
+    logging.info("zwave: Controller node id : %s" % _network.controller.node.node_id)
+    logging.info("zwave: Controller node version : %s" % (_network.controller.node.version))
+    logging.info("zwave: Nodes in network : %s" % _network.nodes_count)
 
 def _waitForReady():
     '''waits until the zwave network is ready'''
+    logging.info("zwave: Waiting for network ready")
+    for i in range(0,300):
+        if _network.state >= _network.STATE_READY:
+            logging.info("zwave: network ready")
+            break
+        else:
+            time.sleep(1.0)
+    if not _network.is_ready:
+        logging.info("zwave: Network is not ready but continue anyway")
+    logging.info("zwave: Controller capabilities : %s" % _network.controller.capabilities)
+    logging.info("zwave: Controller node capabilities : %s" % _network.controller.node.capabilities)
+    logging.info("zwave: Nodes in network : %s" % _network.nodes_count)
+    logging.info("zwave: Driver statistics : %s" % _network.controller.stats)
+
+
+def _addDevice(node):
+    '''adds the specified node to the cloud as a device. Also adds all the assets.'''
+    _gateway.addDevice(node.node_id, node.product_name, "")
+    _addBatteryLevels(node)
+    _addPowerLevels(node)
+    
+def _addBatteryLevels(node):
+    for val in node.get_battery_levels() :
+        print("node/name/index/instance : %s/%s/%s/%s" % (node,network.nodes[node].name,network.nodes[node].values[val].index,network.nodes[node].values[val].instance))
+        print("  label/help : %s/%s" % (network.nodes[node].values[val].label,network.nodes[node].values[val].help))
+        print("  id on the network : %s" % (network.nodes[node].values[val].id_on_network))
+        print("  value : %s" % (network.nodes[node].get_battery_level(val)))
+
+def _addPowerLevels(node):
+    for val in node.get_power_levels() :
+        print("node/name/index/instance : %s/%s/%s/%s" % (node,network.nodes[node].name,network.nodes[node].values[val].index,network.nodes[node].values[val].instance))
+        print("  label/help : %s/%s" % (network.nodes[node].values[val].label,network.nodes[node].values[val].help))
+        print("  id on the network : %s" % (network.nodes[node].values[val].id_on_network))
+        print("  value : %s" % (network.nodes[node].get_power_level(val)))

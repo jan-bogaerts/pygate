@@ -21,5 +21,9 @@ class Gateway(object):
         """add device"""
         cloud.addDevice(self, self._moduleName, deviceId, name, description)
 
+    def deleteDevice(self, deviceId):
+        """delete device"""
+        cloud.deleteDevice(self._moduleName, deviceId)
+
     def send(self, value, deviceId, actuator):
         cloud.send(self._moduleName, deviceId, actuator, value)

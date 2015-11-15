@@ -43,10 +43,18 @@ def run():
 class syncDeviceList(object):
     """gets the full list of devices 1 time from the cloud and then allows filtered queries on the list"""
 
-    #def __init__(self):
+    def __init__(self):
+        self._list = []
     
     def filter(self, key):
         """return a sublist, first make certain that we have the list."""
         if not self._list:
             self._list = self_cloud.getDevices()
+            self.stripDeviceIds()
         return [x for x in self._list if  cloud.getModuleName(x.Name) == key]
+
+    def stripDeviceIds(self):
+        '''goes over the list items and converts the 'deviceIds' to local versions (strip module '''
+        for x in self._list:
+            x['id'] = cloud.getDeviceId(x['id'])
+
