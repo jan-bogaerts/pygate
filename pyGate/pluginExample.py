@@ -20,3 +20,11 @@ def syncGatewayAssets():
 def run():
     ''' required
         main function of the plugin module'''
+
+def onActuate(actuator, value):
+    '''optional 
+    callback routine for plugins that behave as devices or for plugins that behave as gateways, when the actuator is on the gateway itself.'''
+
+
+def onDeviceActuate(device, actuator, value):
+    '''optional callback routine for plugins that behave as gateways'''

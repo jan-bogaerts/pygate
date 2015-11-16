@@ -12,7 +12,9 @@ _gateway = None                             # provides access to the cloud
 _network = None                             # provides access to the zwave network
 _readyEvent = threading.Event()             # signaled when the zwave network has been fully started.
 
-_discoveryStateId = 'discovery_state'   #id of asset
+_discoveryStateId = 'discoveryState'   #id of asset
+_hardResetId = 'hardReset'   #id of asset
+_softResetId = 'softReset'   #id of asset
 
 def connectToGateway(moduleName):
     '''optional
@@ -44,6 +46,8 @@ def syncGatewayAssets():
     '''
     #don't need to wait for the zwave server to be fully ready, don't need to query it for this call.
     _gateway.addGatewayAsset(_discoveryStateId, 'discovery state', 'add/remove devices to the network', '{"enum":["off"|"include"|"exclude"]}')
+    _gateway.addGatewayAsset(_hardResetId, 'hard reset', 'reset the controller to factory default', 'boolean')
+    _gateway.addGatewayAsset(_softResetId, 'hard reset', 'reset the controller, but keep network configuration settings', 'boolean')
 
 def run():
     ''' required
@@ -53,6 +57,29 @@ def run():
 
 def onDeviceActuate(device, actuator, value):
     '''called when an actuator command is received'''
+    node = _network.nodes[device]
+    if node:
+        val = node.values[actuator]
+        if val:
+            cc = val.command_class                  # get the command class for 
+            print "to do: send actual command"
+        else:
+            logging.error("failed to set asset value: can't find asset " + actuator + " for device " + node)
+    else:
+        logging.error("failed to  to set asset value: can't find device " + device)
+
+def onActuate(actuator, value):
+    '''callback for actuators on the gateway level'''
+    if actuator == _discoveryStateId:
+        #change discovery state
+        if value == 'include':
+            _network.controller
+    elif actuator == _hardResetId:
+        #reset controller
+    elif actuator == _softResetId:
+        #reset controller
+    else:
+        logging.error("zwave: unknown gateway actuator command: " + actuator)
 
 
 def _setupZWave():
@@ -173,3 +200,6 @@ def _assetAdded(network, node, val):
 
 def _assetRemoved(network, node, val):
     _gateway.deleteAsset(node.node_id, val)
+
+def _assetValueChanged(network, node, val):
+    _gateway.send(node.values[val].data_as_string, node.node_id, val)

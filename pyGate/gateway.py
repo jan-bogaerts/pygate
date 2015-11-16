@@ -1,4 +1,4 @@
-#allows a gateway plugin to manage it's cloud presence.
+﻿#allows a gateway plugin to manage it's cloud presence.
 
 import cloud
 
@@ -12,7 +12,10 @@ class Gateway(object):
 
     def addAsset(self, id, deviceId, name, description, isActuator, assetType, style = "Undefined"):
         """add asset"""
-        cloud.addAsset(self, self._moduleName, deviceId, id, name, description, isActuator, assetType, style)
+        cloud.addAsset(self._moduleName, deviceId, id, name, description, isActuator, assetType, style)
+
+    def deleteAsset(deviceId, asset):
+        cloud.deleteAsset(self._moduleName, deviceId, asset)
 
     def addGatewayAsset(self, id, name, description, isActuator, assetType, style = "Undefined"):
         cloud.addGatewayAsset(self, self._moduleName, id, name, description, isActuator, assetType, style)
@@ -27,3 +30,4 @@ class Gateway(object):
 
     def send(self, value, deviceId, actuator):
         cloud.send(self._moduleName, deviceId, actuator, value)
+

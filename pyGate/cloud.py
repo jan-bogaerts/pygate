@@ -9,9 +9,14 @@ _mqttLock = threading.Lock()                                                    
 
 def onActuate(device, actuator, value):
     '''called by att_iot_gateway when actuator command is received'''
-    devid = device.split('_')                       # device id contains module name
-    if _pyGateCallback:
-        _pyGateCallback(devid[0], devid[1], actuator, value)
+    if _pyGateCallback:                                     # need a callback, otherwise there is no handler for the command (yet).
+        if device:                                          # its an actuator for a specific device
+            devid = device.split('_')                       # device id contains module name
+            _pyGateCallback(devid[0], devid[1], actuator, value)
+        else:                                               # it's an actuator at the level of the gateway.
+            splitPos = actuator.find('_')
+            module = actuator[:splitPos]          #get the module name from the actuator
+            _pyGateCallback(module, None, actuator[splitPos:], value)
 
 
 def connect(config, callback):
@@ -87,12 +92,21 @@ def addAsset(module, deviceId, id, name, description, isActuator, assetType, sty
     finally:
         _httpLock.release()
 
+def deleteAsset(module, deviceId, asset):
+    """delete the asset"""
+    devId = module + '_' + deviceId
+    _httpLock.acquire()
+    try:
+        return IOT.deleteAsset(devId, assetId)
+    finally:
+        _httpLock.release()
+
 def addGatewayAsset(module, id, name, description, isActuator, assetType, style = "Undefined"):
     """add asset to gateway"""
     id = module + '_' + id
     _httpLock.acquire()
     try:
-        IOT.addGatewayAsset(id, name, description, isActuator, assetType, style)
+        IOT.addAsset(id, None, name, description, isActuator, assetType, style)
     finally:
         _httpLock.release()
 
