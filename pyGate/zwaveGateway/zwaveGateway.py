@@ -74,6 +74,12 @@ def _waitForStartup():
     '''
     _waitForAwake()
     _waitForReady()
+    dispatcher.connect(_nodeAdded, ZWaveNetwork.SIGNAL_NODE_ADDED)     #set up callback handling -> for when node is added/removed or value changed.
+    dispatcher.connect(_nodeRemoved, ZWaveNetwork.SIGNAL_NODE_REMOVED)
+    dispatcher.connect(_assetAdded, ZWaveNetwork.SIGNAL_VALUE_ADDED)
+    dispatcher.connect(_assetRemoved, ZWaveNetwork.SIGNAL_VALUE_REMOVED)
+    dispatcher.connect(_assetValueChanged, ZWaveNetwork.SIGNAL_VALUE_CHANGED)
+    dispatcher.connect(_assetValueChanged, ZWaveNetwork.SIGNAL_VALUE_REFRESHED)
     _readyEvent.set()
 
 def _buildZWaveOptions(): 
@@ -132,19 +138,38 @@ def _waitForReady():
 def _addDevice(node):
     '''adds the specified node to the cloud as a device. Also adds all the assets.'''
     _gateway.addDevice(node.node_id, node.product_name, "")
-    _addBatteryLevels(node)
-    _addPowerLevels(node)
+    for cmd in network.nodes[node].command_classes:
+        for val in network.nodes[node].get_values_for_command_class(cmd) :
+            _gateway.addAsset(val, node.node_id, node.values[val].label, node.values[val].label.help, not node.values[val].is_read_only, getAssetType(node, val), getStyle(node, val))
+            _gateway.send(node.values[val].data_as_string, node.node_id, val)
     
-def _addBatteryLevels(node):
-    for val in node.get_battery_levels() :
-        print("node/name/index/instance : %s/%s/%s/%s" % (node,network.nodes[node].name,network.nodes[node].values[val].index,network.nodes[node].values[val].instance))
-        print("  label/help : %s/%s" % (network.nodes[node].values[val].label,network.nodes[node].values[val].help))
-        print("  id on the network : %s" % (network.nodes[node].values[val].id_on_network))
-        print("  value : %s" % (network.nodes[node].get_battery_level(val)))
 
-def _addPowerLevels(node):
-    for val in node.get_power_levels() :
-        print("node/name/index/instance : %s/%s/%s/%s" % (node,network.nodes[node].name,network.nodes[node].values[val].index,network.nodes[node].values[val].instance))
-        print("  label/help : %s/%s" % (network.nodes[node].values[val].label,network.nodes[node].values[val].help))
-        print("  id on the network : %s" % (network.nodes[node].values[val].id_on_network))
-        print("  value : %s" % (network.nodes[node].get_power_level(val)))
+def _getAssetType(node, val):
+    '''extract the asset type from the command class'''
+
+    print "node type: " + node.values[val].type            # for debugging
+
+    type = "{'type': 'string'"                              #small hack for now.
+
+    if node.values[val].max:
+        type += ', "maximum": ' + node.values[val].max
+    if node.values[val].min:
+        type += ', "minimum": ' + node.values[val].min
+    if node.values[val].units:
+        type += ', "unit": ' + node.values[val].units
+    
+    return type + "}"
+    
+
+def _nodeAdded(network, node):
+    _addDevice(node)
+
+def _nodeRemoved(network, node):
+    _gateway.deleteDevice(node.node_id)
+
+def _assetAdded(network, node, val):
+    _gateway.addAsset(val, node.node_id, node.values[val].label, node.values[val].label.help, not node.values[val].is_read_only, getAssetType(node, val), getStyle(node, val))
+    _gateway.send(node.values[val].data_as_string, node.node_id, val)
+
+def _assetRemoved(network, node, val):
+    _gateway.deleteAsset(node.node_id, val)
