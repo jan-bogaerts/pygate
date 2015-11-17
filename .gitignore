@@ -2,3 +2,4 @@
 .vs/
 pyGate/env/
 .idea/
+*.pyc

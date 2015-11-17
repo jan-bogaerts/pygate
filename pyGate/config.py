@@ -21,21 +21,23 @@ def load():
     if configs.read(rootConfigFileName):
         logging.info("loading " + rootConfigFileName)
         
-        modules = configs.get('general', 'modules')
-        logging.info("modules: " + str(modules))
-        
-        gatewayId = configs.get('general', 'gatewayId')
-        logging.info("gatewayId: " + gatewayId)
-
-        clientId = configs.get('general', 'clientId')
-        logging.info("clientId: " + clientId)
-
-        clientKey = configs.get('general', 'clientKey')
-        logging.info("clientKey: " + clientKey)
+        if configs.has_option('general', 'modules'):
+            modulesStr = configs.get('general', 'modules')
+            logging.info("modules: " + str(modulesStr))
+            modules = modulesStr.split(';')
+        if configs.has_option('general', 'gatewayId'):
+            gatewayId = configs.get('general', 'gatewayId')
+            logging.info("gatewayId: " + gatewayId)
+        if configs.has_option('general', 'clientId'):
+            clientId = configs.get('general', 'clientId')
+            logging.info("clientId: " + clientId)
+        if configs.has_option('general', 'clientKey'):
+            clientKey = configs.get('general', 'clientKey')
+            logging.info("clientKey: " + clientKey)
     else:
         logging.error('failed to load ' + rootConfigFileName)
 
-def load(fileName, asJson = False):
+def loadConfig(fileName, asJson = False):
     """loads the config file from the correct directory and returns a ConfigParser object that can be used to load
        config data"""
     fileName = '../config/' + fileName

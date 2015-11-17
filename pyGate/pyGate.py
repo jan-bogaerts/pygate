@@ -24,7 +24,7 @@ def onActuate(module, device, actuator, value):
 
 
 config.load()
-cloud.connect(config, onActuate)
+cloud.connect(onActuate)
 modules.load(config.modules)
 modules.syncGatewayAssets()
 modules.syncDevices()

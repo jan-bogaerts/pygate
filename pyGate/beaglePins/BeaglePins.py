@@ -1,4 +1,4 @@
-# this plugin module provides access to the pins of a beaglebone
+﻿# this plugin module provides access to the pins of a beaglebone
 # the config file 'beaglePins.config' defines which pins should be used and how.
 
 import config
@@ -12,8 +12,8 @@ def connectToGateway(moduleName):
     '''optional
         called when the system connects to the cloud.'''
     global _cloud, _pinLayouts
-    _device = device(moduleName, 'beagle')
-    configs = config.load('beaglePins', True)
+    _device = device.Device(moduleName, 'beagle')
+    configs = config.loadConfig('beaglePins', True)
     _pinLayouts = configs['pinLayouts']
     setupGPIO()
 
@@ -23,7 +23,7 @@ def syncDevices(existing):
        existing: the list of devices that are already known in the cloud for this module.'''
     if not existing:
         _device.createDevice('beagle pins', 'all the pins on the beagle bone')
-        _cloud.addAsset('1', 'garage', 'garagae lights', True, 'boolean')
+        _device.addAsset('1', 'garage', 'garagae lights', True, 'boolean')
          
 def run():
     ''' required

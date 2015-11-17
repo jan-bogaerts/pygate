@@ -76,8 +76,10 @@ def onActuate(actuator, value):
             _network.controller
     elif actuator == _hardResetId:
         #reset controller
+        '''do something'''
     elif actuator == _softResetId:
         #reset controller
+        '''do something'''
     else:
         logging.error("zwave: unknown gateway actuator command: " + actuator)
 

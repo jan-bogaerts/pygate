@@ -1,6 +1,10 @@
 ﻿import logging
-import att_iot_gateway as IOT                              #provide cloud support
+import att_iot_gateway.att_iot_gateway as IOT                              #provide cloud support
 import threading
+import time
+from uuid import getnode as get_mac
+
+import config
 
 
 _pyGateCallback = None                                                          #callback for pyGate module, which hanldes distribution of the callback over the modules (and possible plugins)
@@ -19,7 +23,7 @@ def onActuate(device, actuator, value):
             _pyGateCallback(module, None, actuator[splitPos:], value)
 
 
-def connect(config, callback):
+def connect(callback):
     """set up the connection with the cloud from the specified configuration
        callback: the callback function for actuator commands
                     format: onActuate(module, device, actuator, value)"""
@@ -28,15 +32,17 @@ def connect(config, callback):
     while not success:
         try:
             IOT.connect()           #"att-capp-2.cloudapp.net"
-            if _authenticate(config):
+            if _authenticate():
                 IOT.subscribe()              							#starts the bi-directional communication   "att-2.cloudapp.net"
                 success = True
             else:
                 logging.error("Failed to authenticate with IOT platform")
+                time.sleep(2)                                           # wait a little until we try again.
         except:
             logging.exception("failed to connect")
+            time.sleep(2)
 
-def _authenticate(config):
+def _authenticate():
     '''if authentication had previously succeeded, loads credentials and validates them with the platform
        if not previously authenticated: register as gateway and wait until user has claimed it
        params:
@@ -47,12 +53,15 @@ def _authenticate(config):
         while True:                                     # we try to finish the claim process until success or app quits, cause the app can't continue without a valid and claimed gateway
             if IOT.finishclaim("pyGate", uid):
                 _storeConfig()
-                sleep(2)                                # give the platform a litle time to set up all the configs so that we can subscribe correctly to the topic. If we don't do this, the subscribe could fail
+                time.sleep(2)                                # give the platform a litle time to set up all the configs so that we can subscribe correctly to the topic. If we don't do this, the subscribe could fail
                 return True
             else:
-                sleep(1)
+                time.sleep(1)
         return False                                # if we get here, didn't succeed in time to finish the claiming process.
     else:
+        IOT.GatewayId = config.gatewayId
+        IOT.ClientId = config.clientId
+        IOT.ClientKey = config.clientKey
         if IOT.authenticate():
             logging.info('Authenticated')
             return True
@@ -67,7 +76,7 @@ def _getUid():
         mac = get_mac()
         if mac & 0x10000000000 == 0:
             break
-        sleep(1)                                                                    # wait a bit before retrying.
+        time.sleep(1)                                                                    # wait a bit before retrying.
 
     result = hex(mac)[2:-1]                                                         # remove the 0x at the front and the L at the back.
     while len(result) < 12:                                                         # it could be that there were missing '0' in the front, add them manually.
@@ -76,7 +85,7 @@ def _getUid():
     logging.info('mac address: ' + result)
     return result
 
-def _storeConfig(config):
+def _storeConfig():
     '''stores the cloud config data in the config object'''
     config.gatewayId = IOT.GatewayId
     config.clientId = IOT.ClientId
@@ -119,11 +128,14 @@ def addDevice(module, deviceId, name, description):
     finally:
         _httpLock.release()
 
-def getDevices(self):
+def getDevices():
     """get all the devices listed for this gateway as a json structure."""
     _httpLock.acquire()
     try:
-        return IOT.getGateway(True)
+        gateway = IOT.getGateway(True)
+        if gateway:
+            return gateway['assets']
+        return []
     finally:
         _httpLock.release()
 
