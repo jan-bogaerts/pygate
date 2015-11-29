@@ -8,23 +8,12 @@ import time
 import config
 import modules
 import cloud
-
-
-def onActuate(module, device, actuator, value):
-    '''called when an actuator command arrives from the cloud'''
-    mod = modules.modules[module];
-    if device:
-        if mod.onDeviceActuate:                                     # it's a gateway
-            mod.onDeviceActuate(device, actuator, value)
-        elif mod.onActuate:                                         # it'sa regular device
-            mod.onActuate(actuator, value)
-    else:
-        if mod.onActuate:
-            mod.onActuate(actuator, value)
+import associations
 
 
 config.load()
-cloud.connect(onActuate)
+associations.load()
+cloud.connect(modules.Actuate, associations.onAssetUpdated)
 modules.load(config.modules)
 modules.syncGatewayAssets()
 modules.syncDevices()

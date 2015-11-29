@@ -1,6 +1,6 @@
 ﻿import logging
 from ConfigParser import *
-import json
+import yaml
 import os.path
 
 configs = None                                      #provides access to the configParser object for plug in modules
@@ -54,7 +54,7 @@ def loadConfig(fileName, asJson = False):
     else:
         with open(fileName) as json_file:
             logging.info("loading " + fileName)
-            json_data = json.load(json_file)
+            json_data = yaml.safe_load(json_file)
             return json_data
 
 def save():

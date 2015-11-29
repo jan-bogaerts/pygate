@@ -15,14 +15,20 @@ def load(moduleNames):
     for key, mod in modules.iteritems():
         if mod.connectToGateway:
             logging.info("connecting " +  key + " to gateway")
-            mod.connectToGateway(key)
+            try:
+                mod.connectToGateway(key)
+            except:
+                logging.exception('failed to connect module ' + key + ' to gateway.')
 
 def syncGatewayAssets():
     '''allows the modules to sync with the cloud, the assets that should come at the level of the gateway'''
     for key, value in modules.iteritems():
         if value.syncGatewayAssets:
             logging.info("syncing gateway assets for " +  key)
-            value.syncGatewayAssets()
+            try:
+                value.syncGatewayAssets()
+            except:
+                logging.exception('failed to sync gateway assets for module ' + key + '.')
 
 def syncDevices():
     """allow the modules to sync the devices with the cloud"""
@@ -30,7 +36,10 @@ def syncDevices():
     for key, value in modules.iteritems():
         if value.syncDevices:
             logging.info("syncing devices for " +  key)
-            value.syncDevices(deviceList.filter(key))
+            try:
+                value.syncDevices(deviceList.filter(key))
+            except:
+                logging.exception('failed to sync devices for module ' + key + '.')
 
 
 def run():
@@ -39,6 +48,23 @@ def run():
     if modules:
         map(lambda x:thread.start_new_thread(x.run, ()), [mod for key, mod in modules.iteritems() if mod.run])
 
+
+def Actuate(module, device, actuator, value):
+    '''Can be used as a generir method to send a command to an actuator managed by the specified module.
+    The function will figure out the most appropriate callback, depending on the presence of a device or not
+    - module can be a string (name of the module), or the module object itself.'''
+    if module is basestring:    
+        mod = modules[module]
+    else:
+        mod = module
+    if device:
+        if mod.onDeviceActuate:                                     # it's a gateway
+            mod.onDeviceActuate(device, actuator, value)
+        elif mod.onActuate:                                         # it'sa regular device
+            mod.onActuate(actuator, value)
+    else:
+        if mod.onActuate:
+            mod.onActuate(actuator, value)
 
 
 class syncDeviceList(object):

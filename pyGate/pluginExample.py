@@ -28,3 +28,9 @@ def onActuate(actuator, value):
 
 def onDeviceActuate(device, actuator, value):
     '''optional callback routine for plugins that behave as gateways'''
+
+def getValueConverter(device, asset):
+    '''optional.
+    called when this module has sent a value to the cloud which triggered other assets (associations). Allows the module to provide a value
+    converter that changes the actuator data (ex: toggle buttons).
+    '''

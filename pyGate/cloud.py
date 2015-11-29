@@ -6,27 +6,31 @@ from uuid import getnode as get_mac
 
 import config
 
-
-_pyGateCallback = None                                                          #callback for pyGate module, which hanldes distribution of the callback over the modules (and possible plugins)
+_sensorCallback = None                                                          #callback for pyGate module, called when sensor data is sent out.
+_actuatorCallback = None                                                          #callback for pyGate module, called when actuator data came in and needs to be redistributed to the correct module.
 _httpLock = threading.Lock()                                                    # makes http request thread save (only 1 plugin can call http at a time, otherwise we get confused.
 _mqttLock = threading.Lock()                                                    # makes mqtt send requests thread save
 
 def onActuate(device, actuator, value):
     '''called by att_iot_gateway when actuator command is received'''
-    if _pyGateCallback:                                     # need a callback, otherwise there is no handler for the command (yet).
+    if _actuatorCallback:                                     # need a callback, otherwise there is no handler for the command (yet).
         if device:                                          # its an actuator for a specific device
             devid = device.split('_')                       # device id contains module name
-            _pyGateCallback(devid[0], devid[1], actuator, value)
+            _actuatorCallback(devid[0], devid[1], actuator, value)
         else:                                               # it's an actuator at the level of the gateway.
             splitPos = actuator.find('_')
             module = actuator[:splitPos]          #get the module name from the actuator
-            _pyGateCallback(module, None, actuator[splitPos:], value)
+            _actuatorCallback(module, None, actuator[splitPos:], value)
 
 
-def connect(callback):
+def connect(actuatorcallback, sensorCallback):
     """set up the connection with the cloud from the specified configuration
-       callback: the callback function for actuator commands
-                    format: onActuate(module, device, actuator, value)"""
+       actuatorcallback: the callback function for actuator commands
+                    format: onActuate(module, device, actuator, value)
+       sensorCallback: the callback function that will be called when sensor data is sent to the cloud"""
+    global _sensorCallback, _actuatorCallback
+    _actuatorCallback = actuatorcallback
+    _sensorCallback = sensorCallback
     IOT.on_message = onActuate 
     success = False
     while not success:
@@ -151,7 +155,7 @@ def deviceExists(module, deviceId):
 
 def deleteDevice(module, deviceId):
     """delete device"""
-    devId = module + '_' + deviceId
+    devId = getDeviceId(module, deviceId)
     _httpLock.acquire()
     try:
         return IOT.deleteDevice(devId)
@@ -160,7 +164,7 @@ def deleteDevice(module, deviceId):
 
 def getAssetState(module, deviceId, assetId):
     """get value of asset"""
-    devId = module + '_' + deviceId
+    devId = getDeviceId(module, deviceId)
     _httpLock.acquire()
     try:
         return IOT.getAssetState(assetId, devId)
@@ -168,15 +172,17 @@ def getAssetState(module, deviceId, assetId):
         _httpLock.release()
 
 
-def send(module, device, actuator, value):
+def send(module, device, asset, value):
     '''send value to the cloud
     thread save: only 1 thread can send at a time'''
-    devId = module + '_' + deviceId
+    devId = getDeviceId(module, device)
     _mqttLock.acquire()
     try:
-        IOT.send(value, devId, actuator)
+        IOT.send(value, devId, asset)
     finally:
         _mqttLock.release()
+    if _sensorCallback:
+        _sensorCallback(module, device, asset, value)
 
 def getModuleName(value):
     """extract the module name out of the string param."""
@@ -185,3 +191,6 @@ def getModuleName(value):
 def getDeviceId(value):
     """extract the module name out of the string param."""
     return value[value.find('_'):]
+
+def getDeviceId(module, device):
+    return module + '_' + device
