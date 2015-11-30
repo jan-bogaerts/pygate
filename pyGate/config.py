@@ -9,6 +9,8 @@ modules = []                                        #all the mmodule names that 
 gatewayId = None                                    # the id of the gateway 
 clientId = None                                     #authentication value
 clientKey = None                                    #authentication value
+apiServer = 'api.smartliving.io'                    #the address of the api server to use
+broker = 'broker.smartliving.io'                    #the address of the broker
 
 configPath = '../config/'                           # the path to the folder that contains all the configs
 rootConfigFileName = configPath + 'pygate.config'   # the path and filename of the main config file
@@ -16,7 +18,7 @@ rootConfigFileName = configPath + 'pygate.config'   # the path and filename of t
 
 def load():
     """Load config data"""
-    global configs, modules, gatewayId, clientId,clientKey
+    global configs, modules, gatewayId, clientId,clientKey, apiServer,broker
     configs = ConfigParser()
     if configs.read(rootConfigFileName):
         logging.info("loading " + rootConfigFileName)
@@ -34,6 +36,13 @@ def load():
         if configs.has_option('general', 'clientKey'):
             clientKey = configs.get('general', 'clientKey')
             logging.info("clientKey: " + clientKey)
+
+        if configs.has_option('general', 'api server'):
+            apiServer = configs.get('general', 'api server')
+            logging.info("api server: " + apiServer)
+        if configs.has_option('general', 'broker'):
+            broker = configs.get('general', 'broker')
+            logging.info("broker: " + broker)
     else:
         logging.error('failed to load ' + rootConfigFileName)
 
@@ -43,19 +52,21 @@ def loadConfig(fileName, asJson = False):
     fileName = '../config/' + fileName
     if not os.path.isfile(fileName):
         logging.error('file not found ' + fileName)
-    if not asJson:
-        c = ConfigParser()
-        if c.read(fileName):
-            logging.info("loading " + fileName)
-            return c
-        else:
-            logging.error('failed to load ' + fileName)
-            return None
+        return None
     else:
-        with open(fileName) as json_file:
-            logging.info("loading " + fileName)
-            json_data = yaml.safe_load(json_file)
-            return json_data
+        if not asJson:
+            c = ConfigParser()
+            if c.read(fileName):
+                logging.info("loading " + fileName)
+                return c
+            else:
+                logging.error('failed to load ' + fileName)
+                return None
+        else:
+            with open(fileName) as json_file:
+                logging.info("loading " + fileName)
+                json_data = yaml.safe_load(json_file)
+                return json_data
 
 def save():
     '''
@@ -65,9 +76,11 @@ def save():
     global configs
     configs = ConfigParser()
     configs.add_section('general')
-    configs.set('general', 'modules', modules)
+    configs.set('general', 'modules', ';'.join(modules))
     configs.set('general', 'gatewayId', gatewayId)
     configs.set('general', 'clientId', clientId)
     configs.set('general', 'clientKey', clientKey)
+    configs.set('general', 'api server', apiServer)
+    configs.set('general', 'broker', broker)
     with open(rootConfigFileName, 'w') as f:
         configs.write(f)

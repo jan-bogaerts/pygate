@@ -1,4 +1,4 @@
-#allows a device to manage it's cloud presence.
+﻿#allows a device to manage it's cloud presence.
 
 import cloud
 
@@ -13,11 +13,11 @@ class Device(object):
 
     def addAsset(self, id, name, description, isActuator, assetType, style = "Undefined"):
         """add asset"""
-        cloud.addAsset(self, self._moduleName, self._deviceId, id, name, description, isActuator, assetType, style)
+        cloud.addAsset(self._moduleName, self._deviceId, id, name, description, isActuator, assetType, style)
 
     def createDevice(self, name, description):
         """add device"""
-        cloud.addDevice(self, self._moduleName, self._deviceId, name, description)
+        cloud.addDevice(self._moduleName, self._deviceId, name, description)
 
     def send(self, value, actuator):
         cloud.send(self._moduleName, self._deviceId, actuator, value)

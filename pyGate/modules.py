@@ -20,10 +20,11 @@ def load(moduleNames):
             except:
                 logging.exception('failed to connect module ' + key + ' to gateway.')
 
+    
 def syncGatewayAssets():
     '''allows the modules to sync with the cloud, the assets that should come at the level of the gateway'''
     for key, value in modules.iteritems():
-        if value.syncGatewayAssets:
+        if hasattr(value, 'syncGatewayAssets'):
             logging.info("syncing gateway assets for " +  key)
             try:
                 value.syncGatewayAssets()
@@ -34,7 +35,7 @@ def syncDevices():
     """allow the modules to sync the devices with the cloud"""
     deviceList = syncDeviceList()
     for key, value in modules.iteritems():
-        if value.syncDevices:
+        if hasattr(value, 'syncDevices'):
             logging.info("syncing devices for " +  key)
             try:
                 value.syncDevices(deviceList.filter(key))
@@ -58,12 +59,11 @@ def Actuate(module, device, actuator, value):
     else:
         mod = module
     if device:
-        if mod.onDeviceActuate:                                     # it's a gateway
+        if hasattr(mod, 'onDeviceActuate'):                                     # it's a gateway
             mod.onDeviceActuate(device, actuator, value)
-        elif mod.onActuate:                                         # it'sa regular device
+        elif hasattr(mod, 'onActuate'):                                         # it'sa regular device
             mod.onActuate(actuator, value)
-    else:
-        if mod.onActuate:
+    elif hasattr(mod, 'onActuate'):
             mod.onActuate(actuator, value)
 
 
@@ -78,10 +78,10 @@ class syncDeviceList(object):
         if not self._list:
             self._list = cloud.getDevices()
             self.stripDeviceIds()
-        return [x for x in self._list if  cloud.getModuleName(x.Name) == key]
+        return [x for x in self._list if  cloud.getModuleName(x['name']) == key]
 
     def stripDeviceIds(self):
         '''goes over the list items and converts the 'deviceIds' to local versions (strip module '''
         for x in self._list:
-            x['id'] = cloud.getDeviceId(x['id'])
+            x['id'] = cloud.stripDeviceId(x['name'])
 

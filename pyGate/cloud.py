@@ -1,5 +1,5 @@
 ﻿import logging
-import att_iot_gateway.att_iot_gateway as IOT                              #provide cloud support
+import att_iot_gateway as IOT                              #provide cloud support
 import threading
 import time
 from uuid import getnode as get_mac
@@ -35,9 +35,9 @@ def connect(actuatorcallback, sensorCallback):
     success = False
     while not success:
         try:
-            IOT.connect()           #"att-capp-2.cloudapp.net"
+            IOT.connect(config.apiServer)           
             if _authenticate():
-                IOT.subscribe()              							#starts the bi-directional communication   "att-2.cloudapp.net"
+                IOT.subscribe(config.broker)              							#starts the bi-directional communication   "att-2.cloudapp.net"
                 success = True
             else:
                 logging.error("Failed to authenticate with IOT platform")
@@ -138,7 +138,7 @@ def getDevices():
     try:
         gateway = IOT.getGateway(True)
         if gateway:
-            return gateway['assets']
+            return gateway['devices']
         return []
     finally:
         _httpLock.release()
@@ -188,7 +188,7 @@ def getModuleName(value):
     """extract the module name out of the string param."""
     return value[:value.find('_')]
 
-def getDeviceId(value):
+def stripDeviceId(value):
     """extract the module name out of the string param."""
     return value[value.find('_'):]
 
