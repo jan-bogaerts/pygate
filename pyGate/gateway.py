@@ -14,15 +14,15 @@ class Gateway(object):
         """add asset"""
         cloud.addAsset(self._moduleName, deviceId, id, name, description, isActuator, assetType, style)
 
-    def deleteAsset(deviceId, asset):
+    def deleteAsset(self, deviceId, asset):
         cloud.deleteAsset(self._moduleName, deviceId, asset)
 
     def addGatewayAsset(self, id, name, description, isActuator, assetType, style = "Undefined"):
-        cloud.addGatewayAsset(self, self._moduleName, id, name, description, isActuator, assetType, style)
+        cloud.addGatewayAsset(self._moduleName, id, name, description, isActuator, assetType, style)
 
     def addDevice(self, deviceId, name, description):
         """add device"""
-        cloud.addDevice(self, self._moduleName, deviceId, name, description)
+        cloud.addDevice(self._moduleName, deviceId, name, description)
 
     def deleteDevice(self, deviceId):
         """delete device"""

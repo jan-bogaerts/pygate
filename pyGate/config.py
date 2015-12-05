@@ -13,7 +13,7 @@ apiServer = 'api.smartliving.io'                    #the address of the api serv
 broker = 'broker.smartliving.io'                    #the address of the broker
 
 configPath = '../config/'                           # the path to the folder that contains all the configs
-rootConfigFileName = configPath + 'pygate.config'   # the path and filename of the main config file
+rootConfigFileName = configPath + 'pyGate.config'   # the path and filename of the main config file
 
 
 def load():

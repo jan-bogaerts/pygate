@@ -119,7 +119,7 @@ def addGatewayAsset(module, id, name, description, isActuator, assetType, style 
     id = module + '_' + id
     _httpLock.acquire()
     try:
-        IOT.addAsset(id, None, name, description, isActuator, assetType, style)
+        IOT.addGatewayAsset(id, name, description, isActuator, assetType, style)
     finally:
         _httpLock.release()
 
