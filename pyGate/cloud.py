@@ -23,6 +23,7 @@ def onActuate(device, actuator, value):
             _actuatorCallback(module, None, actuator[splitPos:], value)
 
 
+
 def connect(actuatorcallback, sensorCallback):
     """set up the connection with the cloud from the specified configuration
        actuatorcallback: the callback function for actuator commands
@@ -98,7 +99,7 @@ def _storeConfig():
 
 def addAsset(module, deviceId, id, name, description, isActuator, assetType, style = "Undefined"):
     """add asset"""
-    devId = module + '_' + deviceId
+    devId = getDeviceId(module, deviceId)
     _httpLock.acquire()
     try:
         IOT.addAsset(id, devId, name, description, isActuator, assetType, style)
@@ -107,10 +108,10 @@ def addAsset(module, deviceId, id, name, description, isActuator, assetType, sty
 
 def deleteAsset(module, deviceId, asset):
     """delete the asset"""
-    devId = module + '_' + deviceId
+    devId = getDeviceId(module, deviceId)
     _httpLock.acquire()
     try:
-        return IOT.deleteAsset(devId, assetId)
+        return IOT.deleteAsset(devId, asset)
     finally:
         _httpLock.release()
 
@@ -125,7 +126,7 @@ def addGatewayAsset(module, id, name, description, isActuator, assetType, style 
 
 def addDevice(module, deviceId, name, description):
     """add device"""
-    devId = module + '_' + deviceId
+    devId = getDeviceId(module, deviceId)
     _httpLock.acquire()
     try:
         IOT.addDevice(devId, name, description)
@@ -146,7 +147,7 @@ def getDevices():
 
 def deviceExists(module, deviceId):
     """check if device exists"""
-    devId = module + '_' + deviceId
+    devId = getDeviceId(module, deviceId)
     _httpLock.acquire()
     try:
         return IOT.deviceExists(devId)
@@ -175,7 +176,10 @@ def getAssetState(module, deviceId, assetId):
 def send(module, device, asset, value):
     '''send value to the cloud
     thread save: only 1 thread can send at a time'''
-    devId = getDeviceId(module, device)
+    if device:                                                      # could be that there is no device: for gateway assets.
+        devId = getDeviceId(module, device)
+    else:
+        devId = module
     _mqttLock.acquire()
     try:
         IOT.send(value, devId, asset)
@@ -193,4 +197,4 @@ def stripDeviceId(value):
     return value[value.find('_'):]
 
 def getDeviceId(module, device):
-    return module + '_' + device
+    return module + '_' + str(device)

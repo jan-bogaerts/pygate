@@ -24,7 +24,8 @@ def on_connect(client, userdata, rc):
         logging.error("Failed to connect to mqtt broker, error: " + mqtt.connack_string(rc))
         return
     
-    topic = "gateway/" + GatewayId + "/#/command"                                           #subscribe to the topics for the device
+    # topic = "gateway/" + GatewayId + "/#/command"                                           #subscribe to the topics for the device
+    topic = '#'
     logging.info("subscribing to: " + topic)
     result = _mqttClient.subscribe(topic)                                                    #Subscribing in on_connect() means that if we lose the connection and reconnect then subscriptions will be renewed.
     logging.info(result)
@@ -37,8 +38,16 @@ def on_MQTTmessage(client, userdata, msg):
     logging.info("Incoming message - topic: " + msg.topic + ", payload: " + payload)
     topicParts = msg.topic.split("/")
     if on_message is not None:
-        idParts = topicParts[-2].split("_")
-        on_message(idParts[1], idParts[2], msg.payload)                                 #we want the second last value in the array, the last one is 'command'
+        try:
+            if topicParts[3] == 'device':
+                devId = topicParts[4]
+                assetId = topicParts[6]
+            else:
+                devId = None
+                assetId = topicParts[4]
+            on_message(devId, assetId, msg.payload)                                 #we want the second last value in the array, the last one is 'command'
+        except:
+            logging.exception("failed to process actuator command: " + msg.topic + ", payload: " + msg.payload)
 
 def on_MQTTSubscribed(client, userdata, mid, granted_qos):
     logging.info("Subscribed to topic, receiving data from the cloud: qos=" + str(granted_qos))
@@ -81,7 +90,7 @@ def addAsset(id, deviceId, name, description, isActuator, assetType, style = "Un
     if _RegisteredGateway == False:
         raise Exception('gateway must be registered')
 
-    body = '{"label":"' + name + '","description":"' + description + '", "style": "' + style + '","is":"'
+    body = '{"title":"' + name + '","description":"' + description + '", "style": "' + style + '","is":"'
     if isActuator:
         body = body + 'actuator'
     else:
@@ -105,7 +114,7 @@ def addGatewayAsset(id, name, description, isActuator, assetType, style = "Undef
     if _RegisteredGateway == False:
         raise Exception('gateway must be registered')
 
-    body = '{"name":"' + name + '","description":"' + description + '", "style": "' + style + '","is":"'
+    body = '{"title":"' + name + '","description":"' + description + '", "style": "' + style + '","is":"'
     if isActuator:
         body = body + 'actuator'
     else:
@@ -135,9 +144,9 @@ def deleteAsset(device, id):
     print("HTTP BODY: None")
     _httpClient.request("DELETE", url, "", headers)
     response = _httpClient.getresponse()
-    print(response.status, response.reason)
+    logging.info(response.status, response.reason)
     jsonStr =  response.read()
-    print(jsonStr)
+    logging.info(jsonStr)
     return response.status == 204
     
 def addDevice(deviceId, name, description):
@@ -147,16 +156,17 @@ def addDevice(deviceId, name, description):
     
     if _RegisteredGateway == False:
         raise Exception('gateway must be registered')
-
-    body = '{"name":"'  + deviceId + '","label":"' + name + '","description":"' + description + '" }'
+    #deviceId = "test"
+    # body = '{"title":"' + name + '","description":"' + description + '"type": "custom" }'
+    body = '{"title":"' + name + '","type": "custom" }'
     headers = _buildHeaders()
-    url = "/device"
+    url = "/device/" + deviceId
     
-    logging.info("HTTP POST: " + url)
+    logging.info("HTTP PUT: " + url)
     logging.info("HTTP HEADER: " + str(headers))
     logging.info("HTTP BODY:" + body)
 
-    return _sendData(url, body, headers)
+    return _sendData(url, body, headers, 'PUT')
 
 def deviceExists(deviceId):
     '''checks if the device already exists in the IOT platform.
@@ -182,14 +192,14 @@ def deleteDevice(deviceId):
     headers = {"Content-type": "application/json", "Auth-ClientKey": ClientKey, "Auth-ClientId": ClientId}
     url = "/Device/" + deviceId
 
-    print("HTTP DELETE: " + url)
-    print("HTTP HEADER: " + str(headers))
-    print("HTTP BODY: None")
+    logging.info("HTTP DELETE: " + url)
+    logging.info("HTTP HEADER: " + str(headers))
+    logging.info("HTTP BODY: None")
     _httpClient.request("DELETE", url, "", headers)
     response = _httpClient.getresponse()
-    print(response.status, response.reason)
+    logging.info(response.status, response.reason)
     jsonStr =  response.read()
-    print(jsonStr)
+    logging.info(jsonStr)
     return response.status == 204
 
 def createGateway(name, uid, assets = None):
@@ -303,14 +313,14 @@ def sendValueHTTP(value, deviceId, assetId):
 
     url = "/device/" +  deviceId + '/asset/' + str(assetId) + "/state"
 
-    print("HTTP PUT: " + url)
-    print("HTTP HEADER: " + str(headers))
-    print("HTTP BODY:" + body)
+    logging.info("HTTP PUT: " + url)
+    logging.info("HTTP HEADER: " + str(headers))
+    logging.info("HTTP BODY:" + body)
     _httpClient.request("PUT", url, body, headers)
     response = _httpClient.getresponse()
-    print(response.status, response.reason)
+    logging.info(response.status, response.reason)
     jsonStr =  response.read()
-    print(jsonStr)
+    logging.info(jsonStr)
 
 
 def _storeCredentials(gateway):

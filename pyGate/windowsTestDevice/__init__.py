@@ -33,7 +33,7 @@ def connectToGateway(moduleName):
     '''optional
         called when the system connects to the cloud.'''
     global _device
-    _device = device.Device(moduleName, 'windowsTest')
+    _device = device.Device(moduleName, 'windowsTest1')
 
 def syncDevices(existing):
     '''optional

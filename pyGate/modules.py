@@ -50,12 +50,19 @@ def run():
         map(lambda x:thread.start_new_thread(x.run, ()), [mod for key, mod in modules.iteritems() if mod.run])
 
 
+import zwaveGateway
+
 def Actuate(module, device, actuator, value):
     '''Can be used as a generir method to send a command to an actuator managed by the specified module.
     The function will figure out the most appropriate callback, depending on the presence of a device or not
     - module can be a string (name of the module), or the module object itself.'''
-    if module is basestring:    
-        mod = modules[module]
+    # zwaveGateway.onActuate(zwaveGateway._discoveryStateId, 'include')
+    if isinstance(module, basestring):
+        if module in modules:
+            mod = modules[module]
+        else:
+            logging.error('actuator request for unknown module: ' + str(module))
+            return
     else:
         mod = module
     if device:
