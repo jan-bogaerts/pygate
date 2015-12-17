@@ -7,6 +7,7 @@ import cloud
 
 modules = {}                                    # the list of dynamically loaded modules.
 
+
 def load(moduleNames):
     """Loads all the gateway modules"""
     global modules
@@ -21,8 +22,10 @@ def load(moduleNames):
                 logging.exception('failed to connect module ' + key + ' to gateway.')
 
     
-def syncGatewayAssets():
-    '''allows the modules to sync with the cloud, the assets that should come at the level of the gateway'''
+def syncGatewayAssets(full = False):
+    '''allows the modules to sync with the cloud, the assets that should come at the level of the gateway
+    :param full: recreate all assets,
+    '''
     for key, value in modules.iteritems():
         if hasattr(value, 'syncGatewayAssets'):
             logging.info("syncing gateway assets for " +  key)
@@ -31,8 +34,12 @@ def syncGatewayAssets():
             except:
                 logging.exception('failed to sync gateway assets for module ' + key + '.')
 
-def syncDevices():
-    """allow the modules to sync the devices with the cloud"""
+
+def syncDevices(full = False):
+    """allow the modules to sync the devices with the cloud
+    :param full: when false, if device already exists, don't update, including assets. When true,
+    update all, including assets
+    """
     deviceList = syncDeviceList()
     for key, value in modules.iteritems():
         if hasattr(value, 'syncDevices'):
@@ -50,7 +57,7 @@ def run():
         map(lambda x:thread.start_new_thread(x.run, ()), [mod for key, mod in modules.iteritems() if mod.run])
 
 
-import zwaveGateway
+import zwave
 
 def Actuate(module, device, actuator, value):
     '''Can be used as a generir method to send a command to an actuator managed by the specified module.

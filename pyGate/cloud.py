@@ -20,7 +20,7 @@ def onActuate(device, actuator, value):
         else:                                               # it's an actuator at the level of the gateway.
             splitPos = actuator.find('_')
             module = actuator[:splitPos]          #get the module name from the actuator
-            _actuatorCallback(module, None, actuator[splitPos:], value)
+            _actuatorCallback(module, None, actuator[splitPos + 1:], value)
 
 
 
@@ -194,7 +194,7 @@ def getModuleName(value):
 
 def stripDeviceId(value):
     """extract the module name out of the string param."""
-    return value[value.find('_'):]
+    return value[value.find('_') + 1:]
 
 def getDeviceId(module, device):
     return module + '_' + str(device)

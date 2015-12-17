@@ -10,12 +10,14 @@ from openzwave.scene import ZWaveScene
 from openzwave.controller import ZWaveController
 from openzwave.network import ZWaveNetwork
 from openzwave.option import ZWaveOption
+from openzwave.controller import ZWaveController
 import time
 from louie import dispatcher, All
 import json
 
 from gateway import Gateway;
 import config
+import deviceClasses
 
 _gateway = None                             # provides access to the cloud
 _network = None                             # provides access to the zwave network
@@ -25,7 +27,7 @@ _discoveryStateId = 'discoverState'   #id of asset
 _hardResetId = 'hardReset'   #id of asset
 _softResetId = 'softReset'   #id of asset
 _assignRouteId = 'assignRoute'
-_cancelCommandId = 'cancelCommand'
+_CC_Battery = 0x80
 
 
 def connectToGateway(moduleName):
@@ -37,10 +39,12 @@ def connectToGateway(moduleName):
     _setupZWave()
 
 
-def syncDevices(existing):
+def syncDevices(existing, Full = False):
     '''optional
        allows a module to synchronize it's device list.
        existing: the list of devices that are already known in the cloud for this module.
+       :param Full: when false, if device already exists, don't update, including assets. When true,
+        update all, including assets
     '''
     if _readyEvent.wait():                         # wait for 5 seconds to get the network ready, otherwise we contintue
         for key, node in _network.nodes.iteritems():
@@ -50,29 +54,33 @@ def syncDevices(existing):
                     _addDevice(node)
                 else:
                     existing.remove(found)              # so we know at the end which ones have to be removed.
+                    if Full:
+                        _addDevice(node)                # this will also refresh it
         for dev in existing:                        # all the items that remain in the 'existing' list, are no longer devices in this network, so remove them
             _gateway.deleteDevice(dev['id'])
     else:
         logging.error('failed to start the network in time, continuing')
 
 
-def syncGatewayAssets():
+def syncGatewayAssets(Full = False):
     '''
     optional. Allows a module to synchronize with the cloud, all the assets that should come at the level
     of the gateway.
+    :param Full: when false, if device already exists, don't update, including assets. When true,
+    update all, including assets
     '''
     #don't need to wait for the zwave server to be fully ready, don't need to query it for this call.
     _gateway.addGatewayAsset(_discoveryStateId, 'discovery state', 'add/remove devices to the network', True,  '{"type" :"string", "enum": ["off","include","exclude"]}')
     _gateway.addGatewayAsset(_hardResetId, 'hard reset', 'reset the controller to factory default', True, 'boolean')
     _gateway.addGatewayAsset(_softResetId, 'soft reset', 'reset the controller, but keep network configuration settings', True, 'boolean')
     _gateway.addGatewayAsset(_assignRouteId, 'assign route', 'assign a network return route from a node to another one', True, '{"type":"object", "properties": {"from":{"type": "integer"}, "to":{"type": "integer"} } }')
-    _gateway.addGatewayAsset(_cancelCommandId, 'cancel command', 'cancel the previously issued command', True, 'boolean')
 
 
 def run():
     ''' required
         main function of the plugin module'''
     _readyEvent.wait()
+    logging.info(_gateway._moduleName + ' running')
 
 
 def onDeviceActuate(device, actuator, value):
@@ -108,10 +116,6 @@ def onActuate(actuator, value):
         params = json.loads(value)
         logging.info("re-assigning route from: " + params['from'] + ", to: " + params['to'])
         _network.controller.begin_command_assign_return_route(params['from'], params['to'])
-    elif actuator == _cancelCommandId:
-        logging.info("cancelling operation")
-        _network.controller.cancel_command()
-        _gateway.send('off', None, _discoveryStateId)
     else:
         logging.error("zwave: unknown gateway actuator command: " + actuator)
 
@@ -130,6 +134,10 @@ def _networkReset():
     dispatcher.disconnect(_networkReset, ZWaveNetwork.SIGNAL_NETWORK_RESETTED)  # no longer need to monitor this?
     _connectSignals()
     logging.info("network reset")
+
+def _discoveryCompleted():
+    '''called when the discovery process is done'''
+    _gateway.send('off', None, _discoveryStateId)
 
 def _setupZWave():
     '''iniializes the zwave network driver'''
@@ -160,6 +168,7 @@ def _connectSignals():
     dispatcher.connect(_assetRemoved, ZWaveNetwork.SIGNAL_VALUE_REMOVED)
     dispatcher.connect(_assetValueChanged, ZWaveNetwork.SIGNAL_VALUE_CHANGED)
     dispatcher.connect(_assetValueChanged, ZWaveNetwork.SIGNAL_VALUE_REFRESHED)
+    dispatcher.connect(_discoveryCompleted, ZWaveController.STATE_COMPLETED)
 
 def _disconnectSignals():
     '''disconnects all the louie signals (for values and nodes). This is used
@@ -171,6 +180,7 @@ def _disconnectSignals():
     dispatcher.disconnect(_assetRemoved, ZWaveNetwork.SIGNAL_VALUE_REMOVED)
     dispatcher.disconnect(_assetValueChanged, ZWaveNetwork.SIGNAL_VALUE_CHANGED)
     dispatcher.disconnect(_assetValueChanged, ZWaveNetwork.SIGNAL_VALUE_REFRESHED)
+    dispatcher.disconnect(_discoveryCompleted, ZWaveController.STATE_COMPLETED)
 
 def _buildZWaveOptions():
     '''create the options object to start up the zwave server'''
@@ -181,7 +191,7 @@ def _buildZWaveOptions():
         logging.error('zwave configuration missing: logLevel')
         return
     if not config.configs.has_option('zwave', 'config'):
-        logging.error('zwave path to configuration files missing: config')
+        logging.error("zwave 'path to configuration files' missing: config")
         return
 
     port = config.configs.get('zwave', 'port')
@@ -234,17 +244,25 @@ def _waitForReady():
     logging.info("zwave: Nodes in network : %s" % _network.nodes_count)
     logging.info("zwave: Driver statistics : %s" % _network.controller.stats)
 
+def _getData(cc):
+    """get the data value in the correct format for the specified command class"""
+    dataType = str(cc.type)
+    if dataType == "Bool":
+        return str(cc.data_as_string).lower()   # for some reason, data_as_string isn't always a string, but a bool or somthing else.
+    else:
+        return cc.data_as_string
 
 def _addDevice(node):
     '''adds the specified node to the cloud as a device. Also adds all the assets.'''
     _gateway.addDevice(node.node_id, node.product_name, node.type)
     for key, val in node.values.iteritems() :
         try:
-            _gateway.addAsset(key, node.node_id, val.label.encode('ascii','ignore'), val.help.encode('ascii','ignore'), not val.is_read_only, _getAssetType(node, val), _getStyle(node, val))
-            _gateway.send(node.values[val].data_as_string, node.node_id, val)
+            if val.command_class:                           # if not related to a command class, then all other fields are 'none' as well, can't t much with them.
+                _gateway.addAsset(key, node.node_id, val.label.encode('ascii','ignore'), val.help.encode('ascii','ignore'), not val.is_read_only, _getAssetType(node, val), _getStyle(node, val))
+                _gateway.send(_getData(val), node.node_id, key)
         except:
             logging.exception('failed to sync device ' + str(node.node_id) + ' for module ' + _gateway._moduleName + ', asset: ' + str(key) + '.')
-    if node.is_sleeping:
+    if _CC_Battery in node.command_classes:
         _gateway.addAsset('failed', node.node_id, 'failed', 'true when the battery device is no longer responding and the controller has labeled it as a failed device.', False, 'boolean', 'Secondary')
 
 
@@ -252,28 +270,40 @@ def _getAssetType(node, val):
     '''extract the asset type from the command class'''
 
     logging.info("node type: " + val.type)            # for debugging
+    dataType = str(val.type)
 
     type = "{'type': "
-    if val.type == 'Bool':
-        type += "'string'"
-    elif val.type == 'Decimal':
+    if dataType == 'Bool':
+        type += "'boolean'"
+    elif dataType == 'Decimal':
         type += "'number'"
-    elif val.type == 'Integer':
+    elif dataType == 'Integer':
         type += "'integer'"
     else:
-        type = "{'type': 'string'"                              #small hack for now.
+        type = '{"type": "string"'                              #small hack for now.
     if val.max and val.max != val.min:
-        type += ', "maximum": ' + val.max
+        type += ', "maximum": ' + str(val.max)
     if val.min and val.max != val.min:
-        type += ', "minimum": ' + val.min
+        type += ', "minimum": ' + str(val.min)
     if val.units:
-        type += ', "unit": ' + val.units
+        type += ', "unit": "' + val.units + '"'
+    if val.data_items and isinstance(val.data_items, list) and  not isinstance(val.data_items, basestring):
+        type += ', "enum": [' + ', '.join(['"' + y + '"' for y in val.data_items]) + ']'
     return type + "}"
 
 def _getStyle(node, val):
     '''check the value type, if it is the primary cc for the device, set is primary, if it is battery...'''
-    #todo: finish this off.
-    return "Undefined"
+    if str(val.type) == 'Config':
+        return 'Config'
+    elif val.command_class == _CC_Battery:
+        return 'Battery'
+    else:
+        primaryCCs = deviceClasses.getPrimaryCCFor(node.generic, node.specific)
+        if primaryCCs:                              # if the dev class has a list of cc's than we can determine primary or secondary, otherwise, it's unknown.
+            if val.command_class in primaryCCs:
+                return 'Primary'
+            return 'Secondary'
+    return "Undefined"                  # if we get here, we don't know, so it is undefined.
 
 def _nodeAdded(node):
     _addDevice(node)

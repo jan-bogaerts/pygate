@@ -5,16 +5,20 @@ def connectToGateway(moduleName):
         called when the system connects to the cloud.
     '''
 
-def syncDevices(existing):
+def syncDevices(existing, Full = False):
     '''optional
        allows a module to synchronize it's device list. 
        existing: the list of devices that are already known in the cloud for this module.
+       :param Full: when false, if device already exists, don't update, including assets. When true,
+       update all, including assets
     '''
 
-def syncGatewayAssets():
+def syncGatewayAssets(Full = False):
     '''
     optional. Allows a module to synchronize with the cloud, all the assets that should come at the level
     of the gateway.
+    :param Full: when false, if device already exists, don't update, including assets. When true,
+    update all, including assets
     '''
 
 def run():

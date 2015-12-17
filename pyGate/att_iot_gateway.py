@@ -39,13 +39,15 @@ def on_MQTTmessage(client, userdata, msg):
     topicParts = msg.topic.split("/")
     if on_message is not None:
         try:
-            if topicParts[3] == 'device':
-                devId = topicParts[4]
+            if len(topicParts) >= 7:
+                if topicParts[3] == 'device':
+                    devId = topicParts[4]
+                else:
+                    devId = None
                 assetId = topicParts[6]
+                on_message(devId, assetId, msg.payload)                                 #we want the second last value in the array, the last one is 'command'
             else:
-                devId = None
-                assetId = topicParts[4]
-            on_message(devId, assetId, msg.payload)                                 #we want the second last value in the array, the last one is 'command'
+                logging.error("unknown topic format: " + msg.topic)
         except:
             logging.exception("failed to process actuator command: " + msg.topic + ", payload: " + msg.payload)
 
@@ -85,7 +87,10 @@ def connect(httpServer="api.smartliving.io"):
 
 def addAsset(id, deviceId, name, description, isActuator, assetType, style = "Undefined"):
     '''add an asset to the device. Use the specified name and description.
-    The asset type can be: string, int, bool, double, dateTime, timeSpan or a json schema to declare the content of data represented as json objects.'''
+    The asset type can be: string, int, bool, double, dateTime, timeSpan or a json schema to declare the content of data represented as json objects.
+    :type style: string
+    :param style: how is the asset displayed in the system. Supported values: 'Undefined', 'Primary', 'Config', 'Battery', 'Secondary'
+    '''
     
     if _RegisteredGateway == False:
         raise Exception('gateway must be registered')
