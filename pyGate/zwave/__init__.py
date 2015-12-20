@@ -46,7 +46,7 @@ def syncDevices(existing, Full = False):
        :param Full: when false, if device already exists, don't update, including assets. When true,
         update all, including assets
     '''
-    if _readyEvent.wait():                         # wait for 5 seconds to get the network ready, otherwise we contintue
+    if _readyEvent.wait(10):                         # wait for a max amount of timeto get the network ready, otherwise we contintue
         for key, node in _network.nodes.iteritems():
             if node.node_id != 1:
                 found = next((x for x in existing if x['id'].encode('ascii','ignore') == str(node.node_id)), None)
@@ -80,29 +80,41 @@ def run():
     ''' required
         main function of the plugin module'''
     _readyEvent.wait()
+    _connectSignals()
+    _network.start()
     logging.info(_gateway._moduleName + ' running')
 
 
 def onDeviceActuate(device, actuator, value):
     '''called when an actuator command is received'''
-    node = _network.nodes[device]
+    node = _network.nodes[int(device)]          # the device Id is received as a string, zwave needs ints...
     if node:
-        val = node.values[actuator]
+        val = node.values[long(actuator)]
         if val:
-            cc = val.command_class                  # get the command class for
-            print "to do: send actual command"
+            dataType = str(val.type)
+            if dataType == 'Bool':
+                value = value.lower() == 'true'
+            elif dataType == 'Decimal':
+                value = float(value)
+            elif dataType == 'Integer':
+                value = int(value)
+            newValue = val.check_data(value)        #checks and possibly does some convertions
+            if newValue != None:
+                val.data = newValue
+            else:
+                logging.error('failed to set actuator: ' + actuator + " for device: " + device + ", unknown data type: " + dataType)
         else:
-            logging.error("failed to set asset value: can't find asset " + actuator + " for device " + node)
+            logging.error("failed to set actuator: can't find actuator " + actuator + " for device " + node)
     else:
-        logging.error("failed to  to set asset value: can't find device " + device)
+        logging.error("failed to  to set actuator: can't find device " + device)
 
 def onActuate(actuator, value):
     '''callback for actuators on the gateway level'''
     if actuator == _discoveryStateId:               #change discovery state
         if value == 'include':
-            _network.controller.begin_command_add_device()
+            _network.controller.add_node()
         elif value == 'exclude':
-            _network.controller.begin_command_remove_device()
+            _network.controller.remove_node()
         else:
             _network.controller.cancel_command()
             value = 'off'
@@ -157,7 +169,6 @@ def _waitForStartup():
     '''
     _waitForAwake()
     _waitForReady()
-    _connectSignals()
     _readyEvent.set()
 
 def _connectSignals():
@@ -166,8 +177,9 @@ def _connectSignals():
     dispatcher.connect(_nodeRemoved, ZWaveNetwork.SIGNAL_NODE_REMOVED)
     dispatcher.connect(_assetAdded, ZWaveNetwork.SIGNAL_VALUE_ADDED)
     dispatcher.connect(_assetRemoved, ZWaveNetwork.SIGNAL_VALUE_REMOVED)
-    dispatcher.connect(_assetValueChanged, ZWaveNetwork.SIGNAL_VALUE_CHANGED)
-    dispatcher.connect(_assetValueChanged, ZWaveNetwork.SIGNAL_VALUE_REFRESHED)
+    #dispatcher.connect(_assetValueChanged, ZWaveNetwork.SIGNAL_VALUE_CHANGED)
+    dispatcher.connect(_assetValueRefreshed, ZWaveNetwork.SIGNAL_VALUE_REFRESHED)
+    dispatcher.connect(_assetValue, ZWaveNetwork.SIGNAL_VALUE)
     dispatcher.connect(_discoveryCompleted, ZWaveController.STATE_COMPLETED)
 
 def _disconnectSignals():
@@ -178,8 +190,9 @@ def _disconnectSignals():
     dispatcher.disconnect(_nodeRemoved, ZWaveNetwork.SIGNAL_NODE_REMOVED)
     dispatcher.disconnect(_assetAdded, ZWaveNetwork.SIGNAL_VALUE_ADDED)
     dispatcher.disconnect(_assetRemoved, ZWaveNetwork.SIGNAL_VALUE_REMOVED)
-    dispatcher.disconnect(_assetValueChanged, ZWaveNetwork.SIGNAL_VALUE_CHANGED)
-    dispatcher.disconnect(_assetValueChanged, ZWaveNetwork.SIGNAL_VALUE_REFRESHED)
+    #dispatcher.disconnect(_assetValueChanged, ZWaveNetwork.SIGNAL_VALUE_CHANGED)
+    dispatcher.disconnect(_assetValueRefreshed, ZWaveNetwork.SIGNAL_VALUE_REFRESHED)
+    dispatcher.disconnect(_assetValue, ZWaveNetwork.SIGNAL_VALUE)
     dispatcher.disconnect(_discoveryCompleted, ZWaveController.STATE_COMPLETED)
 
 def _buildZWaveOptions():
@@ -253,18 +266,24 @@ def _getData(cc):
         return cc.data_as_string
 
 def _addDevice(node):
-    '''adds the specified node to the cloud as a device. Also adds all the assets.'''
+    """adds the specified node to the cloud as a device. Also adds all the assets.
+    """
     _gateway.addDevice(node.node_id, node.product_name, node.type)
     for key, val in node.values.iteritems() :
         try:
-            if val.command_class:                           # if not related to a command class, then all other fields are 'none' as well, can't t much with them.
-                _gateway.addAsset(key, node.node_id, val.label.encode('ascii','ignore'), val.help.encode('ascii','ignore'), not val.is_read_only, _getAssetType(node, val), _getStyle(node, val))
-                _gateway.send(_getData(val), node.node_id, key)
+            if val.command_class and not str(val.genre) == 'System':                # if not related to a command class, then all other fields are 'none' as well, can't t much with them. System values are not interesting, it's about frames and such (possibly for future debugging...)
+                _addAsset(node, val)
         except:
             logging.exception('failed to sync device ' + str(node.node_id) + ' for module ' + _gateway._moduleName + ', asset: ' + str(key) + '.')
     if _CC_Battery in node.command_classes:
         _gateway.addAsset('failed', node.node_id, 'failed', 'true when the battery device is no longer responding and the controller has labeled it as a failed device.', False, 'boolean', 'Secondary')
 
+
+def _addAsset(node, value):
+    lbl = value.label.encode('ascii', 'ignore').replace('"', '\\"')        # make certain that we don't upload any illegal chars, also has to be ascii
+    hlp = value.help.encode('ascii', 'ignore').replace('"', '\\"')         # make certain that we don't upload any illegal chars, also has to be ascii
+    _gateway.addAsset(value.value_id, node.node_id, lbl, hlp, not value.is_read_only, _getAssetType(node, value), _getStyle(node, value))
+    _gateway.send(_getData(value), node.node_id, value.value_id)
 
 def _getAssetType(node, val):
     '''extract the asset type from the command class'''
@@ -281,19 +300,21 @@ def _getAssetType(node, val):
         type += "'integer'"
     else:
         type = '{"type": "string"'                              #small hack for now.
-    if val.max and val.max != val.min:
-        type += ', "maximum": ' + str(val.max)
-    if val.min and val.max != val.min:
-        type += ', "minimum": ' + str(val.min)
+
+    if dataType == 'Decimal' or dataType == 'Integer':
+        if val.max and val.max != val.min:
+            type += ', "maximum": ' + str(val.max)
+        if val.min and val.max != val.min:
+            type += ', "minimum": ' + str(val.min)
     if val.units:
         type += ', "unit": "' + val.units + '"'
-    if val.data_items and isinstance(val.data_items, list) and  not isinstance(val.data_items, basestring):
+    if val.data_items and isinstance(val.data_items, set):
         type += ', "enum": [' + ', '.join(['"' + y + '"' for y in val.data_items]) + ']'
     return type + "}"
 
 def _getStyle(node, val):
     '''check the value type, if it is the primary cc for the device, set is primary, if it is battery...'''
-    if str(val.type) == 'Config':
+    if str(val.genre) == 'Config':
         return 'Config'
     elif val.command_class == _CC_Battery:
         return 'Battery'
@@ -306,17 +327,29 @@ def _getStyle(node, val):
     return "Undefined"                  # if we get here, we don't know, so it is undefined.
 
 def _nodeAdded(node):
+    logging.info('node added: ' + str(node.node_id))
     _addDevice(node)
 
 def _nodeRemoved(node):
+    logging.info('node removed')
     _gateway.deleteDevice(node.node_id)
 
-def _assetAdded(node, val):
-    _gateway.addAsset(val, node.node_id, node.values[val].label, node.values[val].label.help, not node.values[val].is_read_only, getAssetType(node, val), getStyle(node, val))
-    _gateway.send(node.values[val].data_as_string, node.node_id, val)
+def _assetAdded(node, value):
+    logging.info('asset added: ' + str(value.value_id))
+    _addAsset(node, value)
 
-def _assetRemoved(node, val):
-    _gateway.deleteAsset(node.node_id, val)
+def _assetRemoved(node, value):
+    logging.info('asset removed: ' + str(value.value_id))
+    _gateway.deleteAsset(node.node_id, value)
 
-def _assetValueChanged(node, val):
-    _gateway.send(node.values[val].data_as_string, node.node_id, val)
+def _assetValue(network, node, value):
+    logging.info('asest value: ' + str(value.value_id))
+    _gateway.send(_getData(value), node.node_id, value.value_id)
+
+#def _assetValueChanged(network, node, value):
+#    logging.info('asset value changed: ' + str(value.value_id))
+#    _gateway.send(_getData(value), node.node_id, value.value_id)
+
+def _assetValueRefreshed(network, node, value):
+    logging.info('asset value refreshed: ' + str(value.value_id))
+    _gateway.send(_getData(value), node.node_id, value.value_id)

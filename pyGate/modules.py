@@ -3,6 +3,7 @@
 
 import logging
 import thread
+import threading
 import cloud
 
 modules = {}                                    # the list of dynamically loaded modules.
@@ -49,12 +50,19 @@ def syncDevices(full = False):
             except:
                 logging.exception('failed to sync devices for module ' + key + '.')
 
+def runModule(module):
+    """executes the run method of a single module, in a safe manner"""
+    try:
+        thread.start_new_thread(module.run, ())
+    except:
+        logging.exception('error while running module')
 
 def run():
     """run the main function of each module in it's own thread"""
     logging.info("starting up all plugins")
     if modules:
-        map(lambda x:thread.start_new_thread(x.run, ()), [mod for key, mod in modules.iteritems() if mod.run])
+        #map(lambda x:thread.start_new_thread(x.run, ()), [mod for key, mod in modules.iteritems() if hasattr(mod, 'run')])
+        map(lambda x: x.run(), [RunModule(mod, key) for key, mod in modules.iteritems() if hasattr(mod, 'run')])
 
 
 import zwave
@@ -99,3 +107,14 @@ class syncDeviceList(object):
         for x in self._list:
             x['id'] = cloud.stripDeviceId(x['name'])
 
+class RunModule(threading.Thread):
+    def __init__(self, module, name):
+        threading.Thread.__init__(self)
+        self.module = module
+        self.name = name
+
+    def run(self):
+        try:
+            self.module.run()
+        except Exception:
+            logging.error('error in run for module: ' + self.name)

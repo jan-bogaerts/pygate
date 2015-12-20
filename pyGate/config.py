@@ -26,7 +26,7 @@ def load():
         if configs.has_option('general', 'modules'):
             modulesStr = configs.get('general', 'modules')
             logging.info("modules: " + str(modulesStr))
-            modules = modulesStr.split(';')
+            modules = [ x.strip() for x in modulesStr.split(';')]
         if configs.has_option('general', 'gatewayId'):
             gatewayId = configs.get('general', 'gatewayId')
             logging.info("gatewayId: " + gatewayId)
@@ -72,15 +72,11 @@ def save():
     '''
     saves the global config data to the global config file. Called when config params have
     been changed, like the gatewayId
+    Will save the entire config object, but will first make certain that 'gatewayId, clientId and clientKey'
+    are up to date in the configs object.
     '''
-    global configs
-    configs = ConfigParser()
-    configs.add_section('general')
-    configs.set('general', 'modules', ';'.join(modules))
     configs.set('general', 'gatewayId', gatewayId)
     configs.set('general', 'clientId', clientId)
     configs.set('general', 'clientKey', clientKey)
-    configs.set('general', 'api server', apiServer)
-    configs.set('general', 'broker', broker)
     with open(rootConfigFileName, 'w') as f:
         configs.write(f)

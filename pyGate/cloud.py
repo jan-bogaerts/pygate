@@ -177,12 +177,12 @@ def send(module, device, asset, value):
     '''send value to the cloud
     thread save: only 1 thread can send at a time'''
     if device:                                                      # could be that there is no device: for gateway assets.
-        devId = getDeviceId(module, device)
+        device = getDeviceId(module, device)
     else:
-        devId = module
+        asset = getDeviceId(module, asset)
     _mqttLock.acquire()
     try:
-        IOT.send(value, devId, asset)
+        IOT.send(value, device, asset)
     finally:
         _mqttLock.release()
     if _sensorCallback:
