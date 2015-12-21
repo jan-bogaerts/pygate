@@ -27,6 +27,7 @@ _discoveryStateId = 'discoverState'   #id of asset
 _hardResetId = 'hardReset'   #id of asset
 _softResetId = 'softReset'   #id of asset
 _assignRouteId = 'assignRoute'
+_controllerStateId = 'controllerState'
 _CC_Battery = 0x80
 
 
@@ -70,10 +71,11 @@ def syncGatewayAssets(Full = False):
     update all, including assets
     '''
     #don't need to wait for the zwave server to be fully ready, don't need to query it for this call.
-    _gateway.addGatewayAsset(_discoveryStateId, 'discovery state', 'add/remove devices to the network', True,  '{"type" :"string", "enum": ["off","include","exclude"]}')
-    _gateway.addGatewayAsset(_hardResetId, 'hard reset', 'reset the controller to factory default', True, 'boolean')
-    _gateway.addGatewayAsset(_softResetId, 'soft reset', 'reset the controller, but keep network configuration settings', True, 'boolean')
-    _gateway.addGatewayAsset(_assignRouteId, 'assign route', 'assign a network return route from a node to another one', True, '{"type":"object", "properties": {"from":{"type": "integer"}, "to":{"type": "integer"} } }')
+    _gateway.addGatewayAsset(_discoveryStateId, 'zwave discovery state', 'add/remove devices to the network', True,  '{"type" :"string", "enum": ["off","include","exclude"]}')
+    _gateway.addGatewayAsset(_hardResetId, 'zwave hard reset', 'reset the controller to factory default', True, 'boolean')
+    _gateway.addGatewayAsset(_softResetId, 'zwave soft reset', 'reset the controller, but keep network configuration settings', True, 'boolean')
+    _gateway.addGatewayAsset(_assignRouteId, 'zwave assign route', 'assign a network return route from a node to another one', True, '{"type":"object", "properties": {"from":{"type": "integer"}, "to":{"type": "integer"} } }')
+    _gateway.addGatewayAsset(_controllerStateId, 'zwave controller state', 'the state of the controller', False, '{"type":"string", "enum": ["Normal", "Starting", "Cancel", "Error", "Waiting", "Sleeping", "InProgress", "Completed", "Failed", "NodeOk", "NodeFailed"] }')
 
 
 def run():
@@ -131,6 +133,7 @@ def onActuate(actuator, value):
     else:
         logging.error("zwave: unknown gateway actuator command: " + actuator)
 
+
 def _doHardReset():
     '''will send a hardware reset command to the controller.
     opzenzwave generates a lot of events during this operation, so louie signals
@@ -149,6 +152,7 @@ def _networkReset():
 
 def _discoveryCompleted():
     '''called when the discovery process is done'''
+    logging.info('discovery done')
     _gateway.send('off', None, _discoveryStateId)
 
 def _setupZWave():
@@ -174,6 +178,11 @@ def _waitForStartup():
 def _connectSignals():
     '''connect to all the louie signals (for values and nodes)'''
     dispatcher.connect(_nodeAdded, ZWaveNetwork.SIGNAL_NODE_ADDED)     #set up callback handling -> for when node is added/removed or value changed.
+    dispatcher.connect(_nodeEvent, ZWaveNetwork.SIGNAL_NODE_EVENT)
+    dispatcher.connect(_nodeNaming, ZWaveNetwork.SIGNAL_NODE_NAMING)
+    #dispatcher.connect(_nodeNew, ZWaveNetwork.SIGNAL_NODE_NEW)    #not working
+    #dispatcher.connect(_nodeReady, ZWaveNetwork.SIGNAL_NODE_READY)  #not working
+    dispatcher.connect(_nodeProtocolInfo, ZWaveNetwork.SIGNAL_NODE_PROTOCOL_INFO)  # not useful
     dispatcher.connect(_nodeRemoved, ZWaveNetwork.SIGNAL_NODE_REMOVED)
     dispatcher.connect(_assetAdded, ZWaveNetwork.SIGNAL_VALUE_ADDED)
     dispatcher.connect(_assetRemoved, ZWaveNetwork.SIGNAL_VALUE_REMOVED)
@@ -181,12 +190,20 @@ def _connectSignals():
     dispatcher.connect(_assetValueRefreshed, ZWaveNetwork.SIGNAL_VALUE_REFRESHED)
     dispatcher.connect(_assetValue, ZWaveNetwork.SIGNAL_VALUE)
     dispatcher.connect(_discoveryCompleted, ZWaveController.STATE_COMPLETED)
+    dispatcher.connect(_queriesDone, ZWaveNetwork.SIGNAL_NODE_QUERIES_COMPLETE)
+    dispatcher.connect(_msgCompete, ZWaveNetwork.SIGNAL_MSG_COMPLETE)
+    dispatcher.connect(_controllerCommand, ZWaveNetwork.SIGNAL_CONTROLLER_COMMAND)
 
 def _disconnectSignals():
     '''disconnects all the louie signals (for values and nodes). This is used
     while reseting the controllers.
     '''
     dispatcher.disconnect(_nodeAdded, ZWaveNetwork.SIGNAL_NODE_ADDED)     #set up callback handling -> for when node is added/removed or value changed.
+    dispatcher.disconnect(_nodeEvent, ZWaveNetwork.SIGNAL_NODE_EVENT)
+    dispatcher.disconnect(_nodeNaming, ZWaveNetwork.SIGNAL_NODE_NAMING)
+    #dispatcher.disconnect(_nodeNew, ZWaveNetwork.SIGNAL_NODE_NEW)
+    #dispatcher.disconnect(_nodeReady, ZWaveNetwork.SIGNAL_NODE_READY)
+    dispatcher.disconnect(_nodeProtocolInfo, ZWaveNetwork.SIGNAL_NODE_PROTOCOL_INFO)
     dispatcher.disconnect(_nodeRemoved, ZWaveNetwork.SIGNAL_NODE_REMOVED)
     dispatcher.disconnect(_assetAdded, ZWaveNetwork.SIGNAL_VALUE_ADDED)
     dispatcher.disconnect(_assetRemoved, ZWaveNetwork.SIGNAL_VALUE_REMOVED)
@@ -194,6 +211,9 @@ def _disconnectSignals():
     dispatcher.disconnect(_assetValueRefreshed, ZWaveNetwork.SIGNAL_VALUE_REFRESHED)
     dispatcher.disconnect(_assetValue, ZWaveNetwork.SIGNAL_VALUE)
     dispatcher.disconnect(_discoveryCompleted, ZWaveController.STATE_COMPLETED)
+    dispatcher.disconnect(_queriesDone, ZWaveNetwork.SIGNAL_NODE_QUERIES_COMPLETE)
+    dispatcher.disconnect(_msgCompete, ZWaveNetwork.SIGNAL_MSG_COMPLETE)
+    dispatcher.disconnect(_controllerCommand, ZWaveNetwork.SIGNAL_CONTROLLER_COMMAND)
 
 def _buildZWaveOptions():
     '''create the options object to start up the zwave server'''
@@ -268,7 +288,10 @@ def _getData(cc):
 def _addDevice(node):
     """adds the specified node to the cloud as a device. Also adds all the assets.
     """
-    _gateway.addDevice(node.node_id, node.product_name, node.type)
+    if node.product_name:                       #newly included devices arent queried fully yet, so create with dummy info, update later
+        _gateway.addDevice(node.node_id, node.product_name, node.type)
+    else:
+        _gateway.addDevice(node.node_id, 'unknown', node.type)
     for key, val in node.values.iteritems() :
         try:
             if val.command_class and not str(val.genre) == 'System':                # if not related to a command class, then all other fields are 'none' as well, can't t much with them. System values are not interesting, it's about frames and such (possibly for future debugging...)
@@ -283,7 +306,7 @@ def _addAsset(node, value):
     lbl = value.label.encode('ascii', 'ignore').replace('"', '\\"')        # make certain that we don't upload any illegal chars, also has to be ascii
     hlp = value.help.encode('ascii', 'ignore').replace('"', '\\"')         # make certain that we don't upload any illegal chars, also has to be ascii
     _gateway.addAsset(value.value_id, node.node_id, lbl, hlp, not value.is_read_only, _getAssetType(node, value), _getStyle(node, value))
-    _gateway.send(_getData(value), node.node_id, value.value_id)
+    # dont send the data yet, we have a seperate event for this
 
 def _getAssetType(node, val):
     '''extract the asset type from the command class'''
@@ -292,11 +315,11 @@ def _getAssetType(node, val):
     dataType = str(val.type)
 
     type = "{'type': "
-    if dataType == 'Bool':
+    if dataType == 'Bool' or dataType == 'Button':
         type += "'boolean'"
     elif dataType == 'Decimal':
         type += "'number'"
-    elif dataType == 'Integer':
+    elif dataType == 'Integer' or dataType == "Byte" or dataType == 'Int' or dataType == "Short":
         type += "'integer'"
     else:
         type = '{"type": "string"'                              #small hack for now.
@@ -326,20 +349,60 @@ def _getStyle(node, val):
             return 'Secondary'
     return "Undefined"                  # if we get here, we don't know, so it is undefined.
 
+
+def _queriesDone(node):
+    logging.info('queries done ')
+    _addDevice(node)
+    _network.controller.cancel_command()        # we also stop discovery after 1 item has been added.
+
+def _msgCompete():
+    logging.info('msg done ')
+
+def _controllerCommand(state):
+    #logging.info('controller command + ' + str(state))
+    _gateway.send(state, None, _controllerStateId)
+
+
 def _nodeAdded(node):
-    logging.info('node added: ' + str(node.node_id))
+    logging.info('node added: ' + str(node))
     _addDevice(node)
 
+def _nodeEvent(node, value):
+    logging.info('node event: ' + str(node) + ', event: ' + str(value))
+    dump(node)
+
+def _nodeNaming(node):
+    logging.info('node naming: ' + str(node))
+    _addDevice(node)   #we add here agai, cause it seems that from this point on, we have enough info to create the object completely
+
+#def _nodeNew(node):
+#    logging.info('node new: ' + str(node))
+#    dump(node)
+
+#def _nodeReady(node):
+#    logging.info('node ready: ' + str(node))
+#    dump(node)
+
+def _nodeProtocolInfo(node):
+    logging.info('node protocol info: ' + str(node))
+    name= _network.manager.GetNodeType(node.home_id, node.node_id)
+    logging.info('node protocol info: ' + name)
+
 def _nodeRemoved(node):
-    logging.info('node removed')
-    _gateway.deleteDevice(node.node_id)
+    try:
+        logging.info('node removed')
+        _gateway.deleteDevice(node.node_id)
+    except:
+        logging.exception('failed to remove node ' + str(node.node_id) )
 
 def _assetAdded(node, value):
     logging.info('asset added: ' + str(value.value_id))
+    #dump(value)
     _addAsset(node, value)
 
 def _assetRemoved(node, value):
     logging.info('asset removed: ' + str(value.value_id))
+    dump(node)
     _gateway.deleteAsset(node.node_id, value)
 
 def _assetValue(network, node, value):
@@ -353,3 +416,16 @@ def _assetValue(network, node, value):
 def _assetValueRefreshed(network, node, value):
     logging.info('asset value refreshed: ' + str(value.value_id))
     _gateway.send(_getData(value), node.node_id, value.value_id)
+
+
+def dump(obj):
+    'for testing'
+    for attr in dir(obj):
+        try:
+            if hasattr( obj, attr ):
+                if getattr(obj, attr):
+                    print( "obj.%s = %s" % (attr, getattr(obj, attr)))
+                else:
+                    print( "obj.%s = none" % (attr))
+        except:
+            logging.exception('failed to print device ' )

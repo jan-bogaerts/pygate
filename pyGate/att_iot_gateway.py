@@ -140,7 +140,7 @@ def addGatewayAsset(id, name, description, isActuator, assetType, style = "Undef
 def deleteAsset(device, id):    
     if not device:
         raise Exception("DeviceId not specified")
-    headers = {"Content-type": "application/json", "Auth-ClientKey": ClientKey, "Auth-ClientId": ClientId}
+    headers = _buildHeaders()
     url = "/device/" + device  + "/" + str(id)
 
     print("HTTP DELETE: " + url)
@@ -160,9 +160,8 @@ def addDevice(deviceId, name, description):
     
     if _RegisteredGateway == False:
         raise Exception('gateway must be registered')
-    #deviceId = "test"
-    # body = '{"title":"' + name + '","description":"' + description + '"type": "custom" }'
-    body = '{"title":"' + name + '","type": "custom" }'
+    body = '{"title":"' + name + '","description":"' + description + '", "type": "custom" }'
+    #body = '{"title":"' + name + '","type": "custom" }'
     headers = _buildHeaders()
     url = "/device/" + deviceId
     
@@ -193,7 +192,7 @@ def deleteDevice(deviceId):
         Deletes the specified device from the cloud.
         returns true when successful.
     '''
-    headers = {"Content-type": "application/json", "Auth-ClientKey": ClientKey, "Auth-ClientId": ClientId}
+    headers = _buildHeaders()
     url = "/Device/" + deviceId
 
     logging.info("HTTP DELETE: " + url)
