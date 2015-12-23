@@ -10,6 +10,7 @@ from louie import dispatcher #, All
 from openzwave.network import ZWaveNetwork
 
 import manager
+import networkMonitor
 
 class DataMessage:
     """use this class to create objects for sendAfterWaiting and sendAfterDone"""
@@ -45,6 +46,8 @@ def _controllerCommand(state):
             'send after done'
             manager.gateway.send(sendOnDone.value, None, sendOnDone.asset)
             sendOnDone = None
+        #if state == 'Error':
+        #    networkMonitor.restartNetwork()
     except:
         logging.exception('failed to process controller command ' + state )
 
@@ -52,10 +55,11 @@ def _controllerCommand(state):
 def _nodeAdded(node):
     try:
         global sendOnDone
-        logging.info('node added: ' + str(node))
-        manager.addDevice(node)                                                         # add from here, could be that we never get 'nodeNaming' event and that this is the only 'addDevice' that gets called
-        sendOnDone = DataMessage('off', manager.discoveryStateId)
-        manager.network.controller.cancel_command()                                     # we need to stop the include process cause a device has been added
+        if node.node_id != 1:                                                               # after a hard reset, an event is raised to add the 1st node, which is the controller, we don't add that as a device, too confusing for the user, that is the gateway.
+            logging.info('node added: ' + str(node))
+            manager.addDevice(node)                                                         # add from here, could be that we never get 'nodeNaming' event and that this is the only 'addDevice' that gets called
+            sendOnDone = DataMessage('off', manager.discoveryStateId)
+            manager.network.controller.cancel_command()                                     # we need to stop the include process cause a device has been added
     except:
         logging.exception('failed to add node ' + str(node) )
 

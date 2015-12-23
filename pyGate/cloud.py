@@ -163,6 +163,16 @@ def deleteDevice(module, deviceId):
     finally:
         _httpLock.release()
 
+def deleteDeviceFullName(name):
+    """delete device. Only use this if you know the full name (module + deviceId) of the device
+    and it's internal structure. In other words, if you have an id (name) that came directly from the cloud
+    """
+    _httpLock.acquire()
+    try:
+        return IOT.deleteDevice(name)
+    finally:
+        _httpLock.release()
+
 def getAssetState(module, deviceId, assetId):
     """get value of asset"""
     devId = getDeviceId(module, deviceId)

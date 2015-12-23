@@ -19,6 +19,8 @@ network = None                             # provides access to the zwave networ
 _CC_Battery = 0x80
 controllerStateId = 'controllerState'
 discoveryStateId = 'discoverState'   #id of asset
+networkStateId = 'networkState'
+deviceStateId = 'deviceState'
 
 
 def init(moduleName):
@@ -35,11 +37,11 @@ def syncDevices(existing, Full):
         if node.node_id != 1:
             found = next((x for x in existing if x['id'].encode('ascii','ignore') == str(node.node_id)), None)
             if not found:
-                _addDevice(node)
+                addDevice(node)
             else:
                 existing.remove(found)              # so we know at the end which ones have to be removed.
                 if Full:
-                    _addDevice(node)                # this will also refresh it
+                    addDevice(node)                # this will also refresh it
     for dev in existing:                        # all the items that remain in the 'existing' list, are no longer devices in this network, so remove them
         gateway.deleteDevice(dev['id'])
 
@@ -83,11 +85,9 @@ def _getAssetType(node, val):
     else:
         type = '{"type": "string"'                              #small hack for now.
 
-    if dataType == 'Decimal' or dataType == 'Integer':
-        if val.max and val.max != val.min:
-            type += ', "maximum": ' + str(val.max)
-        if val.min and val.max != val.min:
-            type += ', "minimum": ' + str(val.min)
+    if dataType == 'Decimal' or dataType == 'Integer' or dataType == "Byte" or dataType == 'Int' or dataType == "Short":
+        if (val.max or val.min) and val.max != val.min:
+            type += ', "maximum": ' + str(val.max) + ', "minimum": ' + str(val.min)
     if val.units:
         type += ', "unit": "' + val.units + '"'
     if val.data_items and isinstance(val.data_items, set):

@@ -2,12 +2,12 @@
 
 import logging
 import thread
-import threading
-import openzwave
-from openzwave.node import ZWaveNode
-from openzwave.value import ZWaveValue
-from openzwave.scene import ZWaveScene
-from openzwave.controller import ZWaveController
+# import threading
+# import openzwave
+# from openzwave.node import ZWaveNode
+# from openzwave.value import ZWaveValue
+# from openzwave.scene import ZWaveScene
+# from openzwave.controller import ZWaveController
 from openzwave.network import ZWaveNetwork
 from openzwave.option import ZWaveOption
 from louie import dispatcher
@@ -35,25 +35,25 @@ def connectToGateway(moduleName):
     _setupZWave()
 
 
-def syncDevices(existing, Full = False):
+def syncDevices(existing, full=False):
     '''optional
        allows a module to synchronize it's device list.
-       existing: the list of devices that are already known in the cloud for this module.
-       :param Full: when false, if device already exists, don't update, including assets. When true,
+       :param existing: the list of devices that are already known in the cloud for this module.
+       :param full: when false, if device already exists, don't update, including assets. When true,
         update all, including assets
     '''
     #if _readyEvent.wait(10):                         # wait for a max amount of timeto get the network ready, otherwise we contintue
     #    manager.syncDevices(existing, Full)
     #else:
     #    logging.error('failed to start the network in time, continuing')
-    manager.syncDevices(existing, Full)
+    manager.syncDevices(existing, full)
 
 
-def syncGatewayAssets(Full = False):
+def syncGatewayAssets(full=False):
     '''
     optional. Allows a module to synchronize with the cloud, all the assets that should come at the level
     of the gateway.
-    :param Full: when false, if device already exists, don't update, including assets. When true,
+    :param full: when false, if device already exists, don't update, including assets. When true,
     update all, including assets
     '''
     #don't need to wait for the zwave server to be fully ready, don't need to query it for this call.
@@ -62,12 +62,18 @@ def syncGatewayAssets(Full = False):
     manager.gateway.addGatewayAsset(_softResetId, 'zwave soft reset', 'reset the controller, but keep network configuration settings', True, 'boolean')
     manager.gateway.addGatewayAsset(_assignRouteId, 'zwave assign route', 'assign a network return route from a node to another one', True, '{"type":"object", "properties": {"from":{"type": "integer"}, "to":{"type": "integer"} } }')
     manager.gateway.addGatewayAsset(manager.controllerStateId, 'zwave controller state', 'the state of the controller', False, '{"type":"string", "enum": ["Normal", "Starting", "Cancel", "Error", "Waiting", "Sleeping", "InProgress", "Completed", "Failed", "NodeOk", "NodeFailed"] }')
+    manager.gateway.addGatewayAsset(manager.networkStateId, 'zwave network state', 'Represents the state for the network', False, '{"type":"string", "enum": ["Starting", "Failed", "Started", "Ready", "Stopped", "Resetted", "Awaked"] }')
+    manager.gateway.addGatewayAsset(manager.deviceStateId, 'zwave devices state', 'Represents the health of the device connectivity for the entire network', False, '{"type":"string", "enum": ["None queried", "Essentials queried", "Awake queried", "All queried", "All queried, some dead"] }')
 
 
 def run():
     ''' required
         main function of the plugin module'''
     #_readyEvent.wait()
+    manager.gateway.send("off", None, manager.discoveryStateId)     # set init state at begin of run, not when gateway asset get defined, cause that also gets called at refresh, and we don't want to give init states for network and such, but keep currents states.
+    manager.gateway.send("Starting", None, manager.controllerStateId)
+    manager.gateway.send("Starting", None, manager.networkStateId)
+    manager.gateway.send("None queried", None, manager.deviceStateId)
     events.connectSignals()
     networkMonitor.connectNetworkSignals()
     manager.start()

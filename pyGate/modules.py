@@ -46,9 +46,16 @@ def syncDevices(full = False):
         if hasattr(value, 'syncDevices'):
             logging.info("syncing devices for " +  key)
             try:
-                value.syncDevices(deviceList.filter(key))
+                subList = deviceList.filter(key)
+                deviceList.remove(subList)              # remove the sublist, so we can see at the end of the ride which 'modules' where present last time, but not anymore, so we can also remove those devices. Do before asking module to sync, cause it could modify the list.
+                value.syncDevices(subList, full)
             except:
                 logging.exception('failed to sync devices for module ' + key + '.')
+    for x in deviceList._list:                          # remove all devices related to modules which are no longer available.
+        try:
+            cloud.deleteDeviceFullName(x['id'])
+        except:
+            logging.exception('failed to clean up device with unrelated module: ' + str(x))
 
 def runModule(module):
     """executes the run method of a single module, in a safe manner"""
@@ -65,7 +72,7 @@ def run():
         map(lambda x: x.run(), [RunModule(mod, key) for key, mod in modules.iteritems() if hasattr(mod, 'run')])
 
 
-import zwave
+#import zwave
 
 def Actuate(module, device, actuator, value):
     '''Can be used as a generir method to send a command to an actuator managed by the specified module.
@@ -76,36 +83,44 @@ def Actuate(module, device, actuator, value):
         if module in modules:
             mod = modules[module]
         else:
-            logging.error('actuator request for unknown module: ' + str(module))
+            logging.error('actuator request for unknown module: %s, dev: %s, actuator: %s, value: %s' % str(module), str(device), str(actuator), str(value))
             return
     else:
         mod = module
-    if device:
-        if hasattr(mod, 'onDeviceActuate'):                                     # it's a gateway
-            mod.onDeviceActuate(device, actuator, value)
-        elif hasattr(mod, 'onActuate'):                                         # it'sa regular device
-            mod.onActuate(actuator, value)
-    elif hasattr(mod, 'onActuate'):
-            mod.onActuate(actuator, value)
+    try:
+        if device:
+            if hasattr(mod, 'onDeviceActuate'):                                     # it's a gateway
+                mod.onDeviceActuate(device, actuator, value)
+            elif hasattr(mod, 'onActuate'):                                         # it'sa regular device
+                mod.onActuate(actuator, value)
+        elif hasattr(mod, 'onActuate'):
+                mod.onActuate(actuator, value)
+    except:
+        logging.exception('error processing actuator request: module: %s, dev: %s, actuator: %s, value: %s' % str(module), str(device), str(actuator), str(value))
 
+
+def stripDeviceIds(list):
+    '''goes over the list items and converts the 'deviceIds' to local versions (strip module '''
+    for x in list:
+        x['id'] = cloud.stripDeviceId(x['name'])
 
 class syncDeviceList(object):
     """gets the full list of devices 1 time from the cloud and then allows filtered queries on the list"""
 
     def __init__(self):
-        self._list = []
-    
+        self._list = cloud.getDevices()
+
     def filter(self, key):
         """return a sublist, first make certain that we have the list."""
-        if not self._list:
-            self._list = cloud.getDevices()
-            self.stripDeviceIds()
-        return [x for x in self._list if  cloud.getModuleName(x['name']) == key]
+        result = [x for x in self._list if  cloud.getModuleName(x['name']) == key]
+        stripDeviceIds(result)       # only do for the requested list so that we have 'full' names for modules that have been removed
+        return result
 
-    def stripDeviceIds(self):
-        '''goes over the list items and converts the 'deviceIds' to local versions (strip module '''
-        for x in self._list:
-            x['id'] = cloud.stripDeviceId(x['name'])
+
+    def remove(self, list):
+        """remove a sublist from the current list"""
+        self._list = [x for x in self._list if x not in list]
+
 
 class RunModule(threading.Thread):
     def __init__(self, module, name):
@@ -118,3 +133,4 @@ class RunModule(threading.Thread):
             self.module.run()
         except Exception:
             logging.error('error in run for module: ' + self.name)
+
