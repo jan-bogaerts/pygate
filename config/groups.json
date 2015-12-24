@@ -1,0 +1,14 @@
+[
+  { "id": "allRollerShutters",
+    "actuators":[
+      { "module": "zwave",
+        "device": "2",
+        "asset": "level"
+      }
+    ],
+    "name": "all roller shutters",
+    "description": "move all roller shutters at the same time"
+    "profile": {"type": "integer", "minimum": 0, "maximum": 255}
+    "sleep": 0.2
+  }
+]

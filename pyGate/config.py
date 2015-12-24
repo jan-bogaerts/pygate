@@ -5,7 +5,8 @@ import os.path
 
 configs = None                                      #provides access to the configParser object for plug in modules
 
-modules = []                                        #all the mmodule names that should be loaded
+modules = []                                        #all the names of the plugins that handle devices/asset
+processors =[]                                      #all the names of the plugins that handle asset value changes
 gatewayId = None                                    # the id of the gateway 
 clientId = None                                     #authentication value
 clientKey = None                                    #authentication value
@@ -18,7 +19,7 @@ rootConfigFileName = configPath + 'pyGate.config'   # the path and filename of t
 
 def load():
     """Load config data"""
-    global configs, modules, gatewayId, clientId,clientKey, apiServer,broker
+    global configs, modules, processors, gatewayId, clientId,clientKey, apiServer,broker
     configs = ConfigParser()
     if configs.read(rootConfigFileName):
         logging.info("loading " + rootConfigFileName)
@@ -27,6 +28,10 @@ def load():
             modulesStr = configs.get('general', 'modules')
             logging.info("modules: " + str(modulesStr))
             modules = [ x.strip() for x in modulesStr.split(';')]
+        if configs.has_option('general', 'processors'):
+            processorsStr = configs.get('general', 'processors')
+            logging.info("processors: " + str(processorsStr))
+            processors = [ x.strip() for x in processorsStr.split(';')]
         if configs.has_option('general', 'gatewayId'):
             gatewayId = configs.get('general', 'gatewayId')
             logging.info("gatewayId: " + gatewayId)

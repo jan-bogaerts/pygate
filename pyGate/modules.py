@@ -1,5 +1,13 @@
 ﻿##########################################################
 # manage all the dynamically loaded modules of the gateway.
+# a module manages devices and or assets
+
+__author__ = 'Jan Bogaerts'
+__copyright__ = "Copyright 2015, AllThingsTalk"
+__credits__ = []
+__maintainer__ = "Jan Bogaerts"
+__email__ = "jb@allthingstalk.com"
+__status__ = "Prototype"  # "Development", or "Production"
 
 import logging
 import thread

@@ -1,22 +1,21 @@
 #!/usr/bin/env python
-from flask import Flask, render_template, Response, request
 import paho.mqtt.client as mqtt                # provides publish-subscribe messaging support
 import json
-
+from flask import Flask, render_template, Response, request
 import att_iot_gateway as IOT
 
+import webServer
 
 
-app = Flask(__name__)
-
-
-@app.route('/')
+@webServer.app.route('/')
 def index():
     return 'not supported'
 
 
-@app.route('/asset/<name>', methods=['PUT'])
-def index(name):
-    url = '/device/'  '/asset/' + name
-    IOT._sendData(request.url, request.data, IOT._buildHeaders(), 'PUT')
-    return 'not supported', 200
+@webServer.app.route('/asset/<name>', methods=['PUT'])
+def putAsset(name):
+    asset = json.loads(request.data)
+    url = '/device/' + asset['deviceId'] + '/asset/' + name
+    asset.remove('deviceId')                                            # this field is no longer allowed in the body
+    IOT._sendData(url, asset, IOT._buildHeaders(), 'PUT')
+    return 'ok', 200

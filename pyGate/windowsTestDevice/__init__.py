@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-
-#important: before running this demo, make certain that you import the library
-#'paho.mqtt.client' into python (https://pypi.python.org/pypi/paho-mqtt)
-
 import device
 from time import sleep                             #pause the app
 
@@ -20,10 +16,10 @@ def onActuate(id, value):
         value = value.lower()                        #make certain that the value is in lower case, for 'True' vs 'true'
         if value == "true":
             print("true on " + Out1Name)
-            IOT.send("true", Out1Id)                #provide feedback to the cloud that the operation was succesful
+            _device.send("true", Out1Id)                #provide feedback to the cloud that the operation was succesful
         elif value == "false":
             print("false on " + Out1Name)
-            IOT.send("false", Out1Id)                #provide feedback to the cloud that the operation was succesful
+            _device.send("false", Out1Id)                #provide feedback to the cloud that the operation was succesful
         else:
             print("unknown value: " + value)
     else:

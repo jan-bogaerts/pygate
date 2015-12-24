@@ -8,12 +8,14 @@ import time
 import config
 import modules
 import cloud
-import associations
+import processors
+import webServer
 
 
 config.load()
-associations.load()
-cloud.connect(modules.Actuate, associations.onAssetUpdated)
+cloud.connect(modules.Actuate, processors.onAssetValueChanged)
+webServer.run()                                             # we need web support before we can activate devices -> some might need it.
+processors.load(config.processors)
 modules.load(config.modules)
 modules.syncGatewayAssets()
 modules.syncDevices()
