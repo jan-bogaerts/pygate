@@ -11,3 +11,9 @@ app = Flask(__name__)
 
 def run():
     app.run(host='0.0.0.0', debug=True, threaded=True)
+
+
+
+@app.route('/<path:path>')
+def catch_all(path):
+    return 'You want path: %s' % path
