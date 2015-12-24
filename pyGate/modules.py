@@ -104,7 +104,10 @@ def Actuate(module, device, actuator, value):
         elif hasattr(mod, 'onActuate'):
                 mod.onActuate(actuator, value)
     except:
-        logging.exception('error processing actuator request: module: %s, dev: %s, actuator: %s, value: %s' % str(module), str(device), str(actuator), str(value))
+        if device:
+            logging.exception('error processing actuator request: module: {}, dev: {}, actuator: {}, value: {}'.format(str(module), str(device), str(actuator), str(value)))
+        else:
+            logging.exception('error processing actuator request: module: %s, dev: none, actuator: %s, value: %s' % str(module), str(actuator), str(value))
 
 
 def stripDeviceIds(list):

@@ -14,12 +14,12 @@ import webServer
 
 config.load()
 cloud.connect(modules.Actuate, processors.onAssetValueChanged)
-webServer.run()                                             # we need web support before we can activate devices -> some might need it.
 processors.load(config.processors)
 modules.load(config.modules)
 modules.syncGatewayAssets()
 modules.syncDevices()
 modules.run()
+webServer.run()
 while True:
     time.sleep(3)
 

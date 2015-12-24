@@ -14,6 +14,7 @@ import modules
 import config
 
 GROUPDEF_ID = 'groupDefs'                                                            #the id of the button, don't uses spaces. required for the att platform
+GROUPDEF_FILE = 'groups.json'
 
 _device = None
 _groups = {}
@@ -38,7 +39,10 @@ def onAssetValueChanged(module, device, asset, value):
 #callback: handles values sent from the cloudapp to the device
 def onActuate(id, value):
     if id == GROUPDEF_ID:
-        loadGroups(json.loads(value))
+        jsonVal = json.loads(value)
+        loadGroups(jsonVal)
+        saveGroups(value)
+        _device.send(jsonVal, id)
     elif id in _groups:
         _setValue(id, _groups[id], value)
     else:
@@ -50,18 +54,20 @@ def connectToGateway(moduleName):
     global _device
     _device = device.Device(moduleName, 'groups')
 
-def syncDevices(existing):
+
+def syncDevices(existing, full):
     '''optional
        allows a module to synchronize it's device list.
        existing: the list of devices that are already known in the cloud for this module.'''
     if not existing:
-        _device.createDevice('groups managaer', 'manage your device groups with single controls')
-        loadGroups(config.loadConfig('groups.json', True))
+        _device.createDevice('group manager', 'manage your device groups with single controls')
+        _device.addAsset(GROUPDEF_ID , 'group definitions', 'define all the groups', True, 'object')
+    loadGroups(config.loadConfig(GROUPDEF_FILE, True))                                          # alwaye need to load these, otherwise there is no mapping loaded in memory
 
 def _setValue(id, group, value):
     """send the new value to each actuator. Make certain that the electrical system doesn't get over burndend, so pause a little betweeen each actuator."""
     for actuator in group.acuators:
-        modules.actuate(actuator['module'], actuator['device'], actuator['asset'], value)
+        modules.Actuate(actuator['module'], actuator['device'], actuator['asset'], value)
         sleep(group.sleep)
     group.value = value
     _device.send(value, id)
@@ -74,6 +80,8 @@ def loadGroups(value):
     """load the groupings from a json structure, so that it's easy to execute the groups and store/update the value of the group
         This will also update the assets for each group in the cloud.
     """
+    _groups.clear()                                                         # before loading the data, make certain that any previous data has been removed.
+    _actuators.clear()
     for group in value:
         grp = Group(group['id'], group['actuators'], group['sleep'])        # also calculates the value for the group and builds the reverese list
         _groups[group['id']] = grp
@@ -83,8 +91,12 @@ def loadGroups(value):
                 _actuators[actName].add(grp)
             else:
                 _actuators[actName] = [grp]
-        _device.addAsset(group['id'], group['name'], group['description'], True, group['profile'])
+        _device.addAsset(group['id'], group['name'], group['description'], True, str(group['profile']))
 
+def saveGroups(value):
+    """save the groups back to the config"""
+    with open(config.configPath + GROUPDEF_FILE, 'w') as f:
+        f.write(value)
 
 class Group:
     def __init__(self, id, actuators, sleep):

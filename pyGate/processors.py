@@ -26,6 +26,6 @@ def onAssetValueChanged(module, device, asset, value):
         if mod.onAssetValueChanged:
             logging.info("running processor " +  key)
             try:
-                mod.onAssetValueChanged(key)
+                mod.onAssetValueChanged(module, device, asset, value)
             except:
                 logging.exception('failed to run procesor ' + key + ' to gateway.')
