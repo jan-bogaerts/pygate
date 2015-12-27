@@ -13,7 +13,7 @@ clientKey = None                                    #authentication value
 apiServer = 'api.smartliving.io'                    #the address of the api server to use
 broker = 'broker.smartliving.io'                    #the address of the broker
 
-configPath = '../config/'                           # the path to the folder that contains all the configs
+configPath = '../config/'                           # the path to the folder that contains all the configs. Warning: path to logging.config is set in pygate.py
 rootConfigFileName = configPath + 'pyGate.config'   # the path and filename of the main config file
 
 

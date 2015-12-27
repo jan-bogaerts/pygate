@@ -13,7 +13,7 @@ from time import sleep
 
 import manager
 
-
+logger = logging.getLogger('zwave')
 _restarter = None               # keeps track of the currently running network restarter object. We only want 1 at a time.
 
 def restartNetwork():
@@ -66,19 +66,19 @@ def _allQueriedSomeDead():
 
 def _sendNetworkState(value):
     try:
-        logging.info(value)
+        logger.info(value)
         #dump(value)
         manager.gateway.send(value, None, manager.networkStateId)
     except:
-        logging.exception('failed to send network state: ' + value)
+        logger.exception('failed to send network state: ' + value)
 
 def _sendDeviceState(value):
     try:
-        logging.info(value)
+        logger.info(value)
         #dump(value)
         manager.gateway.send(value, None, manager.deviceStateId)
     except:
-        logging.exception('failed to send network state: ' + value )
+        logger.exception('failed to send network state: ' + value )
 
 def disconnectNetworkSignals():
     dispatcher.disconnect(_networkFailed, ZWaveNetwork.SIGNAL_NETWORK_FAILED)
@@ -125,5 +125,5 @@ class RestartManager(threading.Thread):
                 if manager.network.state == manager.network.STATE_STARTED:
                     started = True
             except Exception:
-                logging.error('error while trying to restart the zwave network')
+                logger.error('error while trying to restart the zwave network')
         _restarter = None                   # when we have succesfully restarted the network, this object can die and if the network were to fail again, a new object can be created

@@ -12,12 +12,13 @@ import os.path
 import config
 
 _devClasses = {}
+logger = logging.getLogger('zwave')
 
 def _loadFile():
     """loads the xml file in memory.
     The file is part of the openzwave distribution"""
     if not config.configs.has_option('zwave', 'device_classes.xml path'):
-        logging.error('zwave path to configuration files missing: config')
+        logger.error('zwave path to configuration files missing: config')
         return
 
     file = config.configs.get('zwave', 'device_classes.xml path')
@@ -37,7 +38,7 @@ def _loadFile():
                     children[int(child.attrib['key'], 16)] = [int(x, 16) for x in child.attrib['command_classes'].split(',')]
             _devClasses[int(generic.attrib['key'], 16)] = specific
     else:
-        logging.error('invalid path to device_classes.xml: ' + file + ". Please check the config parameter [zwave] 'device_classes.xml path'")
+        logger.error('invalid path to device_classes.xml: ' + file + ". Please check the config parameter [zwave] 'device_classes.xml path'")
 
 def getPrimaryCCFor(generic, specific):
     '''get the primary command class(es) for a device with the specified generic and specific device class values'''
@@ -52,6 +53,6 @@ def getPrimaryCCFor(generic, specific):
                     return specific
                 return generic['cc']
     except:
-        logging.exception("failed to convert device_classes.xml, can't detect primary and secondary assets")
+        logger.exception("failed to convert device_classes.xml, can't detect primary and secondary assets")
     return None
 

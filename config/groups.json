@@ -3,7 +3,35 @@
     "actuators":[
       { "module": "zwave",
         "device": "2",
-        "asset": "level"
+        "asset": "72057594076299265"
+      },
+      { "module": "zwave",
+        "device": "3",
+        "asset": "72057594093076481"
+      },
+      { "module": "zwave",
+        "device": "4",
+        "asset": "72057594109853697"
+      },
+      { "module": "zwave",
+        "device": "5",
+        "asset": "72057594126630913"
+      },
+      { "module": "zwave",
+        "device": "6",
+        "asset": "72057594143408129"
+      },
+      { "module": "zwave",
+        "device": "7",
+        "asset": "72057594160185345"
+      },
+      { "module": "zwave",
+        "device": "8",
+        "asset": "72057594176962561"
+      },
+      { "module": "zwave",
+        "device": "9",
+        "asset": "72057594193739777"
       }
     ],
     "name": "all roller shutters",

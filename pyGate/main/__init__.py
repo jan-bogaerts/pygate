@@ -10,11 +10,15 @@ __status__ = "Prototype"  # "Development", or "Production"
 # this is done through gateway assets that don't belong to any other plugin
 ##################################################
 
+import logging
+
 import cloud
 import modules
 
 _moduleName = None
 refreshGatewayId = '1'
+
+logger = logging.getLogger('main')
 
 def connectToGateway(moduleName):
     '''optional
@@ -32,4 +36,4 @@ def onActuate(id, value):
         modules.syncGatewayAssets(True)
         modules.syncDevices(True)
     else:
-        print("unknown actuator: " + id)
+        logger.error("unknown actuator: " + id)

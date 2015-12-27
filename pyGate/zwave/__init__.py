@@ -26,6 +26,8 @@ _hardResetId = 'hardReset'   #id of asset
 _softResetId = 'softReset'   #id of asset
 _assignRouteId = 'assignRoute'
 
+logger = logging.getLogger('zwave')
+
 
 def connectToGateway(moduleName):
     '''optional
@@ -45,7 +47,7 @@ def syncDevices(existing, full=False):
     #if _readyEvent.wait(10):                         # wait for a max amount of timeto get the network ready, otherwise we contintue
     #    manager.syncDevices(existing, Full)
     #else:
-    #    logging.error('failed to start the network in time, continuing')
+    #    logger.error('failed to start the network in time, continuing')
     manager.syncDevices(existing, full)
 
 
@@ -96,11 +98,11 @@ def onDeviceActuate(device, actuator, value):
             if newValue != None:
                 val.data = newValue
             else:
-                logging.error('failed to set actuator: ' + actuator + " for device: " + device + ", unknown data type: " + dataType)
+                logger.error('failed to set actuator: ' + actuator + " for device: " + device + ", unknown data type: " + dataType)
         else:
-            logging.error("failed to set actuator: can't find actuator " + actuator + " for device " + node)
+            logger.error("failed to set actuator: can't find actuator " + actuator + " for device " + node)
     else:
-        logging.error("failed to  to set actuator: can't find device " + device)
+        logger.error("failed to  to set actuator: can't find device " + device)
 
 def onActuate(actuator, value):
     '''callback for actuators on the gateway level'''
@@ -117,14 +119,14 @@ def onActuate(actuator, value):
     elif actuator == _hardResetId:                  #reset controller
         _doHardReset()
     elif actuator == _softResetId:                  #reset controller
-        logging.info("soft-resetting network")
+        logger.info("soft-resetting network")
         manager.network.controller.soft_reset()
     elif actuator == _assignRouteId:
         params = json.loads(value)
-        logging.info("re-assigning route from: " + params['from'] + ", to: " + params['to'])
+        logger.info("re-assigning route from: " + params['from'] + ", to: " + params['to'])
         manager.network.controller.begin_command_assign_return_route(params['from'], params['to'])
     else:
-        logging.error("zwave: unknown gateway actuator command: " + actuator)
+        logger.error("zwave: unknown gateway actuator command: " + actuator)
 
 
 def _doHardReset():
@@ -132,7 +134,7 @@ def _doHardReset():
     opzenzwave generates a lot of events during this operation, so louie signals
     (for nodes & value signals) have to be detached during this operation
     '''
-    logging.info("resetting network")
+    logger.info("resetting network")
     events.disconnectSignals()
     dispatcher.connect(_networkReset, ZWaveNetwork.SIGNAL_NETWORK_RESETTED)
     manager.network.controller.hard_reset()
@@ -141,7 +143,7 @@ def _networkReset():
     '''make certain that all the signals are reconnected.'''
     dispatcher.disconnect(_networkReset, ZWaveNetwork.SIGNAL_NETWORK_RESETTED)  # no longer need to monitor this?
     events.connectSignals()
-    logging.info("network reset")
+    logger.info("network reset")
 
 def _setupZWave():
     '''iniializes the zwave network driver'''
@@ -165,19 +167,19 @@ def _setupZWave():
 def _buildZWaveOptions():
     '''create the options object to start up the zwave server'''
     if not config.configs.has_option('zwave', 'port'):
-        logging.error('zwave configuration missing: port')
+        logger.error('zwave configuration missing: port')
         return
     if not config.configs.has_option('zwave', 'logLevel'):
-        logging.error('zwave configuration missing: logLevel')
+        logger.error('zwave configuration missing: logLevel')
         return
     if not config.configs.has_option('zwave', 'config'):
-        logging.error("zwave 'path to configuration files' missing: config")
+        logger.error("zwave 'path to configuration files' missing: config")
         return
 
     port = config.configs.get('zwave', 'port')
-    logging.info('zwave server on port: ' + port)
+    logger.info('zwave server on port: ' + port)
     logLevel = config.configs.get('zwave', 'logLevel')
-    logging.info('zwave log level: ' + logLevel)
+    logger.info('zwave log level: ' + logLevel)
 
     options = ZWaveOption(port, config_path=config.configs.get('zwave', 'config'), user_path=".", cmd_line="")
     options.set_log_file("OZW_Log.log")

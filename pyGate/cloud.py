@@ -100,6 +100,10 @@ def _storeConfig():
 def addAsset(module, deviceId, id, name, description, isActuator, assetType, style = "Undefined"):
     """add asset"""
     devId = getDeviceId(module, deviceId)
+    if len(name) > 140:
+        newName = name[:140]
+        logging.warning('length of asset name too long, max 140 chars allowed: ' + name + ", truncated to: :" + newName)
+        name = newName
     _httpLock.acquire()
     try:
         IOT.addAsset(id, devId, name, description, isActuator, assetType, style)

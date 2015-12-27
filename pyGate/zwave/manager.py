@@ -12,6 +12,7 @@ import time
 from gateway import Gateway;
 import deviceClasses
 
+logger = logging.getLogger('zwave')
 
 gateway = None                             # provides access to the cloud
 network = None                             # provides access to the zwave network
@@ -30,7 +31,7 @@ def init(moduleName):
 
 def start():
     network.start()
-    logging.info(gateway._moduleName + ' running')
+    logger.info(gateway._moduleName + ' running')
 
 def syncDevices(existing, Full):
     for key, node in network.nodes.iteritems():
@@ -49,18 +50,22 @@ def syncDevices(existing, Full):
 def addDevice(node):
     """adds the specified node to the cloud as a device. Also adds all the assets.
     """
-    if node.product_name:                       #newly included devices arent queried fully yet, so create with dummy info, update later
-        gateway.addDevice(node.node_id, node.product_name, node.type)
-    else:
-        gateway.addDevice(node.node_id, 'unknown', node.type)
-    for key, val in node.values.iteritems() :
-        try:
-            if val.command_class and not str(val.genre) == 'System':                # if not related to a command class, then all other fields are 'none' as well, can't t much with them. System values are not interesting, it's about frames and such (possibly for future debugging...)
-                addAsset(node, val)
-        except:
-            logging.exception('failed to sync device ' + str(node.node_id) + ' for module ' + gateway._moduleName + ', asset: ' + str(key) + '.')
-    if _CC_Battery in node.command_classes:
-        gateway.addAsset('failed', node.node_id, 'failed', 'true when the battery device is no longer responding and the controller has labeled it as a failed device.', False, 'boolean', 'Secondary')
+    try:
+        if node.product_name:                       #newly included devices arent queried fully yet, so create with dummy info, update later
+            gateway.addDevice(node.node_id, node.product_name, node.type)
+        else:
+            gateway.addDevice(node.node_id, 'unknown', node.type)
+        items = dict(node.values)                                         # take a copy of the list cause if the network is still refreshing/loading, the list could get updated while in the loop
+        for key, val in items.iteritems():
+            try:
+                if val.command_class and not str(val.genre) == 'System':                # if not related to a command class, then all other fields are 'none' as well, can't t much with them. System values are not interesting, it's about frames and such (possibly for future debugging...)
+                    addAsset(node, val)
+            except:
+                logger.exception('failed to sync device ' + str(node.node_id) + ' for module ' + gateway._moduleName + ', asset: ' + str(key) + '.')
+        if _CC_Battery in node.command_classes:
+            gateway.addAsset('failed', node.node_id, 'failed', 'true when the battery device is no longer responding and the controller has labeled it as a failed device.', False, 'boolean', 'Secondary')
+    except:
+        logger.exception('error while adding device: ' + str(node))
 
 
 def addAsset(node, value):
@@ -72,7 +77,7 @@ def addAsset(node, value):
 def _getAssetType(node, val):
     '''extract the asset type from the command class'''
 
-    logging.info("node type: " + val.type)            # for debugging
+    logger.info("node type: " + val.type)            # for debugging
     dataType = str(val.type)
 
     type = "{'type': "
@@ -107,40 +112,3 @@ def _getStyle(node, val):
                 return 'Primary'
             return 'Secondary'
     return "Undefined"                  # if we get here, we don't know, so it is undefined.
-
-def waitForAwake():
-    '''waits until the zwave network is awakened'''
-    time_started = 0
-    logging.info("zwave: Waiting for network awaked")
-    for i in range(0,300):
-        if network.state >= network.STATE_AWAKED:
-            logging.info("zwave: network awake")
-            break
-        else:
-            time.sleep(1.0)
-    if network.state < network.STATE_AWAKED:
-        logging.error("zwave: Network is not awake but continue anyway")
-    logging.info("zwave: Use openzwave library : %s" % network.controller.ozw_library_version)
-    logging.info("zwave: Use python library : %s" % network.controller.python_library_version)
-    logging.info("zwave: Use ZWave library : %s" % network.controller.library_description)
-    logging.info("zwave: Network home id : %s" % network.home_id_str)
-    logging.info("zwave: Controller node id : %s" % network.controller.node.node_id)
-    logging.info("zwave: Controller node version : %s" % (network.controller.node.version))
-    logging.info("zwave: Nodes in network : %s" % network.nodes_count)
-
-def waitForReady():
-    '''waits until the zwave network is ready'''
-    logging.info("zwave: Waiting for network ready")
-    for i in range(0,30):
-        if network.state >= network.STATE_READY:
-            logging.info("zwave: network ready")
-            break
-        else:
-            time.sleep(1.0)
-    if not network.is_ready:
-        logging.info("zwave: Network is not ready but continue anyway")
-    logging.info("zwave: Controller capabilities : %s" % network.controller.capabilities)
-    logging.info("zwave: Controller node capabilities : %s" % network.controller.node.capabilities)
-    logging.info("zwave: Nodes in network : %s" % network.nodes_count)
-    logging.info("zwave: Driver statistics : %s" % network.controller.stats)
-
