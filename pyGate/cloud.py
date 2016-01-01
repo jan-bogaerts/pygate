@@ -186,6 +186,14 @@ def getAssetState(module, deviceId, assetId):
     finally:
         _httpLock.release()
 
+def _sendData(url, asset, method):
+    """secure manner for calling low level 'sendData to IOT connection"""
+    _httpLock.acquire()
+    try:
+        IOT._sendData(url, str(asset), IOT._buildHeaders(), 'PUT')
+    finally:
+        _httpLock.release()
+
 
 def send(module, device, asset, value):
     '''send value to the cloud

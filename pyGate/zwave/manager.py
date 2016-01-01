@@ -9,7 +9,7 @@ __status__ = "Prototype"  # "Development", or "Production"
 import logging
 import time
 
-from gateway import Gateway;
+from gateway import Gateway
 import deviceClasses
 
 logger = logging.getLogger('zwave')
