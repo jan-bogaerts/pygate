@@ -60,7 +60,7 @@ def getAction(device, words):
     if 'omhoog' in words or 'open' in words:
         actuator = [act for act in node.values.iteritems() if act.label == 'Open']
         return actuator, True
-    elif 'beneden' in words or 'toe' in words:
+    elif 'beneden' in words or 'toe' in words or 'sluiten' in words:
         """close something"""
         actuator = [act for act in node.values.iteritems() if act.label == 'Close']
         return actuator, True
