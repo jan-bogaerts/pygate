@@ -79,22 +79,25 @@ def onDeviceActuate(device, actuator, value):
     '''called when an actuator command is received'''
     node = manager.network.nodes[int(device)]          # the device Id is received as a string, zwave needs ints...
     if node:
-        val = node.values[long(actuator)]
-        if val:
-            dataType = str(val.type)
-            if dataType == 'Bool':
-                value = value.lower() == 'true'
-            elif dataType == 'Decimal':
-                value = float(value)
-            elif dataType == 'Integer':
-                value = int(value)
-            newValue = val.check_data(value)        #checks and possibly does some convertions
-            if newValue != None:
-                val.data = newValue
-            else:
-                logger.error('failed to set actuator: ' + actuator + " for device: " + device + ", unknown data type: " + dataType)
+        if actuator == 'location':                      # location is a special case
+            node.location = value
         else:
-            logger.error("failed to set actuator: can't find actuator " + actuator + " for device " + node)
+            val = node.values[long(actuator)]
+            if val:
+                dataType = str(val.type)
+                if dataType == 'Bool':
+                    value = value.lower() == 'true'
+                elif dataType == 'Decimal':
+                    value = float(value)
+                elif dataType == 'Integer':
+                    value = int(value)
+                newValue = val.check_data(value)        #checks and possibly does some convertions
+                if newValue != None:
+                    val.data = newValue
+                else:
+                    logger.error('failed to set actuator: ' + actuator + " for device: " + device + ", unknown data type: " + dataType)
+            else:
+                logger.error("failed to set actuator: can't find actuator " + actuator + " for device " + node)
     else:
         logger.error("failed to  to set actuator: can't find device " + device)
 

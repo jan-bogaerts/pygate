@@ -80,8 +80,6 @@ def run():
         map(lambda x: x.run(), [RunModule(mod, key) for key, mod in modules.iteritems() if hasattr(mod, 'run')])
 
 
-#import zwave
-
 def Actuate(module, device, actuator, value):
     '''Can be used as a generir method to send a command to an actuator managed by the specified module.
     The function will figure out the most appropriate callback, depending on the presence of a device or not

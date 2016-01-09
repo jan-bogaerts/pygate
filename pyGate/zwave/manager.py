@@ -56,9 +56,10 @@ def addDevice(node):
         else:
             gateway.addDevice(node.node_id, 'unknown', node.type)
         items = dict(node.values)                                         # take a copy of the list cause if the network is still refreshing/loading, the list could get updated while in the loop
+        gateway.addAsset('location', node.node_id, 'location', 'the physical location of the device', True, 'string', 'Config')
         for key, val in items.iteritems():
             try:
-                if val.command_class and not str(val.genre) == 'System':                # if not related to a command class, then all other fields are 'none' as well, can't t much with them. System values are not interesting, it's about frames and such (possibly for future debugging...)
+                if val.command_class and not str(val.genre).lower() == 'system':                # if not related to a command class, then all other fields are 'none' as well, can't t much with them. System values are not interesting, it's about frames and such (possibly for future debugging...)
                     addAsset(node, val)
             except:
                 logger.exception('failed to sync device ' + str(node.node_id) + ' for module ' + gateway._moduleName + ', asset: ' + str(key) + '.')
