@@ -1,5 +1,5 @@
 ﻿import logging
-import att_iot_gateway as IOT                              #provide cloud support
+import att_iot_gateway.att_iot_gateway as IOT                              #provide cloud support
 import threading
 import time
 from uuid import getnode as get_mac

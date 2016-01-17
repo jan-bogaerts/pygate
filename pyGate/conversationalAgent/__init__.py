@@ -28,7 +28,7 @@ def connectToGateway(moduleName):
 
 
 def syncGatewayAssets():
-    cloud.addGatewayAsset(_moduleName, conversationId , 'converstaion', 'talk to the gateway', True, 'string')
+    cloud.addGatewayAsset(_moduleName, conversationId , 'conversation', 'talk to the gateway', True, 'string')
 
 #callback: handles values sent from the cloudapp to the device
 def onActuate(id, value):
@@ -49,18 +49,22 @@ def processInput(value):
 
 def getDevice(words):
     """look up the device, currently simple"""
-    zwave = modules['zwave']
+    zwave = modules.modules['zwave']
 
     for key, node in zwave.manager.network.nodes.iteritems():
-        if node.location in words:
-            return zwave, node
-    return none
+        if str(node.location) in words:
+            return 'zwave', node
+    return None
 
 def getAction(device, words):
     if 'omhoog' in words or 'open' in words:
-        actuator = [act for act in node.values.iteritems() if act.label == 'Open']
-        return actuator, True
-    elif 'beneden' in words or 'toe' in words or 'sluiten' in words:
+        actuator = [act for key, act in device.values.iteritems() if act.label == 'Level']
+        if actuator:
+            actuator = actuator[0].value_id
+        return actuator, 99
+    elif 'beneden' in words or 'toe' in words or 'sluiten' in words or 'close' in words:
         """close something"""
-        actuator = [act for act in node.values.iteritems() if act.label == 'Close']
-        return actuator, True
+        actuator = [act for key, act in device.values.iteritems() if act.label == 'Level']
+        if actuator:
+            actuator = actuator[0].value_id
+        return actuator, 0

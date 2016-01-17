@@ -16,13 +16,14 @@ logger = logging.getLogger('zwave')
 
 class DataMessage:
     """use this class to create objects for sendAfterWaiting and sendAfterDone"""
-    def __init__(self, value, asset):
+    def __init__(self, value, asset, device = None):
         """
         :param value: the value to send
         :param asset: the asset to send the value for
         """
         self.value = value
         self.asset = asset
+        self.device = device
 
 sendAfterWaiting = None                             # this data structure contains the asset + it's value that should be sent to to the cloud when the controller's state becomes 'waiting'
 sendOnDone = None                                   # this data structure contains the asset + it's value that should be sent to to the cloud when the controller's state becomes 'Completed', Cancel, Error or Failed
@@ -42,10 +43,10 @@ def _controllerCommand(state):
         global sendOnDone, sendAfterWaiting
         manager.gateway.send(state, None, manager.controllerStateId)
         if state == 'Waiting' and sendAfterWaiting:
-            manager.gateway.send(sendAfterWaiting.value, None, sendAfterWaiting.asset)
+            manager.gateway.send(sendAfterWaiting.value, sendAfterWaiting.device, sendAfterWaiting.asset)
             sendAfterWaiting = None
         elif sendOnDone and state in ['Completed', 'Cancel', 'Error', 'Failed']:
-            manager.gateway.send(sendOnDone.value, None, sendOnDone.asset)
+            manager.gateway.send(sendOnDone.value, sendOnDone.device, sendOnDone.asset)
             sendOnDone = None
         #if state == 'Error':
         #    networkMonitor.restartNetwork()
@@ -55,6 +56,7 @@ def _controllerCommand(state):
 def _stopDiscovery():
     """turns the discovery mode off, if needed (discovery still running)"""
     global sendOnDone
+    logger.info("stop discovery requested, current state: " + manager.network.controller.ctrl_last_state)
     if manager.network.controller.ctrl_last_state == 'InProgress':
         sendOnDone = DataMessage('off', manager.discoveryStateId)
         manager.network.controller.cancel_command()                                     # we need to stop the include process cause a device has been added
@@ -70,9 +72,18 @@ def _nodeAdded(node):
 
 def _nodeNaming(node):
     try:
-        logger.info('node naming: ' + str(node))
-        manager.addDevice(node)                         #we add here again, cause it seems that from this point on, we have enough info to create the object completely. Could be that 'nodeAdded' was not called?
-        _stopDiscovery()                                # if not already done
+        global sendOnDone
+        if manager.network.controller.ctrl_last_state != 'Normal':
+            logger.info('node renamed: ' + str(node))
+            manager.addDevice(node)                         #we add here again, cause it seems that from this point on, we have enough info to create the object completely. Could be that 'nodeAdded' was not called?
+            _stopDiscovery()                                # if not already done
+        elif sendOnDone:                                    # when the location asset has changed, we get this event, so let the cloud know that it was updated ok.
+            logger.info('node prop changed: ' + str(node))
+            manager.gateway.send(sendOnDone.value, sendOnDone.device, sendOnDone.asset)
+            sendOnDone = None
+        else:
+            logger.info('node props queried (should only be during start): ' + str(node))
+
     except:
         logger.exception('failed to remove node ' + str(node) )
 
@@ -88,9 +99,11 @@ def _nodeRemoved(node):
 
 def _assetAdded(node, value):
     try:
-        logger.info('asset added: ' + str(value))
-        #dump(value)
-        manager.addAsset(node, value)
+        if manager.network.controller.ctrl_last_state != 'Normal':          # when the controller is restarted, all devices are also queried, at that time, we don't need to add devices, it is already added during the sync period, and all assets have also been refreshed already. This call is only needed for adding devices (in case some assets were missed during discovery)
+            logger.info('asset added: ' + str(value))
+            manager.addAsset(node, value)
+        else:
+            logger.info('asset found: ' + str(value) + ", should only happen during startup, current state: " + manager.network.controller.ctrl_last_state)
     except:
         logger.exception('failed to add asset for node: ' + str(node) + ', asset: ' + str(value) )
 

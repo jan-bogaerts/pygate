@@ -81,11 +81,12 @@ def onDeviceActuate(device, actuator, value):
     if node:
         if actuator == 'location':                      # location is a special case
             node.location = value
+            events.sendOnDone = events.DataMessage(value, 'location', device)               # when the operation is done, we get an event from the controller, when this happened, update the cloud
         else:
             val = node.values[long(actuator)]
             if val:
                 dataType = str(val.type)
-                if dataType == 'Bool':
+                if dataType == 'Bool' or dataType == "Button":
                     value = value.lower() == 'true'
                 elif dataType == 'Decimal':
                     value = float(value)
