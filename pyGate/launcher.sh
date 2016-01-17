@@ -14,7 +14,9 @@ writelog "Starting"
 while true ; do
   #check for network connectivity
   wget -q --tries=10 --timeout=99 --spider http://google.com
+  sleep 1
   if [ $? -eq 0 ]; then
+        ntpdate -b -s -u pool.ntp.org   # update the time, bb has not external clock
         cd /root/pygate/pyGate
         # pause a little, if we don't then the zwave stack crashes cause it's started too fast. With the delay, everything is ok.
         sleep 1

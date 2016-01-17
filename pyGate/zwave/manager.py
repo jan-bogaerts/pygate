@@ -42,19 +42,21 @@ def syncDevices(existing, Full):
             else:
                 existing.remove(found)              # so we know at the end which ones have to be removed.
                 if Full:
-                    addDevice(node)                # this will also refresh it
+                    addDevice(node, True)                # this will also refresh it
     for dev in existing:                        # all the items that remain in the 'existing' list, are no longer devices in this network, so remove them
         gateway.deleteDevice(dev['id'])
 
 
-def addDevice(node):
+def addDevice(node, update = False):
     """adds the specified node to the cloud as a device. Also adds all the assets.
     """
     try:
         if node.product_name:                       #newly included devices arent queried fully yet, so create with dummy info, update later
-            gateway.addDevice(node.node_id, node.product_name, node.type)
+            name = node.product_name
         else:
-            gateway.addDevice(node.node_id, 'unknown', node.type)
+            name = 'unknown'
+        if not update:                              # for an update, we don't need to do anyhthing for the device, only the assets
+            gateway.addDevice(node.node_id, name, node.type)
         items = dict(node.values)                                         # take a copy of the list cause if the network is still refreshing/loading, the list could get updated while in the loop
         gateway.addAsset('location', node.node_id, 'location', 'the physical location of the device', True, 'string', 'Config')
         for key, val in items.iteritems():
