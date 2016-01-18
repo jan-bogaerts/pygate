@@ -2,3 +2,4 @@ att-iot-gateway==0.2.0
 paho-mqtt==1.1
 PyYAML==3.11
 Louie==1.1
+Flask

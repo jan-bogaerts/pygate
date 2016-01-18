@@ -18,6 +18,7 @@ gateway = None                             # provides access to the cloud
 network = None                             # provides access to the zwave network
 
 _CC_Battery = 0x80
+_CC_MultiLevelSwitch = 0x26
 controllerStateId = 'controllerState'
 discoveryStateId = 'discoverState'   #id of asset
 networkStateId = 'networkState'
@@ -95,12 +96,18 @@ def _getAssetType(node, val):
 
     if dataType == 'Decimal' or dataType == 'Integer' or dataType == "Byte" or dataType == 'Int' or dataType == "Short":
         if (val.max or val.min) and val.max != val.min:
-            type += ', "maximum": ' + str(val.max) + ', "minimum": ' + str(val.min)
+            type = addMinMax(type, node, val)
     if val.units:
         type += ', "unit": "' + val.units + '"'
     if val.data_items and isinstance(val.data_items, set):
         type += ', "enum": [' + ', '.join(['"' + y + '"' for y in val.data_items]) + ']'
     return type + "}"
+
+def addMinMax(type, node, val):
+    if val.command_class == _CC_MultiLevelSwitch:
+        return type + ', "maximum": 99, "minimum": 0'
+    else:
+        return type + ', "maximum": ' + str(val.max) + ', "minimum": ' + str(val.min)
 
 def _getStyle(node, val):
     '''check the value type, if it is the primary cc for the device, set is primary, if it is battery...'''
