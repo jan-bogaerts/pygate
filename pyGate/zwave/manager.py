@@ -68,6 +68,9 @@ def addDevice(node, update = False):
                 logger.exception('failed to sync device ' + str(node.node_id) + ' for module ' + gateway._moduleName + ', asset: ' + str(key) + '.')
         if _CC_Battery in node.command_classes:
             gateway.addAsset('failed', node.node_id, 'failed', 'true when the battery device is no longer responding and the controller has labeled it as a failed device.', False, 'boolean', 'Secondary')
+            gateway.send(node.is_failed(), 'failed', node.node_id)
+        gateway.addAsset('manufacturer_name', node.node_id, 'manufacturer name', 'The name of the manufacturer', False, 'string', 'Undefined')
+        gateway.send(node.manufacturer_name(), 'manufacturer_name', node.node_id)
     except:
         logger.exception('error while adding device: ' + str(node))
 
