@@ -22,8 +22,12 @@ def syncGatewayAssets(Full = False):
     '''
 
 def run():
-    ''' required
+    ''' optional
         main function of the plugin module'''
+
+def stop():
+    """ optional
+        called when the application is stopped. Perform all the necessary cleanup here"""
 
 def onActuate(actuator, value):
     '''optional 

@@ -30,7 +30,7 @@ sendOnDone = None                                   # this data structure contai
 
 def _queriesDone(node):
     logger.info('queries done for node: ' + str(node))
-    if manager.network.controller.ctrl_last_state != 'Normal':          # when the controller is restarted, all devices are also queried, at that time, we don't need to add devices, it is already added during the sync period, and all assets have also been refreshed already. This call is only needed for adding devices (in case some assets were missed during discovery)
+    if _controllerState != 'Normal':          # when the controller is restarted, all devices are also queried, at that time, we don't need to add devices, it is already added during the sync period, and all assets have also been refreshed already. This call is only needed for adding devices (in case some assets were missed during discovery)
         manager.addDevice(node)                             #make certain that when the query is done, everything gets loaded again, it could be that we misssed some.
     # don't try to stop any discovery mode at this stage, the query can potentially take hours (for battery devices),
     # by that time, the user might be doing another include already.
@@ -38,9 +38,12 @@ def _queriesDone(node):
 #def _msgCompete():
 #    logger.info('msg done ')
 
+_controllerState = None
+
 def _controllerCommand(state):
     try:
-        global sendOnDone, sendAfterWaiting
+        global sendOnDone, sendAfterWaiting, _controllerState
+        _controllerState = state
         manager.gateway.send(state, None, manager.controllerStateId)
         if state == 'Waiting' and sendAfterWaiting:
             manager.gateway.send(sendAfterWaiting.value, sendAfterWaiting.device, sendAfterWaiting.asset)
@@ -56,8 +59,8 @@ def _controllerCommand(state):
 def _stopDiscovery():
     """turns the discovery mode off, if needed (discovery still running)"""
     global sendOnDone
-    logger.info("stop discovery requested, current state: " + manager.network.controller.ctrl_last_state)
-    if manager.network.controller.ctrl_last_state == 'InProgress':
+    logger.info("stop discovery requested, current state: " + _controllerState)
+    if _controllerState == 'InProgress':
         sendOnDone = DataMessage('off', manager.discoveryStateId)
         manager.network.controller.cancel_command()                                     # we need to stop the include process cause a device has been added
 
@@ -99,11 +102,11 @@ def _nodeRemoved(node):
 
 def _assetAdded(node, value):
     try:
-        if manager.network.controller.ctrl_last_state != 'Normal':          # when the controller is restarted, all devices are also queried, at that time, we don't need to add devices, it is already added during the sync period, and all assets have also been refreshed already. This call is only needed for adding devices (in case some assets were missed during discovery)
+        if node.is_ready == False and manager.network.state >= ZWaveNetwork.STATE_AWAKED:          # when starting, don't need to add assets of known devices. only when the device is not yet fully queried (ready) and when the network has started. Note battery devices take a long time before they report in, so don't wait for them, otherwise we can't include easy.
             logger.info('asset added: ' + str(value))
             manager.addAsset(node, value)
         else:
-            logger.info('asset found: ' + str(value) + ", should only happen during startup, current state: " + manager.network.controller.ctrl_last_state)
+            logger.info('asset found: ' + str(value) + ", should only happen during startup, controller state: " + _controllerState + ", node.isReady =" + node.is_read)
     except:
         logger.exception('failed to add asset for node: ' + str(node) + ', asset: ' + str(value) )
 

@@ -18,6 +18,7 @@ _restarter = None               # keeps track of the currently running network r
 
 def restartNetwork():
     if not _restarter:              # we only want 1 restarter object at a time. If the network already failed previously without recovering, then don't try to restart a new object.
+        logger.info("restarting network")
         manager.network.stop()      # try to stop the full network first??
         restarter = RestartManager()
         restarter.run()

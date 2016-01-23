@@ -79,6 +79,15 @@ def run():
         #map(lambda x:thread.start_new_thread(x.run, ()), [mod for key, mod in modules.iteritems() if hasattr(mod, 'run')])
         map(lambda x: x.run(), [RunModule(mod, key) for key, mod in modules.iteritems() if hasattr(mod, 'run')])
 
+def stop():
+    """lets every module that wants to, perform the necessary cleanups."""
+    for key, value in modules.iteritems():
+        if hasattr(value, 'stop'):
+            logging.info("stopping module " +  key)
+            try:
+                value.stop()
+            except:
+                logging.exception('failed to stop module ' + key + '.')
 
 def Actuate(module, device, actuator, value):
     '''Can be used as a generir method to send a command to an actuator managed by the specified module.

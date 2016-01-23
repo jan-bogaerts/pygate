@@ -74,6 +74,10 @@ def run():
     networkMonitor.connectNetworkSignals()
     manager.start()
 
+def stop():
+    """"called when the application terminates.  Allows us to clean up the hardware correctly, so we cn be restarted without (cold) reboot""""
+    logger.info("stopping zwave network")
+    manager.network.stop()
 
 def onDeviceActuate(device, actuator, value):
     '''called when an actuator command is received'''
@@ -82,6 +86,8 @@ def onDeviceActuate(device, actuator, value):
         if actuator == 'location':                      # location is a special case
             node.location = value
             events.sendOnDone = events.DataMessage(value, 'location', device)               # when the operation is done, we get an event from the controller, when this happened, update the cloud
+        elif actuator == manager.refreshDeviceId:
+            manager.addDevice(node, True)                                                   # update the node and it's values
         else:
             val = node.values[long(actuator)]
             if val:
