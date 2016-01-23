@@ -17,7 +17,7 @@ Check the [api docs](https://github.com/allthingstalk/rpi-python-gateway-client/
 
 
 ### dependencies
-[python open-zwave](https://github.com/OpenZWave/python-openzwave)
-[mosquitto](http://mosquitto.org/) mqtt server
+- [python open-zwave](https://github.com/OpenZWave/python-openzwave)
+- [mosquitto](http://mosquitto.org/) mqtt server
 
 
