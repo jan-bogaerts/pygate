@@ -14,7 +14,7 @@ Check the [api docs](https://github.com/allthingstalk/rpi-python-gateway-client/
 ### Installation
 - downoad the application
 - run install.sh
-
+- update pyGate\launcher.sh  (not yet automated)
 
 ### dependencies
 - [python open-zwave](https://github.com/OpenZWave/python-openzwave)

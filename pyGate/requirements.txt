@@ -1,4 +1,4 @@
-att-iot-gateway==0.2.0
+att-iot-gateway
 paho-mqtt==1.1
 PyYAML==3.11
 Louie==1.1
