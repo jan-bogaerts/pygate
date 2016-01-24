@@ -4,6 +4,8 @@ import json
 from flask import Flask, render_template, Response, request
 import paho.mqtt.client as mqtt                # provides publish-subscribe messaging support
 import logging
+import os
+import subprocess
 
 import webServer
 from gateway import Gateway
@@ -26,20 +28,35 @@ def index():
 
 @webServer.app.route('/asset/<name>', methods=['PUT'])
 def putAsset(name):
+    """add or update the asset. If in discovery mode, this will also trigger an add/update for the device"""
     asset = json.loads(request.data)
-    url = '/device/' + asset['deviceId'] + '/asset/' + name
-    asset.remove('deviceId')                                            # this field is no longer allowed in the body
-    if cloud._sendData(url, str(asset), 'PUT'):
-        return 'ok', 200
-    else:
-        return 'gateway problem', 400
+    allOk = True
+    if _discoveryState == 'include' and gateway.deviceExists(asset['deviceId']) == False:   # if in discovery mode, an asset value also triggers an add device.
+        if request.headers.get('Auth-ClientId') == config.clientId:
+            addDevice(asset['deviceId'], None, request.headers.get('Auth-ClientId'), request.headers.get('Auth-ClientKey'))
+            _turnDiscoveryOff()
+        else:
+            logger.error('wifi device has invalid client id')
+            allOk = False
+    if allOk:
+        url = '/device/' + asset['deviceId'] + '/asset/' + name
+        asset.remove('deviceId')                                            # this field is no longer allowed in the body
+        if cloud._sendData(url, str(asset), 'PUT'):
+            return 'ok', 200
+    return 'gateway problem', 400
 
 
 @webServer.app.route('/device', methods=['POST'])
 def postDevice():
     if _discoveryState == 'include':
-        devParams = json.loads(request.data)
-        return addDevice(devParams)
+        if request.headers.get('Auth-ClientId') == config.clientId:
+            devParams = json.loads(request.data)
+            id = _counter.getValue()
+            addDevice(id, devParams)
+            _turnDiscoveryOff()
+            return id
+        else:
+            logger.error('wifi device has invalid client id')
     else:
         logging.error("invalid request to add device: " + request.data + ": not in include mode")
 
@@ -55,16 +72,22 @@ def deleteDevice(id):
 def getAssetState(device, asset):                                        # this field is no longer allowed in the body
     return cloud.getAssetState(gateway._moduleName, device, asset)
 
+def _turnDiscoveryOff():
+    """update the internal flaf and update the cloud so that we are no longer in discovery"""
+    global _discoveryState
+    _discoveryState = 'off'
+    gateway.send(_discoveryState, None, _discoveryState)
 
-def addDevice(parameters):
+def addDevice(id, parameters):
     """adds the specified device to the cloud.
     :param parameters: the jston object that defines the device (title, description)
     :returns the id of the device
     """
     try:
-        id = _counter.getValue()
-        gateway.addDevice(id, parameters['title'], parameters['description'])
-        return id
+        if parameters:
+            gateway.addDevice(id, parameters['title'], parameters['description'])
+        else:
+            gateway.addDevice(id, 'new device', 'wifi device')
     except:
         logger.exception('error while adding device with parameters: ' + str(parameters))
 
@@ -79,7 +102,7 @@ def connectToGateway(moduleName):
     _mqttClient.on_connect = on_connect
     _mqttClient.on_message = on_MQTTmessage
     _mqttClient.on_subscribe = on_MQTTSubscribed
-    #_mqttClient.username_pw_set(brokerId, ClientKey);
+    _mqttClient.username_pw_set("pyGate", "abc123");
     _mqttClient.connect("localhost", "1883", 60)
     _mqttClient.loop_start()
 
@@ -140,5 +163,6 @@ def onActuate(actuator, value):
     global _discoveryState
     if actuator == discoveryStateId:               #change discovery state
         _discoveryState = value
+        gateway.send(value, None, _discoveryState)
     else:
         logger.error("zwave: unknown gateway actuator command: " + actuator)

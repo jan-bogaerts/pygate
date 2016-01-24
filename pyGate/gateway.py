@@ -31,3 +31,6 @@ class Gateway(object):
     def send(self, value, deviceId, actuator):
         cloud.send(self._moduleName, deviceId, actuator, value)
 
+    def deviceExists(self, deviceId):
+        return cloud.deviceExists(self._moduleName, deviceId)
+
