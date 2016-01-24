@@ -106,7 +106,7 @@ def _assetAdded(node, value):
             logger.info('asset added: ' + str(value))
             manager.addAsset(node, value)
         else:
-            logger.info('asset found: ' + str(value) + ", should only happen during startup, controller state: " + _controllerState + ", node.isReady =" + node.is_read)
+            logger.info('asset found: ' + str(value) + ", should only happen during startup, controller state: " + _controllerState + ", node.isReady =" + node.is_ready)
     except:
         logger.exception('failed to add asset for node: ' + str(node) + ', asset: ' + str(value) )
 

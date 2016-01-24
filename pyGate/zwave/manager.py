@@ -72,7 +72,7 @@ def addDevice(node, update = False):
             gateway.send(node.is_failed(), 'failed', node.node_id)
         gateway.addAsset(refreshDeviceId, node.node_id, 'refresh', 'Refresh all the assets and their values', True, 'boolean', 'Undefined')
         gateway.addAsset('manufacturer_name', node.node_id, 'manufacturer name', 'The name of the manufacturer', False, 'string', 'Undefined')
-        gateway.send(node.manufacturer_name(), 'manufacturer_name', node.node_id)
+        gateway.send(node.manufacturer_name, 'manufacturer_name', node.node_id)
     except:
         logger.exception('error while adding device: ' + str(node))
 
