@@ -37,7 +37,7 @@ def start():
 
 def syncDevices(existing, Full):
     for key, node in network.nodes.iteritems():
-        if node.node_id != 1:
+        if str(node.node_id) != '1':                    # for some reason, this compare doesn't work without convertion.
             found = next((x for x in existing if x['id'].encode('ascii','ignore') == str(node.node_id)), None)
             if not found:
                 addDevice(node)

@@ -75,7 +75,7 @@ def run():
     manager.start()
 
 def stop():
-    """"called when the application terminates.  Allows us to clean up the hardware correctly, so we cn be restarted without (cold) reboot""""
+    """"called when the application terminates.  Allows us to clean up the hardware correctly, so we cn be restarted without (cold) reboot"""
     logger.info("stopping zwave network")
     manager.network.stop()
 
