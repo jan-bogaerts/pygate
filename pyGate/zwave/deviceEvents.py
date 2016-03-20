@@ -30,7 +30,7 @@ sendOnDone = None                                   # this data structure contai
 
 def _queriesDone(node):
     logger.info('queries done for node: ' + str(node))
-    if _controllerState != 'Normal':          # when the controller is restarted, all devices are also queried, at that time, we don't need to add devices, it is already added during the sync period, and all assets have also been refreshed already. This call is only needed for adding devices (in case some assets were missed during discovery)
+    if _controllerState != 'Normal' and node.node_id != 1:          # when the controller is restarted, all devices are also queried, at that time, we don't need to add devices, it is already added during the sync period, and all assets have also been refreshed already. This call is only needed for adding devices (in case some assets were missed during discovery)
         manager.addDevice(node)                             #make certain that when the query is done, everything gets loaded again, it could be that we misssed some.
     # don't try to stop any discovery mode at this stage, the query can potentially take hours (for battery devices),
     # by that time, the user might be doing another include already.
@@ -106,7 +106,7 @@ def _assetAdded(node, value):
             logger.info('asset added: ' + str(value))
             manager.addAsset(node, value)
         else:
-            logger.info('asset found: ' + str(value) + ", should only happen during startup, controller state: " + _controllerState + ", node.isReady =" + node.is_ready)
+            logger.info('asset found: ' + str(value) + ", should only happen during startup, controller state: " + str(_controllerState) + ", node.isReady =" + str(node.is_ready))
     except:
         logger.exception('failed to add asset for node: ' + str(node) + ', asset: ' + str(value) )
 
