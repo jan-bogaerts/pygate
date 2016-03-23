@@ -113,8 +113,10 @@ def onActuate(actuator, value):
     if actuator == manager.discoveryStateId:               #change discovery state
         if value == 'include':
             events.sendAfterWaiting = events.DataMessage(value, actuator)
+            manager._discoveryMode = "Include"
             manager.network.controller.add_node()
         elif value == 'exclude':
+            manager._discoveryMode = "Exclude"
             events.sendAfterWaiting = events.DataMessage(value, actuator)
             manager.network.controller.remove_node()
         else:

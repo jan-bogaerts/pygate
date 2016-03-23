@@ -12,6 +12,7 @@ clientId = None                                     #authentication value
 clientKey = None                                    #authentication value
 apiServer = 'api.smartliving.io'                    #the address of the api server to use
 broker = 'broker.smartliving.io'                    #the address of the broker
+secure = False
 
 configPath = '../config/'                           # the path to the folder that contains all the configs. Warning: path to logging.config is set in pygate.py
 rootConfigFileName = configPath + 'pyGate.config'   # the path and filename of the main config file
@@ -19,7 +20,7 @@ rootConfigFileName = configPath + 'pyGate.config'   # the path and filename of t
 
 def load():
     """Load config data"""
-    global configs, modules, processors, gatewayId, clientId,clientKey, apiServer,broker
+    global configs, modules, processors, gatewayId, clientId,clientKey, apiServer,broker, secure
     configs = ConfigParser()
     if configs.read(rootConfigFileName):
         logging.info("loading " + rootConfigFileName)
@@ -48,6 +49,9 @@ def load():
         if configs.has_option('general', 'broker'):
             broker = configs.get('general', 'broker')
             logging.info("broker: " + broker)
+        if configs.has_option('general', 'secure'):
+            secure = configs.get('general', 'secure')
+            logging.info("secure: " + broker)
     else:
         logging.error('failed to load ' + rootConfigFileName)
 

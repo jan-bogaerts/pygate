@@ -24,7 +24,7 @@ discoveryStateId = 'discoverState'   #id of asset
 networkStateId = 'networkState'
 deviceStateId = 'deviceState'
 refreshDeviceId = 'refreshDevice'
-
+_discoveryMode = "Off"                      # the current discovery mode that the system is in, so we can determine when to add/refresh devices.
 
 def init(moduleName):
     """initialize all objext"""
@@ -40,7 +40,7 @@ def syncDevices(existing, Full):
         if str(node.node_id) != '1':                    # for some reason, this compare doesn't work without convertion.
             found = next((x for x in existing if x['id'].encode('ascii','ignore') == str(node.node_id)), None)
             if not found:
-                addDevice(node)
+                addDevice(node, False)
             else:
                 existing.remove(found)              # so we know at the end which ones have to be removed.
                 if Full:
@@ -49,15 +49,18 @@ def syncDevices(existing, Full):
         gateway.deleteDevice(dev['id'])
 
 
-def addDevice(node, update = False):
+def addDevice(node, createDevice = True):
     """adds the specified node to the cloud as a device. Also adds all the assets.
+    :param node: the device details
+    :param createDevice: when true, addDevice will be called. when false, only the assets will be updated/created
+    This is for prevention of overwriting the name.
     """
     try:
         if node.product_name:                       #newly included devices arent queried fully yet, so create with dummy info, update later
             name = node.product_name
         else:
             name = 'unknown'
-        if not update:                              # for an update, we don't need to do anyhthing for the device, only the assets
+        if createDevice:                              # for an update, we don't need to do anyhthing for the device, only the assets
             gateway.addDevice(node.node_id, name, node.type)
         items = dict(node.values)                                         # take a copy of the list cause if the network is still refreshing/loading, the list could get updated while in the loop
         gateway.addAsset('location', node.node_id, 'location', 'the physical location of the device', True, 'string', 'Config')

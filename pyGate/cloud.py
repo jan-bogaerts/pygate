@@ -36,9 +36,9 @@ def connect(actuatorcallback, sensorCallback):
     success = False
     while not success:
         try:
-            IOT.connect(config.apiServer)           
+            IOT.connect(config.apiServer, config.secure)
             if _authenticate():
-                IOT.subscribe(config.broker)              							#starts the bi-directional communication   "att-2.cloudapp.net"
+                IOT.subscribe(config.broker, 8883 if config.secure else 1883, config.secure, 'cacert.pem')              							#starts the bi-directional communication   "att-2.cloudapp.net"
                 success = True
             else:
                 logging.error("Failed to authenticate with IOT platform")
