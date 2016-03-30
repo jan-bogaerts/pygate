@@ -210,6 +210,19 @@ def send(module, device, asset, value):
     if _sensorCallback:
         _sensorCallback(module, device, asset, value)
 
+def sendCommand(gatewayId, module, device, asset, value):
+    '''send value to the cloud
+        thread save: only 1 thread can send at a time'''
+    if device:  # could be that there is no device: for gateway assets.
+        device = getDeviceId(module, device)
+    else:
+        asset = getDeviceId(module, asset)
+    _mqttLock.acquire()
+    try:
+        IOT.sendCommand(value, gatewayId, device, asset)
+    finally:
+        _mqttLock.release()
+
 def getModuleName(value):
     """extract the module name out of the string param."""
     return value[:value.find('_')]

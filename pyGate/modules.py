@@ -149,6 +149,6 @@ class RunModule(threading.Thread):
     def run(self):
         try:
             self.module.run()
-        except Exception:
-            logging.error('error in run for module: ' + self.name)
+        except:
+            logging.exception('error in run for module: ' + self.name)
 
