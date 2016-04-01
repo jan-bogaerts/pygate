@@ -63,7 +63,7 @@ def syncGatewayAssets(full=False):
 
 
 def run():
-    ''' required
+    ''' optional
         main function of the plugin module'''
     #_readyEvent.wait()
     manager.gateway.send("off", None, manager.discoveryStateId)     # set init state at begin of run, not when gateway asset get defined, cause that also gets called at refresh, and we don't want to give init states for network and such, but keep currents states.

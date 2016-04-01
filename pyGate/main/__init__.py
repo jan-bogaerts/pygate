@@ -7,6 +7,7 @@ __status__ = "Prototype"  # "Development", or "Production"
 
 ##################################################
 # manages the gateway functionality like refresh
+# and provides an application identity to the gateway (for auto discovery of gateways in an account)
 # this is done through gateway assets that don't belong to any other plugin
 ##################################################
 
@@ -17,6 +18,7 @@ import modules
 
 _moduleName = None
 refreshGatewayId = '1'
+ApplicationId = 'applicationId'
 
 logger = logging.getLogger('main')
 
@@ -29,6 +31,7 @@ def connectToGateway(moduleName):
 
 def syncGatewayAssets():
     cloud.addGatewayAsset(_moduleName, refreshGatewayId , 'refresh', 'refresh all the devices and assets', True, 'boolean')
+    cloud.addGatewayAsset(_moduleName, ApplicationId , 'application Id', 'Identifies the software running on the gateway', False, 'string')
 
 #callback: handles values sent from the cloudapp to the device
 def onActuate(id, value):
@@ -37,3 +40,10 @@ def onActuate(id, value):
         modules.syncDevices(True)
     else:
         logger.error("unknown actuator: " + id)
+
+
+def run():
+    ''' optional
+        main function of the plugin module
+        init the assets'''
+    cloud.send(_moduleName, None, ApplicationId, "ATT-pyGate")
