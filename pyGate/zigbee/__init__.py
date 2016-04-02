@@ -54,16 +54,15 @@ def run():
                 logger.info("Check if device already known in IOT")
                 if gateway.deviceExists(deviceId) == False:     										#as we only keep deviceId's locally in memory, it could be that we already created the device in a previous run. We only want to create it 1 time.
                     logger.info("creating new device")
-                    gateway.addDevice(deviceId, deviceId, "XBEE Plantsensor" )		#adjust according to your needs
-                gateway.addAsset(1, deviceId, 'light', 'Light', False, 'integer')	#adjust according to your needs
-                gateway.addAsset(2, deviceId, "temp", "Temperature", False, "integer")	#adjust according to your needs
-                gateway.addAsset(3, deviceId, "moisture", "moisture", False, "integer")	#adjust according to your needs
-                gateway.addAsset(4, deviceId, "Battery", "Battery Level (mv)", False, "integer") #adjust according to your needs
-            temp = ((data['samples'][0]['adc-2']*1200/1023)-500)/10
-            batt = (data['samples'][0]['adc-7']*1200/1023)
-            gateway.send(data['samples'][0]['adc-1'], deviceId, 1)									#adjust according to your needs
-            gateway.send(temp, deviceId, 2)									#adjust according to your needs
-            gateway.send(data['samples'][0]['adc-3'], deviceId, 3)									#adjust according to your needs
-            gateway.send(batt, deviceId, 4)
+                    gateway.addDevice(deviceId, deviceId, "XBEE device")
+                    for key, value in data['samples'][0]:
+                        if str(key) == 'adc-7':
+                            gateway.addAsset(key, deviceId, "battery", "battery", False, 'integer')
+                        else:
+                            gateway.addAsset(key, deviceId, key, key, False, 'integer')
+            for key, value in data['samples'][0]:
+                if str(key) == 'adc-7':
+                    value = value * 1200 / 1023
+                gateway.send(value, deviceId, key)									#adjust according to your needs
     except Exception as e:                                                      				#in case of an xbee error: print it and try to continue
         logger.exception("value error occured")

@@ -23,24 +23,25 @@ _actuators = {}
 
 def onAssetValueChanged(module, device, asset, value):
     """callback for the processor part: check if the value of an actuator has changed, if so, update the group's value"""
-    name = _getActName(module, device, asset)
+    name = cloud.getUniqueName(module, device, asset)
     if name in _actuators:
-        grp = _actuators[name]
-        if grp.value != value:
-            if grp.value:                       # previous values were all the same, so they went different.
-                grp.value = None
-                _device.send("", grp.id)
-            else:
-                grp.value = grp.getValueFromActuators()     # check if they are all the same again.
-                if grp.value:
-                    _device.send(grp.value, grp.id)
+        grps = _actuators[name]
+        for grp in grps:
+            if grp.value != value:
+                if grp.value:                       # previous values were all the same, so they went different.
+                    grp.value = None
+                    _device.send("", grp.id)
+                else:
+                    grp.value = grp.getValueFromActuators()     # check if they are all the same again.
+                    if grp.value:
+                        _device.send(grp.value, grp.id)
 
 
 #callback: handles values sent from the cloudapp to the device
 def onActuate(id, value):
     if id == GROUPDEF_ID:
         jsonVal = json.loads(value)
-        loadGroups(jsonVal)
+        loadGroups(jsonVal, True)           # always do a full load cause the list of groups has changed, so the assets need to be updated in the cloud.
         saveGroups(value)
         _device.send(jsonVal, id)
     elif id in _groups:
@@ -62,7 +63,14 @@ def syncDevices(existing, full):
     if not existing:
         _device.createDevice('group manager', 'manage your device groups with single controls')
         _device.addAsset(GROUPDEF_ID , 'group definitions', 'define all the groups', True, 'object')
-    loadGroups(config.loadConfig(GROUPDEF_FILE, True))                                          # alwaye need to load these, otherwise there is no mapping loaded in memory
+    if full:
+        global _groups
+        _groups = _buildGroupsDict(existing['assets'])
+    loadGroups(config.loadConfig(GROUPDEF_FILE, True), full)                                          # alwaye need to load these, otherwise there is no mapping loaded in memory
+
+def _buildGroupsDict(assets):
+    for asset in assets:
+        _groups[asset['name']] = None       # we don't need an actual object in the dict, just a reference that the group exists
 
 def _setValue(id, group, value):
     """send the new value to each actuator. Make certain that the electrical system doesn't get over burndend, so pause a little betweeen each actuator."""
@@ -72,26 +80,35 @@ def _setValue(id, group, value):
     group.value = value
     _device.send(value, id)
 
-
-def _getActName(module, device, asset):
-    return module + "_" + str(device) + "_" + str(asset)
-
-def loadGroups(value):
+def loadGroups(value, syncCloud):
     """load the groupings from a json structure, so that it's easy to execute the groups and store/update the value of the group
         This will also update the assets for each group in the cloud.
+        :param value: a json object that contains the group definitions
+        :param syncCloud: when true, the cloud is synced: assets are created and deleted.
+        When false, only the internal state of the engine is updated (quicker).
     """
-    _groups.clear()                                                         # before loading the data, make certain that any previous data has been removed.
+    global _groups
+    newGroups = {}
     _actuators.clear()
     for group in value:
         grp = Group(group['id'], group['actuators'], group['sleep'])        # also calculates the value for the group and builds the reverese list
-        _groups[group['id']] = grp
+        newGroups[group['id']] = grp
         for actuator in group['actuators']:                     # build the reverse map, for fast changing of group values.
-            actName = _getActName(actuator['module'], actuator['device'], actuator['asset'])
+            actName = cloud.getUniqueName(actuator['module'], actuator['device'], actuator['asset'])
             if actName in _actuators:
                 _actuators[actName].add(grp)
             else:
                 _actuators[actName] = [grp]
-        _device.addAsset(group['id'], group['name'], group['description'], True, str(group['profile']))
+        if syncCloud:
+            if group['id'] not in _groups:
+                _device.addAsset(group['id'], group['name'], group['description'], True, str(group['profile']))
+            else:
+                _groups.pop(group['id'])  # the group still exists, so remove it from the old list (otherwise it gets deleted from the clodu)
+
+    if syncCloud:
+        for key, value in _groups:
+            _device.deleteAsset(key)
+    _groups = newGroups
 
 def saveGroups(value):
     """save the groups back to the config"""

@@ -5,6 +5,7 @@ import time
 from uuid import getnode as get_mac
 
 import config
+import assetStateCache as valueCache
 
 _sensorCallback = None                                                          #callback for pyGate module, called when sensor data is sent out.
 _actuatorCallback = None                                                          #callback for pyGate module, called when actuator data came in and needs to be redistributed to the correct module.
@@ -178,11 +179,11 @@ def deleteDeviceFullName(name):
         _httpLock.release()
 
 def getAssetState(module, deviceId, assetId):
-    """get value of asset"""
+    """get value of asset (note: does not include the timestamp when the value was recorded)"""
     devId = getDeviceId(module, deviceId)
     _httpLock.acquire()
     try:
-        return IOT.getAssetState(assetId, devId)
+        return valueCache.getValue(assetId, devId)
     finally:
         _httpLock.release()
 
@@ -233,3 +234,7 @@ def stripDeviceId(value):
 
 def getDeviceId(module, device):
     return module + '_' + str(device)
+
+def getUniqueName(module, device, asset):
+    """renders a unique name for the specified asset by using '_' to combine all the fractions."""
+    return module + "_" + str(device) + "_" + str(asset)

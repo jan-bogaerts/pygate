@@ -15,6 +15,9 @@ class Device(object):
         """add asset"""
         cloud.addAsset(self._moduleName, self._deviceId, id, name, description, isActuator, assetType, style)
 
+    def deleteAsset(self, id):
+        cloud.deleteAsset(self._moduleName, self._deviceId, id)
+
     def createDevice(self, name, description):
         """add device"""
         cloud.addDevice(self._moduleName, self._deviceId, name, description)

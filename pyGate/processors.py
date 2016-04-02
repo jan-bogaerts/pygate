@@ -10,6 +10,7 @@ __email__ = "jb@allthingstalk.com"
 __status__ = "Prototype"  # "Development", or "Production"
 
 import logging
+import assetStateCache as cache
 
 processors = {}
 
@@ -22,9 +23,10 @@ def load(processorNames):
 
 
 def onAssetValueChanged(module, device, asset, value):
+    cache.tryUpdateValue(module, device, asset, value)              # before calling any processors update the casche, so that processors that rely on the cache also get the latest value
     for key, mod in processors.iteritems():
         if mod.onAssetValueChanged:
-            logging.info("running processor " +  key)
+            logging.info("running processor " + key)
             try:
                 mod.onAssetValueChanged(module, device, asset, value)
             except:
