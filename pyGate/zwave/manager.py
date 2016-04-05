@@ -40,11 +40,11 @@ def syncDevices(existing, Full):
         if str(node.node_id) != '1':                    # for some reason, this compare doesn't work without convertion.
             found = next((x for x in existing if x['id'].encode('ascii','ignore') == str(node.node_id)), None)
             if not found:
-                addDevice(node, False)
+                addDevice(node)
             else:
                 existing.remove(found)              # so we know at the end which ones have to be removed.
                 if Full:
-                    addDevice(node, True)                # this will also refresh it
+                    addDevice(node)                # this will also refresh it
     for dev in existing:                        # all the items that remain in the 'existing' list, are no longer devices in this network, so remove them
         gateway.deleteDevice(dev['id'])
 

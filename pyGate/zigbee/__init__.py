@@ -17,6 +17,7 @@ serial_port = None
 gateway = None
 zb = None
 devices = []                                           #contains the list of devices already connected to the
+_isRunning = True
 
 def connectToGateway(moduleName):
     '''optional
@@ -40,29 +41,32 @@ def connectToGateway(moduleName):
     zb = ZigBee(serial_port)
 
 def stop():
+    global _isRunning
+    _isRunning = False
     if serial_port:
         serial_port.close()
 
 def run():
-    try:
-        while True:
+    while _isRunning:
+        try:
             data = zb.wait_read_frame() #Get data for later use
-            logger.info("found data: " + str(data))
-            deviceId = data['source_addr_long'].encode("HEX")
-            if deviceId not in devices:                     										#if we haven't seen this deviceId yet, check if we need to create a new device for it
-                devices.append(deviceId)
-                logger.info("Check if device already known in IOT")
-                if gateway.deviceExists(deviceId) == False:     										#as we only keep deviceId's locally in memory, it could be that we already created the device in a previous run. We only want to create it 1 time.
-                    logger.info("creating new device")
-                    gateway.addDevice(deviceId, deviceId, "XBEE device")
-                    for key, value in data['samples'][0]:
-                        if str(key) == 'adc-7':
-                            gateway.addAsset(key, deviceId, "battery", "battery", False, 'integer')
-                        else:
-                            gateway.addAsset(key, deviceId, key, key, False, 'integer')
-            for key, value in data['samples'][0]:
-                if str(key) == 'adc-7':
-                    value = value * 1200 / 1023
-                gateway.send(value, deviceId, key)									#adjust according to your needs
-    except Exception as e:                                                      				#in case of an xbee error: print it and try to continue
-        logger.exception("value error occured")
+            if _isRunning:
+                logger.info("found data: " + str(data))
+                deviceId = data['source_addr_long'].encode("HEX")
+                if deviceId not in devices:                     										#if we haven't seen this deviceId yet, check if we need to create a new device for it
+                    devices.append(deviceId)
+                    logger.info("Check if device already known in IOT")
+                    if gateway.deviceExists(deviceId) == False:     										#as we only keep deviceId's locally in memory, it could be that we already created the device in a previous run. We only want to create it 1 time.
+                        logger.info("creating new device")
+                        gateway.addDevice(deviceId, deviceId, "XBEE device")
+                        for key, value in data['samples'][0]:
+                            if str(key) == 'adc-7':
+                                gateway.addAsset(key, deviceId, "battery", "battery", False, 'integer')
+                            else:
+                                gateway.addAsset(key, deviceId, key, key, False, 'integer')
+                for key, value in data['samples'][0]:
+                    if str(key) == 'adc-7':
+                        value = value * 1200 / 1023
+                    gateway.send(value, deviceId, key)									#adjust according to your needs
+        except Exception as e:                                                      				#in case of an xbee error: print it and try to continue
+            logger.exception("value error occured")

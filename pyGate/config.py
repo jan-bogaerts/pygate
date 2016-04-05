@@ -51,7 +51,7 @@ def load():
             logging.info("broker: " + broker)
         if configs.has_option('general', 'secure'):
             secure = configs.get('general', 'secure')
-            logging.info("secure: " + broker)
+            logging.info("secure: " + secure)
     else:
         logging.error('failed to load ' + rootConfigFileName)
 
