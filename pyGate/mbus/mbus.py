@@ -50,17 +50,25 @@ class Mbus:
     def sample(self):
         """walk over all the devices, """
         for devId in self._devices:
-            self._mbus.send_request_frame(devId)
-            reply = self._mbus.recv_frame()
-            reply_data = self._mbus.frame_data_parse(reply)
-            for asset in reply_data.records:
-                if asset.storage_number in self._devices:
-                    prev = self._devices[asset.storage_number]
-                    if prev:
-                        self._gateway.send(asset.value - prev, asset.storage_number, devId)
-                    self._devices[asset.storage_number] = asset.value
-                else:
-                    self._gateway.send(asset.value, asset.storage_number, devId)
+            try:
+                self._mbus.send_request_frame(devId)
+                reply = self._mbus.recv_frame()
+                reply_data = self._mbus.frame_data_parse(reply)
+                for asset in reply_data.records:
+                    if asset.storage_number in self._devices:
+                        prev = self._devices[asset.storage_number]
+                        if prev:
+                            if asset.value >= prev:
+                                val = asset.value - prev
+                            else:
+                                #todo: find out how many bytes that the value uses (1, 2, 4, 8)
+                                val = asset.value + (0xFFFF - prev)
+                            self._gateway.send(val, asset.storage_number, devId)
+                        self._devices[asset.storage_number] = asset.value
+                    else:
+                        self._gateway.send(asset.value, asset.storage_number, devId)
+            except:
+                logger.exception("failed to process device: {}".format(devId))
 
 
 
@@ -93,22 +101,23 @@ class MBusScanner(threading.Thread):
     def run(self):
         try:
             result = {}
+            self.mbus._devicesLock.acquire()
             try:
-                for address in range(0, mbusLow.MBUS_MAX_PRIMARY_SLAVES + 1):
-                    try:
-                        dev = self.ping(address)
-                        if dev:
-                            result[address] = dev
-                            self.mbus._devicesLock.acquire()
-                            try:
-                                self.mbus._devices.add(address)
-                            finally:
-                                self.mbus._devicesLock.release()
-
-                    except:
-                        logger.exception('error while pinging mbus device id: {}, moving on to next device'.format(address))
-            except:
-                logger.exception('failed to scan for mbus devices')
+                self.mbus._devices = set([])                            # when we rescan for all devices, then we need to make certain taht we start with an empty list
+            finally:
+                self.mbus._devicesLock.release()
+            for address in range(0, mbusLow.MBUS_MAX_PRIMARY_SLAVES + 1):
+                try:
+                    dev = self.ping(address)
+                    if dev:
+                        result[address] = dev
+                        self.mbus._devicesLock.acquire()
+                        try:
+                            self.mbus._devices.add(address)
+                        finally:
+                            self.mbus._devicesLock.release()
+                except:
+                    logger.exception('error while pinging mbus device id: {}, moving on to next device'.format(address))
             if self.callback:
                 self.callback(self.existing, self.full, result)
         except:

@@ -13,9 +13,12 @@ import logging
 import thread
 import threading
 import cloud
+import config
+import sys
 
 modules = {}                                    # the list of dynamically loaded modules.
-
+_modulesName = 'modules'
+_activepluginsName = 'activeplugins'
 
 def load(moduleNames):
     """Loads all the gateway modules"""
@@ -35,13 +38,17 @@ def syncGatewayAssets(full = False):
     '''allows the modules to sync with the cloud, the assets that should come at the level of the gateway
     :param full: recreate all assets,
     '''
-    for key, value in modules.iteritems():
-        if hasattr(value, 'syncGatewayAssets'):
-            logging.info("syncing gateway assets for " +  key)
-            try:
-                value.syncGatewayAssets()
-            except:
-                logging.exception('failed to sync gateway assets for module ' + key + '.')
+    try:
+        for key, value in modules.iteritems():
+            if hasattr(value, 'syncGatewayAssets'):
+                logging.info("syncing gateway assets for " +  key)
+                try:
+                    value.syncGatewayAssets()
+                except:
+                    logging.exception('failed to sync gateway assets for module {}.'.format(key))
+        cloud.addGatewayAsset(_modulesName, _activepluginsName, 'Active plugins', 'The list of currently active plugins', True, '{"type": "array", "items":{"type":"string"}}')
+    except:
+        logging.exception('failed to sync gateway')
 
 
 def syncDevices(full = False):
@@ -94,6 +101,11 @@ def Actuate(module, device, actuator, value):
     The function will figure out the most appropriate callback, depending on the presence of a device or not
     - module can be a string (name of the module), or the module object itself.'''
     # zwaveGateway.onActuate(zwaveGateway._discoveryStateId, 'include')
+    if module == _modulesName:
+        if actuator == _activepluginsName:
+            switchPlugins(value)
+        else:
+            logging.error("invalid actuator request for modules-module: {}, value: {}".format(actuator, value))
     if isinstance(module, basestring):
         if module in modules:
             mod = modules[module]
@@ -116,6 +128,12 @@ def Actuate(module, device, actuator, value):
         else:
             logging.exception('error processing actuator request: module: %s, dev: none, actuator: %s, value: %s' % str(module), str(actuator), str(value))
 
+
+def switchPlugins(newModules):
+    logging.warning("list of plugins has been modified to: {}, stopping system, the shell should restart the application".format(newModules))
+    config.configs.set('general', 'modules', ';'.join(newModules))
+    config.save()
+    sys.exit()
 
 def stripDeviceIds(list):
     '''goes over the list items and converts the 'deviceIds' to local versions (strip module '''

@@ -39,7 +39,7 @@ def syncDevices(existing, full=False):
          update all, including assets
      '''
     scanner = MBusScanner(_mbus, existing, full, _syncDevices)
-    scanner.run()
+    scanner.start()
 
 
 def syncGatewayAssets(full=False):
@@ -55,7 +55,6 @@ def stop():
 def run():
     while _isRunning:
         try:
-            pass
             startTime = datetime.now()
             _mbus.sample()
             sleepTime = _sampleEvery - (datetime.now() - startTime)
@@ -70,7 +69,7 @@ def onActuate(actuator, value):
     if actuator == _isScanningId:  # change discovery state
         if bool(value) == True:
             scanner = MBusScanner(_mbus, None, True, _syncDevices)
-            scanner.run()
+            scanner.start()
     else:
         logger.error("mbus: unknown gateway actuator command: " + actuator)
 
@@ -92,30 +91,35 @@ def _syncDevices(existing, full, found):
             if full:
                 addDevice(key, dev)  # this will also refresh it
     for dev in existing:  # all the items that remain in the 'existing' list, are no longer devices in this network, so remove them
-        _gateway.deleteDevice(dev['id'])
-
+        try:
+            _gateway.deleteDevice(dev['id'])
+        except:
+            logger.error("failed to delete device on cloud: {}".format(dev))
 
 def addDevice(id, device):
     """adds the device and all it's assets to the cloud"""
-    name = "{} {} meter".format(device.manufacturer, device.medium_type)
-    desc = "{}, version: {}".format(name, device.version)
-    _gateway.addDevice(id, name, name)
+    try:
+        name = "{} {} meter".format(device.manufacturer, device.medium_type)
+        desc = "{}, version: {}".format(name, device.version)
+        _gateway.addDevice(id, name, desc)
 
-    _gateway.addAsset('status', id, 'status', 'status', False, 'number')
-    _gateway.send(device.status, 'status', id)
+        _gateway.addAsset('status', id, 'status', 'status', False, 'number')
+        _gateway.send(device.status, 'status', id)
 
-    _gateway.addAsset('manufacturer', id, 'manufacturer', 'manufacturer', False, 'string')
-    _gateway.send(device.manufacturer, 'manufacturer', id)
+        _gateway.addAsset('manufacturer', id, 'manufacturer', 'manufacturer', False, 'string')
+        _gateway.send(device.manufacturer, 'manufacturer', id)
 
-    _gateway.addAsset('version', id, 'version', 'version', False, 'string')
-    _gateway.send(device.version, 'version', id)
+        _gateway.addAsset('version', id, 'version', 'version', False, 'string')
+        _gateway.send(device.version, 'version', id)
 
-    _gateway.addAsset('id_bcd', id, 'id_bcd', 'id_bcd', False, 'string')
-    _gateway.send(device.id_bcd, 'id_bcd', id)
+        _gateway.addAsset('id_bcd', id, 'id_bcd', 'id_bcd', False, 'string')
+        _gateway.send(device.id_bcd, 'id_bcd', id)
 
-    for asset in device.record:
-        if asset.is_numeric:
-            _gateway.addAsset(asset.storage_number, id, asset.unit,asset.unit, False, 'number')
-        else:
-            _gateway.addAsset(asset.storage_number, id, asset.unit, asset.unit, False, 'string')
-        _gateway.send(asset.value, asset.storage_number, id)
+        for asset in device.record:
+            if asset.is_numeric:
+                _gateway.addAsset(asset.storage_number, id, asset.unit,asset.unit, False, 'number')
+            else:
+                _gateway.addAsset(asset.storage_number, id, asset.unit, asset.unit, False, 'string')
+            _gateway.send(asset.value, asset.storage_number, id)
+    except:
+        logger.exception("failed to add device id: {}, value: ".format(id, device))

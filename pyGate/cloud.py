@@ -121,7 +121,15 @@ def deleteAsset(module, deviceId, asset):
         _httpLock.release()
 
 def addGatewayAsset(module, id, name, description, isActuator, assetType, style = "Undefined"):
-    """add asset to gateway"""
+    """add asset to gateway
+    :param module: module name
+    :param id: id of asset
+    :param name: name/label of asset
+    :param description:  description
+    :param isActuator: true = actuator
+    :param assetType: datatype
+    :param style: Undefined, Primary, Secondary, Battery, Config
+    """
     id = module + '_' + id
     _httpLock.acquire()
     try:
