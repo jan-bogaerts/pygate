@@ -7,6 +7,7 @@ from uuid import getnode as get_mac
 import config
 import assetStateCache as valueCache
 
+existingGatewayAssets = {}                                                      # used during sync of asset gateways: contains all the existing assets, when a new asset is created, the ref is remvoed from this list.
 _sensorCallback = None                                                          #callback for pyGate module, called when sensor data is sent out.
 _actuatorCallback = None                                                          #callback for pyGate module, called when actuator data came in and needs to be redistributed to the correct module.
 _httpLock = threading.Lock()                                                    # makes http request thread save (only 1 plugin can call http at a time, otherwise we get confused.
@@ -120,6 +121,16 @@ def deleteAsset(module, deviceId, asset):
     finally:
         _httpLock.release()
 
+def deleteGatewayAsset(asset):
+    """delete the asset
+    :type asset: full asset name (including module)
+    """
+    _httpLock.acquire()
+    try:
+        return IOT.deleteGatewayAsset(id)
+    finally:
+        _httpLock.release()
+
 def addGatewayAsset(module, id, name, description, isActuator, assetType, style = "Undefined"):
     """add asset to gateway
     :param module: module name
@@ -134,6 +145,9 @@ def addGatewayAsset(module, id, name, description, isActuator, assetType, style 
     _httpLock.acquire()
     try:
         IOT.addGatewayAsset(id, name, description, isActuator, assetType, style)
+        # not so clean:
+        if id in existingGatewayAssets:  # this is for syncing assets: when the asset already exists, remove from the current sync list, so we don't delete it after the sync
+            existingGatewayAssets.pop(id)
     finally:
         _httpLock.release()
 
@@ -157,6 +171,14 @@ def getDevices():
     finally:
         _httpLock.release()
 
+
+def getGateway():
+    """get the gateway details and all the devices listed for this gateway as a json structure."""
+    _httpLock.acquire()
+    try:
+        return IOT.getGateway(True)
+    finally:
+        _httpLock.release()
 
 def deviceExists(module, deviceId):
     """check if device exists"""

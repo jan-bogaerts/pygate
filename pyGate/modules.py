@@ -12,9 +12,11 @@ __status__ = "Prototype"  # "Development", or "Production"
 import logging
 import thread
 import threading
+import sys
+
 import cloud
 import config
-import sys
+import processors
 
 modules = {}                                    # the list of dynamically loaded modules.
 _modulesName = 'modules'
@@ -33,12 +35,18 @@ def load(moduleNames):
             except:
                 logging.exception('failed to connect module ' + key + ' to gateway.')
 
-    
-def syncGatewayAssets(full = False):
+def syncGateway(full = False):
+    content = cloud.getGateway()
+    syncGatewayAssets(content['assets'], full)
+    syncDevices(content['devices'], full)
+
+def syncGatewayAssets(currentAssets, full = False):
     '''allows the modules to sync with the cloud, the assets that should come at the level of the gateway
     :param full: recreate all assets,
     '''
+    assetsDict = {x['name']: x for x in currentAssets}          # convert existing assets to dict, so that cloud module can easily remove gateway assets that have been recreated.
     try:
+        cloud.existingGatewayAssets = assetsDict
         for key, value in modules.iteritems():
             if hasattr(value, 'syncGatewayAssets'):
                 logging.info("syncing gateway assets for " +  key)
@@ -47,16 +55,21 @@ def syncGatewayAssets(full = False):
                 except:
                     logging.exception('failed to sync gateway assets for module {}.'.format(key))
         cloud.addGatewayAsset(_modulesName, _activepluginsName, 'Active plugins', 'The list of currently active plugins', True, '{"type": "array", "items":{"type":"string"}}')
+        processors.syncGatewayAssets(full)
+        for key, value in assetsDict:
+            cloud.deleteGatewayAsset(key)
     except:
         logging.exception('failed to sync gateway')
+    finally:
+        cloud.existingGatewayAssets = None
 
 
-def syncDevices(full = False):
+def syncDevices(devices, full = False):
     """allow the modules to sync the devices with the cloud
     :param full: when false, if device already exists, don't update, including assets. When true,
     update all, including assets
     """
-    deviceList = syncDeviceList()
+    deviceList = syncDeviceList(devices)
     for key, value in modules.iteritems():
         if hasattr(value, 'syncDevices'):
             logging.info("syncing devices for " +  key)
@@ -109,6 +122,8 @@ def Actuate(module, device, actuator, value):
     if isinstance(module, basestring):
         if module in modules:
             mod = modules[module]
+        elif module in processors.processors:
+            mod = processors.processors[module]
         else:
             logging.error('actuator request for unknown module: %s, dev: %s, actuator: %s, value: %s' % str(module), str(device), str(actuator), str(value))
             return
@@ -143,12 +158,12 @@ def stripDeviceIds(list):
 class syncDeviceList(object):
     """gets the full list of devices 1 time from the cloud and then allows filtered queries on the list"""
 
-    def __init__(self):
-        self._list = cloud.getDevices()
+    def __init__(self, devices):
+        self._list = devices
 
     def filter(self, key):
         """return a sublist, first make certain that we have the list."""
-        result = [x for x in self._list if  cloud.getModuleName(x['name']) == key]
+        result = [x for x in self._list if cloud.getModuleName(x['name']) == key]
         stripDeviceIds(result)       # only do for the requested list so that we have 'full' names for modules that have been removed
         return result
 

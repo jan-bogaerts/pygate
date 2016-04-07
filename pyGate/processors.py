@@ -25,9 +25,18 @@ def load(processorNames):
 def onAssetValueChanged(module, device, asset, value):
     cache.tryUpdateValue(module, device, asset, value)              # before calling any processors update the casche, so that processors that rely on the cache also get the latest value
     for key, mod in processors.iteritems():
-        if mod.onAssetValueChanged:
+        if hasattr(mod, 'onAssetValueChanged'):
             logging.info("running processor " + key)
             try:
                 mod.onAssetValueChanged(module, device, asset, value)
             except:
                 logging.exception('failed to run procesor ' + key + ' to gateway.')
+
+def syncGatewayAssets(full=False):
+    for key, mod in processors.iteritems():
+        if hasattr(mod, 'syncGatewayAssets'):
+            logging.info("syncing gateway assets for " + key)
+            try:
+                mod.syncGatewayAssets()
+            except:
+                logging.exception('failed to sync gateway assets for processor {}.'.format(key))
