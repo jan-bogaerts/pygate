@@ -45,7 +45,7 @@ def syncDevices(existing, full=False):
     manager.syncDevices(existing, full)
 
 
-def syncGatewayAssets(full=False):
+def syncGatewayAssets():
     '''
     optional. Allows a module to synchronize with the cloud, all the assets that should come at the level
     of the gateway.

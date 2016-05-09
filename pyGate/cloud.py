@@ -34,7 +34,7 @@ def connect(actuatorcallback, sensorCallback):
     global _sensorCallback, _actuatorCallback
     _actuatorCallback = actuatorcallback
     _sensorCallback = sensorCallback
-    IOT.on_message = onActuate 
+    IOT.on_message = onActuate
     success = False
     while not success:
         try:
@@ -55,10 +55,11 @@ def _authenticate():
        params:
     '''
     if not config.gatewayId:
-        uid = _getUid();
-        IOT.createGateway("pyGate", uid)
+        uid = _getUid()
+        gatewayName = config.getConfig("general", "name", "pyGate")
+        IOT.createGateway(gatewayName, uid)
         while True:                                     # we try to finish the claim process until success or app quits, cause the app can't continue without a valid and claimed gateway
-            if IOT.finishclaim("pyGate", uid):
+            if IOT.finishclaim(gatewayName, uid):
                 _storeConfig()
                 time.sleep(2)                                # give the platform a litle time to set up all the configs so that we can subscribe correctly to the topic. If we don't do this, the subscribe could fail
                 return True
@@ -108,7 +109,7 @@ def addAsset(module, deviceId, id, name, description, isActuator, assetType, sty
         name = newName
     _httpLock.acquire()
     try:
-        IOT.addAsset(id, devId, name, description, isActuator, assetType, style)
+        return IOT.addAsset(id, devId, name, description, isActuator, assetType, style)
     finally:
         _httpLock.release()
 
@@ -157,6 +158,15 @@ def addDevice(module, deviceId, name, description):
     _httpLock.acquire()
     try:
         IOT.addDevice(devId, name, description)
+    finally:
+        _httpLock.release()
+
+def addDeviceFromTemplate(module, deviceId, templateId):
+    """add a device from template"""
+    devId = getDeviceId(module, deviceId)
+    _httpLock.acquire()
+    try:
+        return IOT.addDeviceFromTemplate(devId, templateId, None)
     finally:
         _httpLock.release()
 

@@ -77,6 +77,14 @@ def loadConfig(fileName, asJson = False):
                 json_data = yaml.safe_load(json_file)
                 return json_data
 
+def getConfig(section, name, default):
+    """return the parameter found in the main configuraion file (pyGate.config) in the specified section, specified
+    name. If the section or name is not present, the default value is returned"""
+    if configs.has_option(section, name):
+        return configs.get(section, name)
+    else:
+        return default
+
 def save():
     '''
     saves the global config data to the global config file. Called when config params have

@@ -6,9 +6,9 @@ __email__ = "jb@allthingstalk.com"
 __status__ = "Prototype"  # "Development", or "Production"
 
 import logging
-from time import sleep                             #pause the app
 import datetime
 logger = logging.getLogger('watchdog')
+from threading import Event
 
 import cloud
 import config
@@ -21,6 +21,8 @@ _nextPingAt = None      # the moment in time that the next ping should be sent.
 _pingCounter = 0        # the count of the ping, increments every time a ping is sent.
 _lastReceived = 0       # the ping counter that was last received.
 _device = None
+_wakeUpEvent = Event()
+_isRunning = True
 
 
 #callback: handles values sent from the cloudapp to the device
@@ -29,6 +31,7 @@ def onActuate(id, value):
     if id == str(WatchDogAssetId):
         _lastReceived = long(value)
         logger.info("received ping: " + str(_lastReceived))
+        cloud.send(_moduleName, None, WatchDogAssetId, _lastReceived) # send back to cloud so that there is feedback.
     else:
         print("unknown actuator: " + id)
 
@@ -62,8 +65,19 @@ def checkPing():
 
     return True
 
+def stop():
+    """"called when the application terminates.  Allows us to clean up the hardware correctly, so we cn be restarted without (cold) reboot"""
+    global _isRunning
+    _isRunning = False
+    _wakeUpEvent.set()  # wake up the thread if it was sleeping
+    logger.info("stopping watchdog")
+
 def run():
+    global _isRunning
     ping()
-    while True:
-        checkPing()
-        sleep(PingFrequency / 15)      # ping every x minutes, so check every x/15 minutes
+    try:
+        while _isRunning:
+            checkPing()
+            _wakeUpEvent.wait(PingFrequency / 15)      # ping every x minutes, so check every x/15 minutes
+    except Exception as e:  # in case of an xbee error: print it and try to continue
+        logger.exception("watchdog failure")

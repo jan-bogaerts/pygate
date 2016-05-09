@@ -12,7 +12,7 @@ class Gateway(object):
 
     def addAsset(self, id, deviceId, name, description, isActuator, assetType, style = "Undefined"):
         """add asset"""
-        cloud.addAsset(self._moduleName, deviceId, id, name, description, isActuator, assetType, style)
+        return cloud.addAsset(self._moduleName, deviceId, id, name, description, isActuator, assetType, style)
 
     def deleteAsset(self, deviceId, asset):
         cloud.deleteAsset(self._moduleName, deviceId, asset)
@@ -23,6 +23,10 @@ class Gateway(object):
     def addDevice(self, deviceId, name, description):
         """add device"""
         cloud.addDevice(self._moduleName, deviceId, name, description)
+
+    def addDeviceFromTemplate(self, deviceId, templateId):
+        """add a device from template"""
+        return cloud.addDeviceFromTemplate(self._moduleName, deviceId, templateId)
 
     def deleteDevice(self, deviceId):
         """delete device"""

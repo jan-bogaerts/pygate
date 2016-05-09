@@ -1,0 +1,1032 @@
+2016-04-26 14:20:27,796 - INFO     - root         - loading ../config/pyGate.config
+2016-04-26 14:20:27,799 - INFO     - root         - modules: main; watchdog
+2016-04-26 14:20:27,799 - INFO     - root         - processors: associations; groups
+2016-04-26 14:20:27,799 - INFO     - root         - gatewayId: 
+2016-04-26 14:20:27,801 - INFO     - root         - clientId: 
+2016-04-26 14:20:27,801 - INFO     - root         - clientKey: 
+2016-04-26 14:20:27,802 - INFO     - root         - api server: api.smartliving.io
+2016-04-26 14:20:27,802 - INFO     - root         - broker: broker.smartliving.io
+2016-04-26 14:20:27,802 - INFO     - root         - secure: True
+2016-04-26 14:20:27,802 - INFO     - att_iot_gateway - connected with http server
+2016-04-26 14:20:27,805 - INFO     - root         - mac address: 0C8BFDD5A295
+2016-04-26 14:20:27,805 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:20:27,805 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:20:27,805 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate", "assets":[] }
+2016-04-26 14:20:28,167 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-26 14:20:28,167 - INFO     - att_iot_gateway - {"id":"55c8acd88b04650a4c4b3b3e","key":"5i4duakv2bq","uid":"0C8BFDD5A295","type":null,"name":"xbee gateway","description":null,"groundId":"E3GxhrbW7abbM6Xe4yCISk8y","ground":{"id":"E3GxhrbW7abbM6Xe4yCISk8y","name":"playground","title":"Playground","ownerId":"5460d9363f6a860b6447935c","visibility":"public"},"client":{"type":"RabbitMqClient","clientId":"testjan","clientSecret":"5i4duakv2bq"},"devices":[],"assets":[],"control":{"name":null,"widgetUrl":null}}
+2016-04-26 14:20:28,167 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:20:28,167 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:20:28,167 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:20:28,273 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-26 14:20:28,273 - INFO     - att_iot_gateway - {"id":"55c8acd88b04650a4c4b3b3e","key":"5i4duakv2bq","uid":"0C8BFDD5A295","type":null,"name":"xbee gateway","description":null,"groundId":"E3GxhrbW7abbM6Xe4yCISk8y","ground":{"id":"E3GxhrbW7abbM6Xe4yCISk8y","name":"playground","title":"Playground","ownerId":"5460d9363f6a860b6447935c","visibility":"public"},"client":{"type":"RabbitMqClient","clientId":"testjan","clientSecret":"5i4duakv2bq"},"devices":[],"assets":[],"control":{"name":null,"widgetUrl":null}}
+2016-04-26 14:20:31,693 - INFO     - root         - loading processors
+2016-04-26 14:20:31,769 - INFO     - att_iot_gateway - Connected to mqtt broker with result code 0
+2016-04-26 14:20:31,769 - INFO     - root         - loading modules
+2016-04-26 14:20:31,772 - INFO     - att_iot_gateway - subscribing to: client/testjan/in/gateway/55c8acd88b04650a4c4b3b3e/#/command
+2016-04-26 14:20:31,802 - INFO     - att_iot_gateway - (0, 1)
+2016-04-26 14:20:31,802 - INFO     - root         - connecting watchdog to gateway
+2016-04-26 14:20:31,803 - INFO     - root         - connecting main to gateway
+2016-04-26 14:20:31,805 - INFO     - att_iot_gateway - HTTP GET: /gateway/55c8acd88b04650a4c4b3b3e?includeDevices=True
+2016-04-26 14:20:31,805 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '5i4duakv2bq', 'Content-type': 'application/json', 'Auth-GatewayId': '55c8acd88b04650a4c4b3b3e'}
+2016-04-26 14:20:31,858 - INFO     - att_iot_gateway - Subscribed to topic, receiving data from the cloud: qos=(0,)
+2016-04-26 14:20:31,921 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-26 14:20:31,921 - INFO     - att_iot_gateway - {"id":"55c8acd88b04650a4c4b3b3e","key":"5i4duakv2bq","uid":"0C8BFDD5A295","type":null,"name":"xbee gateway","description":null,"groundId":"E3GxhrbW7abbM6Xe4yCISk8y","ground":{"id":"E3GxhrbW7abbM6Xe4yCISk8y","name":"playground","title":"Playground","ownerId":"5460d9363f6a860b6447935c","visibility":"public"},"client":{"type":"RabbitMqClient","clientId":"testjan","clientSecret":"5i4duakv2bq"},"devices":[],"assets":[],"control":{"name":null,"widgetUrl":null}}
+2016-04-26 14:20:31,921 - INFO     - att_iot_gateway - connected with http server
+2016-04-26 14:20:31,921 - ERROR    - root         - unrecoverable error
+Traceback (most recent call last):
+  File "C:/Users/Jan/Documents/dev/pyGate/pyGate/pyGate.py", line 35, in <module>
+    modules.syncGateway()
+  File "C:/Users/Jan/Documents/dev/pyGate/pyGate\modules.py", line 39, in syncGateway
+    content = cloud.getGateway()
+  File "C:/Users/Jan/Documents/dev/pyGate/pyGate\cloud.py", line 189, in getGateway
+    return IOT.getGateway(True)
+  File "C:/Users/Jan/Documents/dev/pyGate/pyGate\att_iot_gateway\att_iot_gateway.py", line 319, in getGateway
+    return _getData(url, "", headers)
+  File "C:/Users/Jan/Documents/dev/pyGate/pyGate\att_iot_gateway\att_iot_gateway.py", line 435, in _getData
+    return json.loads(response.read())
+  File "C:\Python27\lib\json\__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "C:\Python27\lib\json\decoder.py", line 366, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "C:\Python27\lib\json\decoder.py", line 384, in raw_decode
+    raise ValueError("No JSON object could be decoded")
+ValueError: No JSON object could be decoded
+2016-04-26 14:20:31,924 - INFO     - root         - pyGate shutting down...
+2016-04-26 14:20:31,926 - INFO     - root         - stopping module watchdog
+2016-04-26 14:20:31,926 - INFO     - watchdog     - stopping watchdog
+2016-04-26 14:20:31,926 - INFO     - root         - pyGate shutdown complete
+2016-04-26 14:22:57,598 - INFO     - root         - loading ../config/pyGate.config
+2016-04-26 14:22:57,598 - INFO     - root         - modules: main; watchdog
+2016-04-26 14:22:57,598 - INFO     - root         - processors: associations; groups
+2016-04-26 14:22:57,598 - INFO     - root         - gatewayId: 55c8acd88b04650a4c4b3b3e
+2016-04-26 14:22:57,599 - INFO     - root         - clientId: testjan
+2016-04-26 14:22:57,599 - INFO     - root         - clientKey: 5i4duakv2bq
+2016-04-26 14:22:57,599 - INFO     - root         - api server: api.smartliving.io
+2016-04-26 14:22:57,601 - INFO     - root         - broker: broker.smartliving.io
+2016-04-26 14:22:57,601 - INFO     - root         - secure: True
+2016-04-26 14:22:57,601 - INFO     - att_iot_gateway - connected with http server
+2016-04-26 14:22:57,601 - INFO     - att_iot_gateway - HTTP GET: /gateway
+2016-04-26 14:22:57,601 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '5i4duakv2bq', 'Content-type': 'application/json', 'Auth-GatewayId': '55c8acd88b04650a4c4b3b3e'}
+2016-04-26 14:22:57,703 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-26 14:22:57,704 - INFO     - att_iot_gateway - [{"id":"55364f6059be3509f839aba2","key":"5i4duakv2bq","uid":"old C03FD563AADA","type":null,"name":"V 1 Liato gateway (sleep - awake)","description":null,"groundId":"E3GxhrbW7abbM6Xe4yCISk8y","ground":{"id":"E3GxhrbW7abbM6Xe4yCISk8y","name":"playground","title":"Playground","ownerId":"5460d9363f6a860b6447935c","visibility":"public"},"client":{"type":"RabbitMqClient","clientId":"testjan","clientSecret":"5i4duakv2bq"},"devices":[],"assets":[],"control":{"name":null,"widgetUrl":null}},{"id":"553a8b059b5b330f70b30e72","key":"5i4duakv2bq","uid":"B827EBCF4D5D_old2","type":null,"name":"Liato gateway old 2","description":null,"groundId":"E3GxhrbW7abbM6Xe4yCISk8y","ground":{"id":"E3GxhrbW7abbM6Xe4yCISk8y","name":"playground","title":"Playground","ownerId":"5460d9363f6a860b6447935c","visibility":"public"},"client":{"type":"RabbitMqClient","clientId":"testjan","clientSecret":"5i4duakv2bq"},"devices":[],"assets":[],"control":{"name":null,"widgetUrl":null}},{"id":"555632207ae2530b385b20c2","key":"5i4duakv2bq","uid":"B827EBCF4D5D","type":null,"name":"Liato gateway","description":null,"groundId":"E3GxhrbW7abbM6Xe4yCISk8y","ground":{"id":"E3GxhrbW7abbM6Xe4yCISk8y","name":"playground","title":"Playground","ownerId":"5460d9363f6a860b6447935c","visibility":"public"},"client":{"type":"RabbitMqClient","clientId":"testjan","clientSecret":"5i4duakv2bq"},"devices":[],"assets":[],"control":{"name":null,"widgetUrl":null}},{"id":"55c8acd88b04650a4c4b3b3e","key":"5i4duakv2bq_old","uid":"0C8BFDD5A295","type":null,"name":"xbee gateway","description":null,"groundId":"E3GxhrbW7abbM6Xe4yCISk8y","ground":{"id":"E3GxhrbW7abbM6Xe4yCISk8y","name":"playground","title":"Playground","ownerId":"5460d9363f6a860b6447935c","visibility":"public"},"client":{"type":"RabbitMqClient","clientId":"testjan","clientSecret":"5i4duakv2bq"},"devices":[],"assets":[],"control":{"name":null,"widgetUrl":null}},{"id":"56facd74a66fe610844eb2fb","key":"5i4duakv2bq","uid":"544A16BF1665","type":null,"name":"pyGate","description":null,"groundId":"8UDGplOffHoZKC6AjX2a0jfN","ground":{"id":"8UDGplOffHoZKC6AjX2a0jfN","name":"tests march","title":"tests march","ownerId":"5460d9363f6a860b6447935c","visibility":"public"},"client":{"type":"RabbitMqClient","clientId":"testjan","clientSecret":"5i4duakv2bq"},"devices":[],"assets":[],"control":{"name":null,"widgetUrl":null}},{"id":"55db248fd2bedb0c484b1391","key":"5i4duakv2bq","uid":"LX2SMPJV","type":null,"name":"zipr gateway","description":null,"groundId":"E3GxhrbW7abbM6Xe4yCISk8y","ground":{"id":"E3GxhrbW7abbM6Xe4yCISk8y","name":"playground","title":"Playground","ownerId":"5460d9363f6a860b6447935c","visibility":"public"},"client":{"type":"RabbitMqClient","clientId":"testjan","clientSecret":"5i4duakv2bq"},"devices":[],"assets":[],"control":{"name":null,"widgetUrl":null}}]
+2016-04-26 14:22:57,704 - INFO     - root         - Authenticated
+2016-04-26 14:22:58,908 - INFO     - root         - loading processors
+2016-04-26 14:22:58,914 - INFO     - root         - loading modules
+2016-04-26 14:22:58,917 - INFO     - root         - connecting watchdog to gateway
+2016-04-26 14:22:58,917 - INFO     - root         - connecting main to gateway
+2016-04-26 14:22:58,918 - INFO     - att_iot_gateway - HTTP GET: /gateway/55c8acd88b04650a4c4b3b3e?includeDevices=True
+2016-04-26 14:22:58,918 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '5i4duakv2bq', 'Content-type': 'application/json', 'Auth-GatewayId': '55c8acd88b04650a4c4b3b3e'}
+2016-04-26 14:22:58,941 - INFO     - att_iot_gateway - Connected to mqtt broker with result code 0
+2016-04-26 14:22:58,941 - INFO     - att_iot_gateway - subscribing to: client/testjan/in/gateway/55c8acd88b04650a4c4b3b3e/#/command
+2016-04-26 14:22:58,943 - INFO     - att_iot_gateway - (0, 1)
+2016-04-26 14:22:58,960 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-26 14:22:58,960 - INFO     - att_iot_gateway - {"id":"55c8acd88b04650a4c4b3b3e","key":"5i4duakv2bq_old","uid":"0C8BFDD5A295","type":null,"name":"xbee gateway","description":null,"groundId":"E3GxhrbW7abbM6Xe4yCISk8y","ground":{"id":"E3GxhrbW7abbM6Xe4yCISk8y","name":"playground","title":"Playground","ownerId":"5460d9363f6a860b6447935c","visibility":"public"},"client":{"type":"RabbitMqClient","clientId":"testjan","clientSecret":"5i4duakv2bq"},"devices":[],"assets":[],"control":{"name":null,"widgetUrl":null}}
+2016-04-26 14:22:58,961 - INFO     - att_iot_gateway - connected with http server
+2016-04-26 14:22:58,961 - ERROR    - root         - unrecoverable error
+Traceback (most recent call last):
+  File "C:/Users/Jan/Documents/dev/pyGate/pyGate/pyGate.py", line 35, in <module>
+    modules.syncGateway()
+  File "C:/Users/Jan/Documents/dev/pyGate/pyGate\modules.py", line 39, in syncGateway
+    content = cloud.getGateway()
+  File "C:/Users/Jan/Documents/dev/pyGate/pyGate\cloud.py", line 189, in getGateway
+    return IOT.getGateway(True)
+  File "C:/Users/Jan/Documents/dev/pyGate/pyGate\att_iot_gateway\att_iot_gateway.py", line 319, in getGateway
+    return _getData(url, "", headers)
+  File "C:/Users/Jan/Documents/dev/pyGate/pyGate\att_iot_gateway\att_iot_gateway.py", line 435, in _getData
+    return json.loads(response.read())
+  File "C:\Python27\lib\json\__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "C:\Python27\lib\json\decoder.py", line 366, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "C:\Python27\lib\json\decoder.py", line 384, in raw_decode
+    raise ValueError("No JSON object could be decoded")
+ValueError: No JSON object could be decoded
+2016-04-26 14:22:58,963 - INFO     - root         - pyGate shutting down...
+2016-04-26 14:22:58,964 - INFO     - root         - stopping module watchdog
+2016-04-26 14:22:58,964 - INFO     - watchdog     - stopping watchdog
+2016-04-26 14:22:58,964 - INFO     - root         - pyGate shutdown complete
+2016-04-26 14:23:53,789 - INFO     - root         - loading ../config/pyGate.config
+2016-04-26 14:23:53,789 - INFO     - root         - modules: main; watchdog
+2016-04-26 14:23:53,789 - INFO     - root         - processors: associations; groups
+2016-04-26 14:23:53,790 - INFO     - root         - gatewayId: 
+2016-04-26 14:23:53,792 - INFO     - root         - clientId: 
+2016-04-26 14:23:53,792 - INFO     - root         - clientKey: 
+2016-04-26 14:23:53,792 - INFO     - root         - api server: api.smartliving.io
+2016-04-26 14:23:53,792 - INFO     - root         - broker: broker.smartliving.io
+2016-04-26 14:23:53,793 - INFO     - root         - secure: True
+2016-04-26 14:23:53,793 - INFO     - att_iot_gateway - connected with http server
+2016-04-26 14:23:53,795 - INFO     - root         - mac address: 0C8BFDD5A295
+2016-04-26 14:23:53,796 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:23:53,796 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:23:53,796 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate", "assets":[] }
+2016-04-26 14:23:53,944 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:23:53,946 - INFO     - att_iot_gateway - 
+2016-04-26 14:23:53,947 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:23:53,947 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:23:53,947 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:23:54,049 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:23:54,049 - INFO     - att_iot_gateway - 
+2016-04-26 14:23:55,051 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:23:55,051 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:23:55,052 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:23:55,203 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:23:55,203 - INFO     - att_iot_gateway - 
+2016-04-26 14:23:56,204 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:23:56,204 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:23:56,204 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:23:56,325 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:23:56,326 - INFO     - att_iot_gateway - 
+2016-04-26 14:23:57,328 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:23:57,328 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:23:57,328 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:23:57,427 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:23:57,427 - INFO     - att_iot_gateway - 
+2016-04-26 14:23:58,428 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:23:58,428 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:23:58,428 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:23:58,588 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:23:58,588 - INFO     - att_iot_gateway - 
+2016-04-26 14:23:59,589 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:23:59,589 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:23:59,591 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:23:59,693 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:23:59,694 - INFO     - att_iot_gateway - 
+2016-04-26 14:24:00,694 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:24:00,694 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:24:00,694 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:24:00,815 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:24:00,816 - INFO     - att_iot_gateway - 
+2016-04-26 14:24:01,816 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:24:01,816 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:24:01,816 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:24:01,930 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:24:01,931 - INFO     - att_iot_gateway - 
+2016-04-26 14:24:02,933 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:24:02,933 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:24:02,933 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:24:03,020 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:24:03,020 - INFO     - att_iot_gateway - 
+2016-04-26 14:24:04,023 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:24:04,023 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:24:04,023 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:24:04,134 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:24:04,134 - INFO     - att_iot_gateway - 
+2016-04-26 14:24:05,135 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:24:05,135 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:24:05,135 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:24:05,256 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:24:05,257 - INFO     - att_iot_gateway - 
+2016-04-26 14:24:06,259 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:24:06,259 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:24:06,260 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:24:06,368 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:24:06,369 - INFO     - att_iot_gateway - 
+2016-04-26 14:24:07,371 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:24:07,371 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:24:07,371 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:24:07,476 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:24:07,476 - INFO     - att_iot_gateway - 
+2016-04-26 14:24:08,477 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:24:08,477 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:24:08,479 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:24:08,571 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:24:08,572 - INFO     - att_iot_gateway - 
+2016-04-26 14:24:09,572 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:24:09,572 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:24:09,572 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:24:09,671 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:24:09,671 - INFO     - att_iot_gateway - 
+2016-04-26 14:24:10,674 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:24:10,674 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:24:10,674 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:24:10,861 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:24:10,861 - INFO     - att_iot_gateway - 
+2016-04-26 14:24:11,861 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:24:11,861 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:24:11,861 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:24:11,967 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:24:11,967 - INFO     - att_iot_gateway - 
+2016-04-26 14:24:12,969 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:24:12,969 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:24:12,969 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:24:13,069 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:24:13,069 - INFO     - att_iot_gateway - 
+2016-04-26 14:24:14,069 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:24:14,069 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:24:14,071 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:24:14,165 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:24:14,167 - INFO     - att_iot_gateway - 
+2016-04-26 14:24:15,167 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:24:15,167 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:24:15,167 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:24:15,279 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:24:15,279 - INFO     - att_iot_gateway - 
+2016-04-26 14:24:16,280 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:24:16,280 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:24:16,282 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:24:16,369 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:24:16,371 - INFO     - att_iot_gateway - 
+2016-04-26 14:24:17,371 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:24:17,371 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:24:17,371 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:24:17,466 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:24:17,466 - INFO     - att_iot_gateway - 
+2016-04-26 14:24:18,467 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:24:18,467 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:24:18,469 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:24:18,576 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:24:18,576 - INFO     - att_iot_gateway - 
+2016-04-26 14:24:19,578 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:24:19,578 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:24:19,579 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:24:19,686 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:24:19,687 - INFO     - att_iot_gateway - 
+2016-04-26 14:24:20,687 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:24:20,687 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:24:20,687 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:24:20,803 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:24:20,805 - INFO     - att_iot_gateway - 
+2016-04-26 14:24:21,805 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:24:21,805 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:24:21,805 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:24:21,928 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:24:21,930 - INFO     - att_iot_gateway - 
+2016-04-26 14:24:22,930 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:24:22,930 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:24:22,930 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:24:23,032 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:24:23,032 - INFO     - att_iot_gateway - 
+2016-04-26 14:24:24,033 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:24:24,033 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:24:24,033 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:24:24,141 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:24:24,142 - INFO     - att_iot_gateway - 
+2016-04-26 14:24:25,142 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:24:25,142 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:24:25,144 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:24:25,234 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-26 14:24:25,236 - INFO     - att_iot_gateway - 
+2016-04-26 14:24:26,236 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-26 14:24:26,236 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-26 14:24:26,236 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-26 14:24:26,338 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-26 14:24:26,338 - INFO     - att_iot_gateway - {"id":"571f5ddea5f930061460cd97","key":"xnmf5g0erse","uid":"0C8BFDD5A295","type":null,"name":"pyGate","description":null,"groundId":"llXLKjWQt7AEM82oAMUzz2QH","ground":{"id":"llXLKjWQt7AEM82oAMUzz2QH","name":"tests","title":"tests","ownerId":"54662cc4e1361b04407f6584","visibility":"public"},"client":{"type":"RabbitMqClient","clientId":"testjan2","clientSecret":"xnmf5g0erse"},"devices":[],"assets":[],"control":{"name":null,"widgetUrl":null}}
+2016-04-26 14:24:29,434 - INFO     - root         - loading processors
+2016-04-26 14:24:29,443 - INFO     - root         - loading modules
+2016-04-26 14:24:29,446 - INFO     - att_iot_gateway - Connected to mqtt broker with result code 0
+2016-04-26 14:24:29,450 - INFO     - root         - connecting watchdog to gateway
+2016-04-26 14:24:29,450 - INFO     - att_iot_gateway - subscribing to: client/testjan2/in/gateway/571f5ddea5f930061460cd97/#/command
+2016-04-26 14:24:29,451 - INFO     - root         - connecting main to gateway
+2016-04-26 14:24:29,453 - INFO     - att_iot_gateway - (0, 1)
+2016-04-26 14:24:29,453 - INFO     - att_iot_gateway - HTTP GET: /gateway/571f5ddea5f930061460cd97?includeDevices=True
+2016-04-26 14:24:29,454 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': 'xnmf5g0erse', 'Content-type': 'application/json', 'Auth-GatewayId': '571f5ddea5f930061460cd97'}
+2016-04-26 14:24:29,506 - INFO     - att_iot_gateway - Subscribed to topic, receiving data from the cloud: qos=(0,)
+2016-04-26 14:24:29,526 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-26 14:24:29,528 - INFO     - att_iot_gateway - {"id":"571f5ddea5f930061460cd97","key":"xnmf5g0erse","uid":"0C8BFDD5A295","type":null,"name":"pyGate","description":null,"groundId":"llXLKjWQt7AEM82oAMUzz2QH","ground":{"id":"llXLKjWQt7AEM82oAMUzz2QH","name":"tests","title":"tests","ownerId":"54662cc4e1361b04407f6584","visibility":"public"},"client":{"type":"RabbitMqClient","clientId":"testjan2","clientSecret":"xnmf5g0erse"},"devices":[],"assets":[],"control":{"name":null,"widgetUrl":null}}
+2016-04-26 14:24:29,529 - INFO     - att_iot_gateway - connected with http server
+2016-04-26 14:24:29,529 - ERROR    - root         - unrecoverable error
+Traceback (most recent call last):
+  File "C:/Users/Jan/Documents/dev/pyGate/pyGate/pyGate.py", line 35, in <module>
+    modules.syncGateway()
+  File "C:/Users/Jan/Documents/dev/pyGate/pyGate\modules.py", line 39, in syncGateway
+    content = cloud.getGateway()
+  File "C:/Users/Jan/Documents/dev/pyGate/pyGate\cloud.py", line 189, in getGateway
+    return IOT.getGateway(True)
+  File "C:/Users/Jan/Documents/dev/pyGate/pyGate\att_iot_gateway\att_iot_gateway.py", line 319, in getGateway
+    return _getData(url, "", headers)
+  File "C:/Users/Jan/Documents/dev/pyGate/pyGate\att_iot_gateway\att_iot_gateway.py", line 435, in _getData
+    return json.loads(response.read())
+  File "C:\Python27\lib\json\__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "C:\Python27\lib\json\decoder.py", line 366, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "C:\Python27\lib\json\decoder.py", line 384, in raw_decode
+    raise ValueError("No JSON object could be decoded")
+ValueError: No JSON object could be decoded
+2016-04-26 14:24:29,533 - INFO     - root         - pyGate shutting down...
+2016-04-26 14:24:29,533 - INFO     - root         - stopping module watchdog
+2016-04-26 14:24:29,535 - INFO     - watchdog     - stopping watchdog
+2016-04-26 14:24:29,536 - INFO     - root         - pyGate shutdown complete
+2016-04-28 15:23:57,697 - INFO     - root         - loading ../config/pyGate.config
+2016-04-28 15:23:57,710 - INFO     - root         - modules: main; watchdog; test
+2016-04-28 15:23:57,710 - INFO     - root         - processors: associations; groups
+2016-04-28 15:23:57,711 - INFO     - root         - gatewayId: 
+2016-04-28 15:23:57,711 - INFO     - root         - clientId: 
+2016-04-28 15:23:57,711 - INFO     - root         - clientKey: 
+2016-04-28 15:23:57,713 - INFO     - root         - api server: apidev.smartliving.io
+2016-04-28 15:23:57,713 - INFO     - root         - broker: brokerdev.smartliving.io
+2016-04-28 15:23:57,713 - INFO     - root         - secure: True
+2016-04-28 15:23:57,713 - INFO     - att_iot_gateway - connected with http server
+2016-04-28 15:23:57,713 - INFO     - root         - mac address: 0C8BFDD5A295
+2016-04-28 15:23:57,714 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:23:57,714 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:23:57,714 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate", "assets":[] }
+2016-04-28 15:23:57,967 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:23:57,969 - INFO     - att_iot_gateway - {"id":"56d805e436935f0d60fa0960","key":"1x1uktlroci","uid":"0C8BFDD5A295","type":null,"name":"pyGate new test","description":null,"groundId":"n7v5NEWTfk6WEiulBgD80meA","ground":{"id":"n7v5NEWTfk6WEiulBgD80meA","name":"playground","title":"Playground","ownerId":"567441544e769c07fc3203e0","visibility":"public"},"client":{"type":"RabbitMqClient","clientId":"testjan4","clientSecret":"1x1uktlroci"},"devices":[],"assets":[],"control":{"name":null,"widgetUrl":null}}
+2016-04-28 15:23:57,970 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:23:57,970 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:23:57,970 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:23:58,000 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:23:58,000 - INFO     - att_iot_gateway - {"id":"56d805e436935f0d60fa0960","key":"1x1uktlroci","uid":"0C8BFDD5A295","type":null,"name":"pyGate new test","description":null,"groundId":"n7v5NEWTfk6WEiulBgD80meA","ground":{"id":"n7v5NEWTfk6WEiulBgD80meA","name":"playground","title":"Playground","ownerId":"567441544e769c07fc3203e0","visibility":"public"},"client":{"type":"RabbitMqClient","clientId":"testjan4","clientSecret":"1x1uktlroci"},"devices":[],"assets":[],"control":{"name":null,"widgetUrl":null}}
+2016-04-28 15:24:00,966 - INFO     - root         - loading processors
+2016-04-28 15:24:01,108 - INFO     - att_iot_gateway - Connected to mqtt broker with result code 0
+2016-04-28 15:24:01,141 - INFO     - root         - loading modules
+2016-04-28 15:24:01,141 - INFO     - att_iot_gateway - subscribing to: client/testjan4/in/gateway/56d805e436935f0d60fa0960/#/command
+2016-04-28 15:24:01,148 - INFO     - att_iot_gateway - (0, 1)
+2016-04-28 15:24:01,151 - INFO     - root         - connecting test to gateway
+2016-04-28 15:24:01,153 - INFO     - root         - connecting watchdog to gateway
+2016-04-28 15:24:01,154 - INFO     - root         - connecting main to gateway
+2016-04-28 15:24:01,154 - INFO     - att_iot_gateway - HTTP GET: /gateway/56d805e436935f0d60fa0960?includeDevices=True
+2016-04-28 15:24:01,154 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': '56d805e436935f0d60fa0960'}
+2016-04-28 15:24:01,177 - INFO     - att_iot_gateway - Subscribed to topic, receiving data from the cloud: qos=(0,)
+2016-04-28 15:24:01,424 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:24:01,426 - INFO     - att_iot_gateway - {"id":"56d805e436935f0d60fa0960","key":"1x1uktlroci","uid":"0C8BFDD5A295","type":null,"name":"pyGate new test","description":null,"groundId":"n7v5NEWTfk6WEiulBgD80meA","ground":{"id":"n7v5NEWTfk6WEiulBgD80meA","name":"playground","title":"Playground","ownerId":"567441544e769c07fc3203e0","visibility":"public"},"client":{"type":"RabbitMqClient","clientId":"testjan4","clientSecret":"1x1uktlroci"},"devices":[{"client":null,"authorizations":null,"id":"EQFxuWw5yWklRLV8uVh84SE","name":"groups_groups","title":"group manager","type":"custom","description":"manage your device groups with single controls","ownerId":"567441544e769c07fc3203e0","gatewayId":"56d805e436935f0d60fa0960","groundId":"n7v5NEWTfk6WEiulBgD80meA","ground":{"id":"n7v5NEWTfk6WEiulBgD80meA","name":"playground","title":"Playground","ownerId":"567441544e769c07fc3203e0","visibility":"public"},"activityEnabled":false,"createdBy":"56d805e436935f0d60fa0960","createdOn":"2016-03-03T09:38:05.956Z","lastActiveAt":null,"updatedBy":"56d805e436935f0d60fa0960","updatedOn":"2016-03-03T09:38:05.956Z","meta":null,"control":null,"assets":[{"deviceId":"EQFxuWw5yWklRLV8uVh84SE","id":"56d805fe36935f0d60fa097d","name":"groupDefs","title":"group definitions","is":"actuator","description":"define all the groups","createdOn":"2016-03-03T09:38:06.173Z","createdBy":"56d805e436935f0d60fa0960","updatedOn":"2016-03-03T09:38:06.173Z","updatedBy":"56d805e436935f0d60fa0960","profile":{"type":"object"},"control":{"name":""},"state":null,"style":"undefined"},{"deviceId":"EQFxuWw5yWklRLV8uVh84SE","id":"56d8060036935f0d60fa098d","name":"allRollerShutters","title":"all roller shutters","is":"actuator","description":"move all roller shutters at the same time","createdOn":"2016-03-03T09:38:08.675Z","createdBy":"56d805e436935f0d60fa0960","updatedOn":"2016-03-03T09:38:08.675Z","updatedBy":"56d805e436935f0d60fa0960","profile":{"minimum":0,"type":"integer","maximum":99},"control":{"name":""},"state":null,"style":"undefined"}]}],"assets":[],"control":{"name":null,"widgetUrl":null}}
+2016-04-28 15:24:01,427 - INFO     - att_iot_gateway - connected with http server
+2016-04-28 15:24:01,427 - ERROR    - root         - unrecoverable error
+Traceback (most recent call last):
+  File "C:/Users/Jan/Documents/dev/pyGate/pyGate/pyGate.py", line 35, in <module>
+    modules.syncGateway()
+  File "C:/Users/Jan/Documents/dev/pyGate/pyGate\modules.py", line 39, in syncGateway
+    content = cloud.getGateway()
+  File "C:/Users/Jan/Documents/dev/pyGate/pyGate\cloud.py", line 189, in getGateway
+    return IOT.getGateway(True)
+  File "C:/Users/Jan/Documents/dev/pyGate/pyGate\att_iot_gateway\att_iot_gateway.py", line 319, in getGateway
+    return _getData(url, "", headers)
+  File "C:/Users/Jan/Documents/dev/pyGate/pyGate\att_iot_gateway\att_iot_gateway.py", line 435, in _getData
+    return json.loads(response.read())
+  File "C:\Python27\lib\json\__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "C:\Python27\lib\json\decoder.py", line 366, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "C:\Python27\lib\json\decoder.py", line 384, in raw_decode
+    raise ValueError("No JSON object could be decoded")
+ValueError: No JSON object could be decoded
+2016-04-28 15:24:01,430 - INFO     - root         - pyGate shutting down...
+2016-04-28 15:24:01,430 - INFO     - root         - stopping module test
+2016-04-28 15:24:01,431 - INFO     - test         - stopping mbus network
+2016-04-28 15:24:01,431 - INFO     - root         - stopping module watchdog
+2016-04-28 15:24:01,433 - INFO     - watchdog     - stopping watchdog
+2016-04-28 15:24:01,433 - INFO     - root         - pyGate shutdown complete
+2016-04-28 15:26:38,917 - INFO     - root         - loading ../config/pyGate.config
+2016-04-28 15:26:38,917 - INFO     - root         - modules: main; watchdog; test
+2016-04-28 15:26:38,917 - INFO     - root         - processors: associations; groups
+2016-04-28 15:26:38,917 - INFO     - root         - gatewayId: 
+2016-04-28 15:26:38,917 - INFO     - root         - clientId: 
+2016-04-28 15:26:38,918 - INFO     - root         - clientKey: 
+2016-04-28 15:26:38,918 - INFO     - root         - api server: apidev.smartliving.io
+2016-04-28 15:26:38,920 - INFO     - root         - broker: brokerdev.smartliving.io
+2016-04-28 15:26:38,920 - INFO     - root         - secure: True
+2016-04-28 15:26:38,921 - INFO     - att_iot_gateway - connected with http server
+2016-04-28 15:26:38,921 - INFO     - root         - mac address: 0C8BFDD5A295
+2016-04-28 15:26:38,921 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:26:38,923 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:26:38,923 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate", "assets":[] }
+2016-04-28 15:26:39,661 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:26:39,663 - INFO     - att_iot_gateway - 
+2016-04-28 15:26:39,664 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:26:39,664 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:26:39,664 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:26:39,703 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:26:39,706 - INFO     - att_iot_gateway - 
+2016-04-28 15:26:40,726 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:26:40,730 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:26:40,732 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:26:40,769 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:26:40,770 - INFO     - att_iot_gateway - 
+2016-04-28 15:26:41,773 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:26:41,773 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:26:41,773 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:26:41,808 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:26:41,808 - INFO     - att_iot_gateway - 
+2016-04-28 15:26:42,809 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:26:42,809 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:26:42,811 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:26:42,844 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:26:42,845 - INFO     - att_iot_gateway - 
+2016-04-28 15:26:43,845 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:26:43,845 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:26:43,845 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:26:43,871 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:26:43,872 - INFO     - att_iot_gateway - 
+2016-04-28 15:26:44,874 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:26:44,874 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:26:44,875 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:26:44,904 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:26:44,904 - INFO     - att_iot_gateway - 
+2016-04-28 15:26:45,917 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:26:45,920 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:26:45,920 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:26:45,950 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:26:45,953 - INFO     - att_iot_gateway - 
+2016-04-28 15:26:46,953 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:26:46,953 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:26:46,953 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:26:46,984 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:26:46,986 - INFO     - att_iot_gateway - 
+2016-04-28 15:26:47,986 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:26:47,986 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:26:47,987 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:26:48,019 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:26:48,020 - INFO     - att_iot_gateway - 
+2016-04-28 15:26:49,022 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:26:49,022 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:26:49,023 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:26:49,061 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:26:49,061 - INFO     - att_iot_gateway - 
+2016-04-28 15:26:50,071 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:26:50,072 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:26:50,072 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:26:50,104 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:26:50,104 - INFO     - att_iot_gateway - 
+2016-04-28 15:26:51,105 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:26:51,105 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:26:51,107 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:26:51,138 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:26:51,138 - INFO     - att_iot_gateway - 
+2016-04-28 15:26:52,140 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:26:52,140 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:26:52,141 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:26:52,171 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:26:52,173 - INFO     - att_iot_gateway - 
+2016-04-28 15:26:53,174 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:26:53,174 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:26:53,176 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:26:53,198 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:26:53,200 - INFO     - att_iot_gateway - 
+2016-04-28 15:26:54,200 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:26:54,201 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:26:54,201 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:26:54,226 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:26:54,227 - INFO     - att_iot_gateway - 
+2016-04-28 15:26:55,229 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:26:55,229 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:26:55,229 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:26:55,263 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:26:55,265 - INFO     - att_iot_gateway - 
+2016-04-28 15:26:56,266 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:26:56,266 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:26:56,267 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:26:56,302 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:26:56,305 - INFO     - att_iot_gateway - 
+2016-04-28 15:26:57,305 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:26:57,305 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:26:57,305 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:26:57,338 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:26:57,339 - INFO     - att_iot_gateway - 
+2016-04-28 15:26:58,342 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:26:58,342 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:26:58,342 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:26:58,378 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:26:58,380 - INFO     - att_iot_gateway - 
+2016-04-28 15:26:59,381 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:26:59,381 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:26:59,381 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:26:59,413 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:26:59,414 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:00,414 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:00,414 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:00,414 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:00,453 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:00,453 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:01,454 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:01,456 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:01,457 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:01,490 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:01,492 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:02,493 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:02,496 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:02,496 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:02,523 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:02,525 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:03,528 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:03,529 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:03,529 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:03,559 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:03,561 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:04,562 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:04,562 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:04,565 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:04,595 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:04,596 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:05,598 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:05,598 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:05,598 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:05,630 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:05,631 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:06,631 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:06,631 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:06,632 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:06,674 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:06,676 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:07,677 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:07,677 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:07,677 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:07,707 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:07,709 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:08,709 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:08,709 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:08,710 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:08,737 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:08,737 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:09,740 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:09,740 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:09,740 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:09,766 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:09,766 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:10,767 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:10,769 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:10,769 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:10,803 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:10,805 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:11,808 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:11,809 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:11,809 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:11,838 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:11,838 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:12,839 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:12,839 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:12,842 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:12,867 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:12,868 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:13,868 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:13,868 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:13,869 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:13,898 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:13,900 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:14,901 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:14,901 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:14,903 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:14,931 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:14,933 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:15,934 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:15,934 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:15,934 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:15,966 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:15,967 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:16,967 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:16,969 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:16,969 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:17,000 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:17,000 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:18,002 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:18,003 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:18,003 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:18,035 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:18,036 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:19,039 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:19,043 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:19,049 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:19,082 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:19,084 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:20,085 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:20,085 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:20,086 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:20,112 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:20,114 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:21,115 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:21,117 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:21,118 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:21,148 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:21,151 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:22,151 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:22,154 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:22,154 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:22,193 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:22,194 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:23,197 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:23,198 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:23,200 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:23,230 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:23,230 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:24,233 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:24,233 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:24,233 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:24,309 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:24,311 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:25,312 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:25,312 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:25,313 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:25,339 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:25,341 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:26,342 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:26,342 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:26,344 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:26,374 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:26,375 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:27,375 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:27,375 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:27,377 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:27,404 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:27,405 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:28,407 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:28,408 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:28,411 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:28,443 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:28,444 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:29,447 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:29,447 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:29,447 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:29,480 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:29,480 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:30,482 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:30,482 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:30,483 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:30,515 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:30,515 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:31,516 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:31,517 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:31,519 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:31,552 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:31,553 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:32,553 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:32,555 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:32,558 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:32,585 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:32,586 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:33,588 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:33,588 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:33,588 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:33,615 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:33,617 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:34,617 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:34,618 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:34,624 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:34,654 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:34,657 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:35,657 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:35,657 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:35,658 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:35,703 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:35,703 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:36,706 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:36,707 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:36,707 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:36,747 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-04-28 15:27:36,749 - INFO     - att_iot_gateway - 
+2016-04-28 15:27:37,750 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-04-28 15:27:37,750 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-04-28 15:27:37,750 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"0C8BFDD5A295","name":"pyGate" , "assets":[]}
+2016-04-28 15:27:37,783 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:27:37,785 - INFO     - att_iot_gateway - {"id":"VVyGO2Ba6LpuX6aU8snfOJ4c","key":"1x1uktlroci","uid":"0C8BFDD5A295","type":null,"name":"pyGate","description":null,"groundId":"n7v5NEWTfk6WEiulBgD80meA","ground":{"id":"n7v5NEWTfk6WEiulBgD80meA","name":"playground","title":"Playground","ownerId":"567441544e769c07fc3203e0","visibility":"public"},"client":{"type":"RabbitMqClient","clientId":"testjan4","clientSecret":"1x1uktlroci"},"devices":[],"assets":[],"control":{"name":null,"widgetUrl":null}}
+2016-04-28 15:27:41,016 - INFO     - root         - loading processors
+2016-04-28 15:27:41,032 - INFO     - root         - loading modules
+2016-04-28 15:27:41,040 - INFO     - att_iot_gateway - Connected to mqtt broker with result code 0
+2016-04-28 15:27:41,049 - INFO     - root         - connecting test to gateway
+2016-04-28 15:27:41,049 - INFO     - att_iot_gateway - subscribing to: client/testjan4/in/gateway/VVyGO2Ba6LpuX6aU8snfOJ4c/#/command
+2016-04-28 15:27:41,052 - INFO     - root         - connecting watchdog to gateway
+2016-04-28 15:27:41,055 - INFO     - att_iot_gateway - (0, 1)
+2016-04-28 15:27:41,055 - INFO     - root         - connecting main to gateway
+2016-04-28 15:27:41,056 - INFO     - att_iot_gateway - HTTP GET: /gateway/VVyGO2Ba6LpuX6aU8snfOJ4c?includeDevices=True
+2016-04-28 15:27:41,058 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:27:41,085 - INFO     - att_iot_gateway - Subscribed to topic, receiving data from the cloud: qos=(0,)
+2016-04-28 15:27:41,109 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:27:41,111 - INFO     - att_iot_gateway - {"id":"VVyGO2Ba6LpuX6aU8snfOJ4c","key":"1x1uktlroci","uid":"0C8BFDD5A295","type":null,"name":"pyGate","description":null,"groundId":"n7v5NEWTfk6WEiulBgD80meA","ground":{"id":"n7v5NEWTfk6WEiulBgD80meA","name":"playground","title":"Playground","ownerId":"567441544e769c07fc3203e0","visibility":"public"},"client":{"type":"RabbitMqClient","clientId":"testjan4","clientSecret":"1x1uktlroci"},"devices":[],"assets":[],"control":{"name":null,"widgetUrl":null}}
+2016-04-28 15:27:41,111 - INFO     - att_iot_gateway - connected with http server
+2016-04-28 15:27:41,114 - ERROR    - root         - unrecoverable error
+Traceback (most recent call last):
+  File "C:/Users/Jan/Documents/dev/pyGate/pyGate/pyGate.py", line 35, in <module>
+    modules.syncGateway()
+  File "C:/Users/Jan/Documents/dev/pyGate/pyGate\modules.py", line 39, in syncGateway
+    content = cloud.getGateway()
+  File "C:/Users/Jan/Documents/dev/pyGate/pyGate\cloud.py", line 189, in getGateway
+    return IOT.getGateway(True)
+  File "C:/Users/Jan/Documents/dev/pyGate/pyGate\att_iot_gateway\att_iot_gateway.py", line 319, in getGateway
+    return _getData(url, "", headers)
+  File "C:/Users/Jan/Documents/dev/pyGate/pyGate\att_iot_gateway\att_iot_gateway.py", line 435, in _getData
+    return json.loads(response.read())
+  File "C:\Python27\lib\json\__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "C:\Python27\lib\json\decoder.py", line 366, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "C:\Python27\lib\json\decoder.py", line 384, in raw_decode
+    raise ValueError("No JSON object could be decoded")
+ValueError: No JSON object could be decoded
+2016-04-28 15:27:41,121 - INFO     - root         - pyGate shutting down...
+2016-04-28 15:27:41,124 - INFO     - root         - stopping module test
+2016-04-28 15:27:41,125 - INFO     - test         - stopping mbus network
+2016-04-28 15:27:41,125 - INFO     - root         - stopping module watchdog
+2016-04-28 15:27:41,127 - INFO     - watchdog     - stopping watchdog
+2016-04-28 15:27:41,128 - INFO     - root         - pyGate shutdown complete
+2016-04-28 15:29:04,500 - INFO     - root         - loading ../config/pyGate.config
+2016-04-28 15:29:04,500 - INFO     - root         - modules: main; watchdog; test
+2016-04-28 15:29:04,502 - INFO     - root         - processors: associations; groups
+2016-04-28 15:29:04,502 - INFO     - root         - gatewayId: VVyGO2Ba6LpuX6aU8snfOJ4c
+2016-04-28 15:29:04,503 - INFO     - root         - clientId: testjan4
+2016-04-28 15:29:04,503 - INFO     - root         - clientKey: 1x1uktlroci
+2016-04-28 15:29:04,503 - INFO     - root         - api server: apidev.smartliving.io
+2016-04-28 15:29:04,503 - INFO     - root         - broker: brokerdev.smartliving.io
+2016-04-28 15:29:04,503 - INFO     - root         - secure: True
+2016-04-28 15:29:04,505 - INFO     - att_iot_gateway - connected with http server
+2016-04-28 15:29:04,505 - INFO     - att_iot_gateway - HTTP GET: /gateway
+2016-04-28 15:29:04,505 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:29:04,640 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:29:04,641 - INFO     - att_iot_gateway - [{"id":"VVyGO2Ba6LpuX6aU8snfOJ4c","key":"1x1uktlroci","uid":"0C8BFDD5A295","type":null,"name":"pyGate","description":null,"groundId":"n7v5NEWTfk6WEiulBgD80meA","ground":{"id":"n7v5NEWTfk6WEiulBgD80meA","name":"playground","title":"Playground","ownerId":"567441544e769c07fc3203e0","visibility":"public"},"client":{"type":"RabbitMqClient","clientId":"testjan4","clientSecret":"1x1uktlroci"},"devices":[],"assets":[],"control":{"name":null,"widgetUrl":null}}]
+2016-04-28 15:29:04,641 - INFO     - root         - Authenticated
+2016-04-28 15:29:05,536 - INFO     - root         - loading processors
+2016-04-28 15:29:05,540 - INFO     - root         - loading modules
+2016-04-28 15:29:05,546 - INFO     - root         - connecting test to gateway
+2016-04-28 15:29:05,546 - INFO     - root         - connecting watchdog to gateway
+2016-04-28 15:29:05,546 - INFO     - root         - connecting main to gateway
+2016-04-28 15:29:05,548 - INFO     - att_iot_gateway - HTTP GET: /gateway/VVyGO2Ba6LpuX6aU8snfOJ4c?includeDevices=True
+2016-04-28 15:29:05,549 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:29:05,562 - INFO     - att_iot_gateway - Connected to mqtt broker with result code 0
+2016-04-28 15:29:05,562 - INFO     - att_iot_gateway - subscribing to: client/testjan4/in/gateway/VVyGO2Ba6LpuX6aU8snfOJ4c/#/command
+2016-04-28 15:29:05,563 - INFO     - att_iot_gateway - (0, 1)
+2016-04-28 15:29:05,591 - INFO     - att_iot_gateway - Subscribed to topic, receiving data from the cloud: qos=(0,)
+2016-04-28 15:29:18,430 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:29:20,766 - INFO     - att_iot_gateway - {"id":"VVyGO2Ba6LpuX6aU8snfOJ4c","key":"1x1uktlroci","uid":"0C8BFDD5A295","type":null,"name":"pyGate","description":null,"groundId":"n7v5NEWTfk6WEiulBgD80meA","ground":{"id":"n7v5NEWTfk6WEiulBgD80meA","name":"playground","title":"Playground","ownerId":"567441544e769c07fc3203e0","visibility":"public"},"client":{"type":"RabbitMqClient","clientId":"testjan4","clientSecret":"1x1uktlroci"},"devices":[],"assets":[],"control":{"name":null,"widgetUrl":null}}
+2016-04-28 15:29:41,273 - INFO     - root         - loading ../config/pyGate.config
+2016-04-28 15:29:41,273 - INFO     - root         - modules: main; watchdog; test
+2016-04-28 15:29:41,273 - INFO     - root         - processors: associations; groups
+2016-04-28 15:29:41,273 - INFO     - root         - gatewayId: VVyGO2Ba6LpuX6aU8snfOJ4c
+2016-04-28 15:29:41,275 - INFO     - root         - clientId: testjan4
+2016-04-28 15:29:41,275 - INFO     - root         - clientKey: 1x1uktlroci
+2016-04-28 15:29:41,276 - INFO     - root         - api server: apidev.smartliving.io
+2016-04-28 15:29:41,276 - INFO     - root         - broker: brokerdev.smartliving.io
+2016-04-28 15:29:41,276 - INFO     - root         - secure: True
+2016-04-28 15:29:41,276 - INFO     - att_iot_gateway - connected with http server
+2016-04-28 15:29:41,276 - INFO     - att_iot_gateway - HTTP GET: /gateway
+2016-04-28 15:29:41,278 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:29:41,338 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:29:41,339 - INFO     - att_iot_gateway - [{"id":"VVyGO2Ba6LpuX6aU8snfOJ4c","key":"1x1uktlroci","uid":"0C8BFDD5A295","type":null,"name":"pyGate","description":null,"groundId":"n7v5NEWTfk6WEiulBgD80meA","ground":{"id":"n7v5NEWTfk6WEiulBgD80meA","name":"playground","title":"Playground","ownerId":"567441544e769c07fc3203e0","visibility":"public"},"client":{"type":"RabbitMqClient","clientId":"testjan4","clientSecret":"1x1uktlroci"},"devices":[],"assets":[],"control":{"name":null,"widgetUrl":null}}]
+2016-04-28 15:29:41,339 - INFO     - root         - Authenticated
+2016-04-28 15:29:42,174 - INFO     - root         - loading processors
+2016-04-28 15:29:42,178 - INFO     - root         - loading modules
+2016-04-28 15:29:42,184 - INFO     - root         - connecting test to gateway
+2016-04-28 15:29:42,184 - INFO     - root         - connecting watchdog to gateway
+2016-04-28 15:29:42,184 - INFO     - root         - connecting main to gateway
+2016-04-28 15:29:42,184 - INFO     - att_iot_gateway - HTTP GET: /gateway/VVyGO2Ba6LpuX6aU8snfOJ4c?includeDevices=True
+2016-04-28 15:29:42,186 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:29:42,201 - INFO     - att_iot_gateway - Connected to mqtt broker with result code 0
+2016-04-28 15:29:42,203 - INFO     - att_iot_gateway - subscribing to: client/testjan4/in/gateway/VVyGO2Ba6LpuX6aU8snfOJ4c/#/command
+2016-04-28 15:29:42,203 - INFO     - att_iot_gateway - (0, 1)
+2016-04-28 15:29:42,230 - INFO     - att_iot_gateway - Subscribed to topic, receiving data from the cloud: qos=(0,)
+2016-04-28 15:29:51,493 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:29:55,117 - INFO     - att_iot_gateway - {"id":"VVyGO2Ba6LpuX6aU8snfOJ4c","key":"1x1uktlroci","uid":"0C8BFDD5A295","type":null,"name":"pyGate","description":null,"groundId":"n7v5NEWTfk6WEiulBgD80meA","ground":{"id":"n7v5NEWTfk6WEiulBgD80meA","name":"playground","title":"Playground","ownerId":"567441544e769c07fc3203e0","visibility":"public"},"client":{"type":"RabbitMqClient","clientId":"testjan4","clientSecret":"1x1uktlroci"},"devices":[],"assets":[],"control":{"name":null,"widgetUrl":null}}
+2016-04-28 15:31:31,295 - INFO     - root         - loading ../config/pyGate.config
+2016-04-28 15:31:31,296 - INFO     - root         - modules: main; watchdog; test
+2016-04-28 15:31:31,298 - INFO     - root         - processors: associations; groups
+2016-04-28 15:31:31,299 - INFO     - root         - gatewayId: VVyGO2Ba6LpuX6aU8snfOJ4c
+2016-04-28 15:31:31,299 - INFO     - root         - clientId: testjan4
+2016-04-28 15:31:31,301 - INFO     - root         - clientKey: 1x1uktlroci
+2016-04-28 15:31:31,302 - INFO     - root         - api server: apidev.smartliving.io
+2016-04-28 15:31:31,302 - INFO     - root         - broker: brokerdev.smartliving.io
+2016-04-28 15:31:31,303 - INFO     - root         - secure: True
+2016-04-28 15:31:31,305 - INFO     - att_iot_gateway - connected with http server
+2016-04-28 15:31:31,305 - INFO     - att_iot_gateway - HTTP GET: /gateway
+2016-04-28 15:31:31,306 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:31:31,446 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:31:31,447 - INFO     - att_iot_gateway - [{"id":"VVyGO2Ba6LpuX6aU8snfOJ4c","key":"1x1uktlroci","uid":"0C8BFDD5A295","type":null,"name":"pyGate","description":null,"groundId":"n7v5NEWTfk6WEiulBgD80meA","ground":{"id":"n7v5NEWTfk6WEiulBgD80meA","name":"playground","title":"Playground","ownerId":"567441544e769c07fc3203e0","visibility":"public"},"client":{"type":"RabbitMqClient","clientId":"testjan4","clientSecret":"1x1uktlroci"},"devices":[],"assets":[],"control":{"name":null,"widgetUrl":null}}]
+2016-04-28 15:31:31,447 - INFO     - root         - Authenticated
+2016-04-28 15:31:32,770 - INFO     - root         - loading processors
+2016-04-28 15:31:32,790 - INFO     - root         - loading modules
+2016-04-28 15:31:32,802 - INFO     - att_iot_gateway - Connected to mqtt broker with result code 0
+2016-04-28 15:31:32,812 - INFO     - att_iot_gateway - subscribing to: client/testjan4/in/gateway/VVyGO2Ba6LpuX6aU8snfOJ4c/#/command
+2016-04-28 15:31:32,813 - INFO     - root         - connecting test to gateway
+2016-04-28 15:31:32,816 - INFO     - att_iot_gateway - (0, 1)
+2016-04-28 15:31:32,816 - INFO     - root         - connecting watchdog to gateway
+2016-04-28 15:31:32,821 - INFO     - root         - connecting main to gateway
+2016-04-28 15:31:32,822 - INFO     - att_iot_gateway - HTTP GET: /gateway/VVyGO2Ba6LpuX6aU8snfOJ4c?includeDevices=True
+2016-04-28 15:31:32,823 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:31:32,848 - INFO     - att_iot_gateway - Subscribed to topic, receiving data from the cloud: qos=(0,)
+2016-04-28 15:31:36,536 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:31:36,538 - INFO     - att_iot_gateway - {"id":"VVyGO2Ba6LpuX6aU8snfOJ4c","key":"1x1uktlroci","uid":"0C8BFDD5A295","type":null,"name":"pyGate","description":null,"groundId":"n7v5NEWTfk6WEiulBgD80meA","ground":{"id":"n7v5NEWTfk6WEiulBgD80meA","name":"playground","title":"Playground","ownerId":"567441544e769c07fc3203e0","visibility":"public"},"client":{"type":"RabbitMqClient","clientId":"testjan4","clientSecret":"1x1uktlroci"},"devices":[],"assets":[],"control":{"name":null,"widgetUrl":null}}
+2016-04-28 15:31:36,540 - INFO     - root         - syncing gateway assets for test
+2016-04-28 15:31:36,542 - INFO     - att_iot_gateway - HTTP PUT: /asset/test_isScanning
+2016-04-28 15:31:36,542 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:31:36,543 - INFO     - att_iot_gateway - HTTP BODY:{"title":"test is scanning","description":"activate/stop scanning mode on mbus for discovering new devices", "style": "Undefined","is":"actuator","profile": {"type":"boolean" }}
+2016-04-28 15:31:36,599 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:31:36,601 - INFO     - att_iot_gateway - {"deviceId":"VVyGO2Ba6LpuX6aU8snfOJ4c","id":"DSodr8e499FJOSbFtezveIvY","name":"test_isScanning","title":"test is scanning","is":"actuator","description":"activate/stop scanning mode on mbus for discovering new devices","createdOn":"2016-04-28T13:31:37.2668992+00:00","createdBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","updatedOn":"2016-04-28T13:31:37.2668992+00:00","updatedBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","profile":{"type":"boolean"},"control":{"name":""},"state":null,"style":"undefined"}
+2016-04-28 15:31:36,602 - INFO     - root         - syncing gateway assets for watchdog
+2016-04-28 15:31:36,604 - INFO     - att_iot_gateway - HTTP PUT: /asset/watchdog_networkWatchDog
+2016-04-28 15:31:36,605 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:31:36,605 - INFO     - att_iot_gateway - HTTP BODY:{"title":"network watchdog","description":"monitor the network and restart if required", "style": "Undefined","is":"actuator","profile": {"type":"integer" }}
+2016-04-28 15:31:36,657 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:31:36,658 - INFO     - att_iot_gateway - {"deviceId":"VVyGO2Ba6LpuX6aU8snfOJ4c","id":"hs6xpAo0Hu4UWVu1wyZHgLxh","name":"watchdog_networkWatchDog","title":"network watchdog","is":"actuator","description":"monitor the network and restart if required","createdOn":"2016-04-28T13:31:37.3294305+00:00","createdBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","updatedOn":"2016-04-28T13:31:37.3294305+00:00","updatedBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","profile":{"type":"integer"},"control":{"name":""},"state":null,"style":"undefined"}
+2016-04-28 15:31:36,660 - INFO     - root         - syncing gateway assets for main
+2016-04-28 15:31:36,661 - INFO     - att_iot_gateway - HTTP PUT: /asset/main_1
+2016-04-28 15:31:36,661 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:31:36,663 - INFO     - att_iot_gateway - HTTP BODY:{"title":"refresh","description":"refresh all the devices and assets", "style": "Undefined","is":"actuator","profile": {"type":"boolean" }}
+2016-04-28 15:31:36,723 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:31:36,724 - INFO     - att_iot_gateway - {"deviceId":"VVyGO2Ba6LpuX6aU8snfOJ4c","id":"w6qMx9M9tknSca8XtBnIpvHk","name":"main_1","title":"refresh","is":"actuator","description":"refresh all the devices and assets","createdOn":"2016-04-28T13:31:37.3919035+00:00","createdBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","updatedOn":"2016-04-28T13:31:37.3919035+00:00","updatedBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","profile":{"type":"boolean"},"control":{"name":""},"state":null,"style":"undefined"}
+2016-04-28 15:31:36,726 - INFO     - att_iot_gateway - HTTP PUT: /asset/main_applicationId
+2016-04-28 15:31:36,726 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:31:36,727 - INFO     - att_iot_gateway - HTTP BODY:{"title":"application Id","description":"Identifies the software running on the gateway", "style": "Undefined","is":"sensor","profile": {"type":"string" }}
+2016-04-28 15:31:36,776 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:31:36,778 - INFO     - att_iot_gateway - {"deviceId":"VVyGO2Ba6LpuX6aU8snfOJ4c","id":"yNNHenlgqoHkwxqpJbLUdoCT","name":"main_applicationId","title":"application Id","is":"sensor","description":"Identifies the software running on the gateway","createdOn":"2016-04-28T13:31:37.4388374+00:00","createdBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","updatedOn":"2016-04-28T13:31:37.4388374+00:00","updatedBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","profile":{"type":"string"},"control":{"name":""},"state":null,"style":"undefined"}
+2016-04-28 15:31:36,779 - INFO     - att_iot_gateway - HTTP PUT: /asset/modules_activeplugins
+2016-04-28 15:31:36,779 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:31:36,780 - INFO     - att_iot_gateway - HTTP BODY:{"title":"Active plugins","description":"The list of currently active plugins", "style": "Undefined","is":"actuator","profile":{"type": "array", "items":{"type":"string"}}}
+2016-04-28 15:31:36,826 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:31:36,828 - INFO     - att_iot_gateway - {"deviceId":"VVyGO2Ba6LpuX6aU8snfOJ4c","id":"CHcxa9eOYmwKyYNNOExr1yYo","name":"modules_activeplugins","title":"Active plugins","is":"actuator","description":"The list of currently active plugins","createdOn":"2016-04-28T13:31:37.5034973+00:00","createdBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","updatedOn":"2016-04-28T13:31:37.5034973+00:00","updatedBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","profile":{"type":"array","items":{"type":"string"}},"control":{"name":""},"state":null,"style":"undefined"}
+2016-04-28 15:31:36,828 - INFO     - root         - syncing gateway assets for associations
+2016-04-28 15:31:36,829 - INFO     - att_iot_gateway - HTTP PUT: /asset/associations_assiociationdefs
+2016-04-28 15:31:36,831 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:31:36,832 - INFO     - att_iot_gateway - HTTP BODY:{"title":"associations","description":"The list of currently active associations", "style": "Config","is":"actuator","profile": {"type":"object" }}
+2016-04-28 15:31:36,869 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:31:36,871 - INFO     - att_iot_gateway - {"deviceId":"VVyGO2Ba6LpuX6aU8snfOJ4c","id":"QdYPlJIR6Og5Ujc3ELdpPK62","name":"associations_assiociationdefs","title":"associations","is":"actuator","description":"The list of currently active associations","createdOn":"2016-04-28T13:31:37.5481595+00:00","createdBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","updatedOn":"2016-04-28T13:31:37.5481595+00:00","updatedBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","profile":{"type":"object"},"control":{"name":""},"state":null,"style":"undefined"}
+2016-04-28 15:31:36,871 - INFO     - root         - syncing devices for test
+2016-04-28 15:31:36,872 - INFO     - root         - waiting for mqtt connection before starting all plugins
+2016-04-28 15:31:36,875 - INFO     - att_iot_gateway - Publishing message - topic: client/testjan4/out/gateway/VVyGO2Ba6LpuX6aU8snfOJ4c/asset/modules_activeplugins/state, payload: {"at": "2016-04-28T13:31:36.874000Z", "value": ["main", "watchdog", "test"]}
+2016-04-28 15:31:36,878 - INFO     - root         - running processor associations
+2016-04-28 15:31:36,880 - INFO     - root         - running processor groups
+2016-04-28 15:31:36,881 - INFO     - root         - starting up all plugins
+2016-04-28 15:31:36,884 - INFO     - att_iot_gateway - Publishing message - topic: client/testjan4/out/gateway/VVyGO2Ba6LpuX6aU8snfOJ4c/asset/test_isScanning/state, payload: 1461850296|false
+2016-04-28 15:31:36,891 - INFO     - root         - running processor associations
+2016-04-28 15:31:36,891 - INFO     - att_iot_gateway - Publishing message - topic: client/testjan4/in/gateway/VVyGO2Ba6LpuX6aU8snfOJ4c/asset/watchdog_networkWatchDog/command, payload: 0
+2016-04-28 15:31:36,894 - INFO     - root         - running processor groups
+2016-04-28 15:31:36,898 - INFO     - att_iot_gateway - Publishing message - topic: client/testjan4/out/gateway/VVyGO2Ba6LpuX6aU8snfOJ4c/asset/main_applicationId/state, payload: 1461850296|ATT-pyGate
+2016-04-28 15:31:36,901 - INFO     - root         - running processor associations
+2016-04-28 15:31:36,904 - INFO     - root         - running processor groups
+2016-04-28 15:31:36,986 - INFO     - att_iot_gateway - Incoming message - topic: client/testjan4/in/gateway/VVyGO2Ba6LpuX6aU8snfOJ4c/asset/watchdog_networkWatchDog/command, payload: 0
+2016-04-28 15:31:36,989 - INFO     - watchdog     - received ping: 0
+2016-04-28 15:31:36,990 - INFO     - att_iot_gateway - Publishing message - topic: client/testjan4/out/gateway/VVyGO2Ba6LpuX6aU8snfOJ4c/asset/watchdog_networkWatchDog/state, payload: 1461850296|0
+2016-04-28 15:31:36,993 - INFO     - root         - running processor associations
+2016-04-28 15:31:36,996 - INFO     - root         - running processor groups
+2016-04-28 15:32:34,321 - INFO     - att_iot_gateway - Incoming message - topic: client/testjan4/in/gateway/VVyGO2Ba6LpuX6aU8snfOJ4c/asset/test_isScanning/command, payload: true
+2016-04-28 15:32:45,835 - ERROR    - att_iot_gateway - failed to process actuator command: client/testjan4/in/gateway/VVyGO2Ba6LpuX6aU8snfOJ4c/asset/test_isScanning/command, payload: true
+Traceback (most recent call last):
+  File "C:/Users/Jan/Documents/dev/pyGate/pyGate\att_iot_gateway\att_iot_gateway.py", line 52, in _on_MQTTmessage
+    on_message(devId, assetId, msg.payload)                                 #we want the second last value in the array, the last one is 'command'
+  File "C:/Users/Jan/Documents/dev/pyGate/pyGate\cloud.py", line 25, in onActuate
+    _actuatorCallback(module, None, actuator[splitPos + 1:], value)
+  File "C:/Users/Jan/Documents/dev/pyGate/pyGate\modules.py", line 139, in Actuate
+    logging.exception('error processing actuator request: module: %s, dev: none, actuator: %s, value: %s' % str(module), str(actuator), str(value))
+TypeError: not enough arguments for format string
+2016-04-28 15:33:23,207 - INFO     - att_iot_gateway - Incoming message - topic: client/testjan4/in/gateway/VVyGO2Ba6LpuX6aU8snfOJ4c/asset/test_isScanning/command, payload: false
+2016-04-28 15:35:00,546 - INFO     - root         - loading ../config/pyGate.config
+2016-04-28 15:35:00,549 - INFO     - root         - modules: main; watchdog; test
+2016-04-28 15:35:00,549 - INFO     - root         - processors: associations; groups
+2016-04-28 15:35:00,551 - INFO     - root         - gatewayId: VVyGO2Ba6LpuX6aU8snfOJ4c
+2016-04-28 15:35:00,552 - INFO     - root         - clientId: testjan4
+2016-04-28 15:35:00,553 - INFO     - root         - clientKey: 1x1uktlroci
+2016-04-28 15:35:00,555 - INFO     - root         - api server: apidev.smartliving.io
+2016-04-28 15:35:00,558 - INFO     - root         - broker: brokerdev.smartliving.io
+2016-04-28 15:35:00,559 - INFO     - root         - secure: True
+2016-04-28 15:35:00,559 - INFO     - att_iot_gateway - connected with http server
+2016-04-28 15:35:00,561 - INFO     - att_iot_gateway - HTTP GET: /gateway
+2016-04-28 15:35:00,562 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:35:00,678 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:35:00,680 - INFO     - att_iot_gateway - [{"id":"VVyGO2Ba6LpuX6aU8snfOJ4c","key":"1x1uktlroci","uid":"0C8BFDD5A295","type":null,"name":"pyGate","description":null,"groundId":"n7v5NEWTfk6WEiulBgD80meA","ground":{"id":"n7v5NEWTfk6WEiulBgD80meA","name":"playground","title":"Playground","ownerId":"567441544e769c07fc3203e0","visibility":"public"},"client":{"type":"RabbitMqClient","clientId":"testjan4","clientSecret":"1x1uktlroci"},"devices":[],"assets":[],"control":{"name":null,"widgetUrl":null}}]
+2016-04-28 15:35:00,681 - INFO     - root         - Authenticated
+2016-04-28 15:35:02,029 - INFO     - root         - loading processors
+2016-04-28 15:35:02,049 - INFO     - root         - loading modules
+2016-04-28 15:35:02,052 - INFO     - att_iot_gateway - Connected to mqtt broker with result code 0
+2016-04-28 15:35:02,066 - INFO     - att_iot_gateway - subscribing to: client/testjan4/in/gateway/VVyGO2Ba6LpuX6aU8snfOJ4c/#/command
+2016-04-28 15:35:02,082 - INFO     - att_iot_gateway - (0, 1)
+2016-04-28 15:35:02,082 - INFO     - root         - connecting test to gateway
+2016-04-28 15:35:02,085 - INFO     - root         - connecting watchdog to gateway
+2016-04-28 15:35:02,088 - INFO     - root         - connecting main to gateway
+2016-04-28 15:35:02,089 - INFO     - att_iot_gateway - HTTP GET: /gateway/VVyGO2Ba6LpuX6aU8snfOJ4c?includeDevices=True
+2016-04-28 15:35:02,092 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:35:02,114 - INFO     - att_iot_gateway - Subscribed to topic, receiving data from the cloud: qos=(0,)
+2016-04-28 15:35:10,388 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:35:10,391 - INFO     - att_iot_gateway - {"id":"VVyGO2Ba6LpuX6aU8snfOJ4c","key":"1x1uktlroci","uid":"0C8BFDD5A295","type":null,"name":"pyGate","description":null,"groundId":"n7v5NEWTfk6WEiulBgD80meA","ground":{"id":"n7v5NEWTfk6WEiulBgD80meA","name":"playground","title":"Playground","ownerId":"567441544e769c07fc3203e0","visibility":"public"},"client":{"type":"RabbitMqClient","clientId":"testjan4","clientSecret":"1x1uktlroci"},"devices":[],"assets":[],"control":{"name":null,"widgetUrl":null}}
+2016-04-28 15:35:10,392 - INFO     - root         - syncing gateway assets for test
+2016-04-28 15:35:10,395 - INFO     - att_iot_gateway - HTTP PUT: /asset/test_isScanning
+2016-04-28 15:35:10,398 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:35:10,400 - INFO     - att_iot_gateway - HTTP BODY:{"title":"test is scanning","description":"activate/stop scanning mode on mbus for discovering new devices", "style": "Undefined","is":"actuator","profile": {"type":"boolean" }}
+2016-04-28 15:35:10,457 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:35:10,459 - INFO     - att_iot_gateway - {"deviceId":"VVyGO2Ba6LpuX6aU8snfOJ4c","id":"DSodr8e499FJOSbFtezveIvY","name":"test_isScanning","title":"test is scanning","is":"actuator","description":"activate/stop scanning mode on mbus for discovering new devices","createdOn":"2016-04-28T13:31:37.266Z","createdBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","updatedOn":"2016-04-28T13:35:11.1161697Z","updatedBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","profile":{"type":"boolean"},"control":{"name":""},"state":{"at":"2016-04-28T13:31:36Z","value":false},"style":"undefined"}
+2016-04-28 15:35:10,460 - INFO     - root         - syncing gateway assets for watchdog
+2016-04-28 15:35:10,463 - INFO     - att_iot_gateway - HTTP PUT: /asset/watchdog_networkWatchDog
+2016-04-28 15:35:10,464 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:35:10,466 - INFO     - att_iot_gateway - HTTP BODY:{"title":"network watchdog","description":"monitor the network and restart if required", "style": "Undefined","is":"actuator","profile": {"type":"integer" }}
+2016-04-28 15:35:10,539 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:35:10,551 - INFO     - att_iot_gateway - {"deviceId":"VVyGO2Ba6LpuX6aU8snfOJ4c","id":"hs6xpAo0Hu4UWVu1wyZHgLxh","name":"watchdog_networkWatchDog","title":"network watchdog","is":"actuator","description":"monitor the network and restart if required","createdOn":"2016-04-28T13:31:37.329Z","createdBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","updatedOn":"2016-04-28T13:35:11.2099372Z","updatedBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","profile":{"type":"integer"},"control":{"name":""},"state":{"at":"2016-04-28T13:31:36Z","value":0},"style":"undefined"}
+2016-04-28 15:35:10,552 - INFO     - root         - syncing gateway assets for main
+2016-04-28 15:35:10,555 - INFO     - att_iot_gateway - HTTP PUT: /asset/main_1
+2016-04-28 15:35:10,556 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:35:10,558 - INFO     - att_iot_gateway - HTTP BODY:{"title":"refresh","description":"refresh all the devices and assets", "style": "Undefined","is":"actuator","profile": {"type":"boolean" }}
+2016-04-28 15:35:10,611 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:35:10,612 - INFO     - att_iot_gateway - {"deviceId":"VVyGO2Ba6LpuX6aU8snfOJ4c","id":"w6qMx9M9tknSca8XtBnIpvHk","name":"main_1","title":"refresh","is":"actuator","description":"refresh all the devices and assets","createdOn":"2016-04-28T13:31:37.391Z","createdBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","updatedOn":"2016-04-28T13:35:11.2724269Z","updatedBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","profile":{"type":"boolean"},"control":{"name":""},"state":null,"style":"undefined"}
+2016-04-28 15:35:10,615 - INFO     - att_iot_gateway - HTTP PUT: /asset/main_applicationId
+2016-04-28 15:35:10,617 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:35:10,618 - INFO     - att_iot_gateway - HTTP BODY:{"title":"application Id","description":"Identifies the software running on the gateway", "style": "Undefined","is":"sensor","profile": {"type":"string" }}
+2016-04-28 15:35:10,671 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:35:10,674 - INFO     - att_iot_gateway - {"deviceId":"VVyGO2Ba6LpuX6aU8snfOJ4c","id":"yNNHenlgqoHkwxqpJbLUdoCT","name":"main_applicationId","title":"application Id","is":"sensor","description":"Identifies the software running on the gateway","createdOn":"2016-04-28T13:31:37.438Z","createdBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","updatedOn":"2016-04-28T13:35:11.3505823Z","updatedBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","profile":{"type":"string"},"control":{"name":""},"state":{"at":"2016-04-28T13:31:36Z","value":"ATT-pyGate"},"style":"undefined"}
+2016-04-28 15:35:10,677 - INFO     - att_iot_gateway - HTTP PUT: /asset/modules_activeplugins
+2016-04-28 15:35:10,677 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:35:10,680 - INFO     - att_iot_gateway - HTTP BODY:{"title":"Active plugins","description":"The list of currently active plugins", "style": "Undefined","is":"actuator","profile":{"type": "array", "items":{"type":"string"}}}
+2016-04-28 15:35:10,720 - INFO     - att_iot_gateway - Incoming message - topic: client/testjan4/in/gateway/VVyGO2Ba6LpuX6aU8snfOJ4c/asset/test_isScanning/command, payload: true
+2016-04-28 15:35:10,736 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:35:10,739 - INFO     - att_iot_gateway - {"deviceId":"VVyGO2Ba6LpuX6aU8snfOJ4c","id":"CHcxa9eOYmwKyYNNOExr1yYo","name":"modules_activeplugins","title":"Active plugins","is":"actuator","description":"The list of currently active plugins","createdOn":"2016-04-28T13:31:37.503Z","createdBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","updatedOn":"2016-04-28T13:35:11.3974326Z","updatedBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","profile":{"type":"array","items":{"type":"string"}},"control":{"name":""},"state":{"at":"2016-04-28T13:31:36.874Z","value":["main","watchdog","test"]},"style":"undefined"}
+2016-04-28 15:35:10,740 - INFO     - root         - syncing gateway assets for associations
+2016-04-28 15:35:10,743 - INFO     - att_iot_gateway - HTTP PUT: /asset/associations_assiociationdefs
+2016-04-28 15:35:10,744 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:35:10,747 - INFO     - att_iot_gateway - HTTP BODY:{"title":"associations","description":"The list of currently active associations", "style": "Config","is":"actuator","profile": {"type":"object" }}
+2016-04-28 15:35:10,793 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:35:10,796 - INFO     - att_iot_gateway - {"deviceId":"VVyGO2Ba6LpuX6aU8snfOJ4c","id":"QdYPlJIR6Og5Ujc3ELdpPK62","name":"associations_assiociationdefs","title":"associations","is":"actuator","description":"The list of currently active associations","createdOn":"2016-04-28T13:31:37.548Z","createdBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","updatedOn":"2016-04-28T13:35:11.4599404Z","updatedBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","profile":{"type":"object"},"control":{"name":""},"state":null,"style":"undefined"}
+2016-04-28 15:35:10,798 - INFO     - root         - syncing devices for test
+2016-04-28 15:35:10,799 - INFO     - root         - waiting for mqtt connection before starting all plugins
+2016-04-28 15:35:10,802 - INFO     - att_iot_gateway - Publishing message - topic: client/testjan4/out/gateway/VVyGO2Ba6LpuX6aU8snfOJ4c/asset/modules_activeplugins/state, payload: {"at": "2016-04-28T13:35:10.802000Z", "value": ["main", "watchdog", "test"]}
+2016-04-28 15:35:10,805 - INFO     - root         - running processor associations
+2016-04-28 15:35:10,808 - INFO     - root         - running processor groups
+2016-04-28 15:35:10,809 - INFO     - root         - starting up all plugins
+2016-04-28 15:35:10,842 - INFO     - att_iot_gateway - Publishing message - topic: client/testjan4/out/gateway/VVyGO2Ba6LpuX6aU8snfOJ4c/asset/test_isScanning/state, payload: 1461850510|false
+2016-04-28 15:35:10,848 - INFO     - root         - running processor associations
+2016-04-28 15:35:10,854 - INFO     - att_iot_gateway - Publishing message - topic: client/testjan4/in/gateway/VVyGO2Ba6LpuX6aU8snfOJ4c/asset/watchdog_networkWatchDog/command, payload: 0
+2016-04-28 15:35:10,855 - INFO     - root         - running processor groups
+2016-04-28 15:35:10,861 - INFO     - att_iot_gateway - Publishing message - topic: client/testjan4/out/gateway/VVyGO2Ba6LpuX6aU8snfOJ4c/asset/main_applicationId/state, payload: 1461850510|ATT-pyGate
+2016-04-28 15:35:10,865 - INFO     - root         - running processor associations
+2016-04-28 15:35:10,868 - INFO     - root         - running processor groups
+2016-04-28 15:35:48,348 - INFO     - root         - loading ../config/pyGate.config
+2016-04-28 15:35:48,351 - INFO     - root         - modules: main; watchdog; test
+2016-04-28 15:35:48,355 - INFO     - root         - processors: associations; groups
+2016-04-28 15:35:48,357 - INFO     - root         - gatewayId: VVyGO2Ba6LpuX6aU8snfOJ4c
+2016-04-28 15:35:48,358 - INFO     - root         - clientId: testjan4
+2016-04-28 15:35:48,361 - INFO     - root         - clientKey: 1x1uktlroci
+2016-04-28 15:35:48,364 - INFO     - root         - api server: apidev.smartliving.io
+2016-04-28 15:35:48,365 - INFO     - root         - broker: brokerdev.smartliving.io
+2016-04-28 15:35:48,368 - INFO     - root         - secure: True
+2016-04-28 15:35:48,380 - INFO     - att_iot_gateway - connected with http server
+2016-04-28 15:35:48,381 - INFO     - att_iot_gateway - HTTP GET: /gateway
+2016-04-28 15:35:48,384 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:35:48,467 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:35:48,470 - INFO     - att_iot_gateway - [{"id":"VVyGO2Ba6LpuX6aU8snfOJ4c","key":"1x1uktlroci","uid":"0C8BFDD5A295","type":null,"name":"pyGate","description":null,"groundId":"n7v5NEWTfk6WEiulBgD80meA","ground":{"id":"n7v5NEWTfk6WEiulBgD80meA","name":"playground","title":"Playground","ownerId":"567441544e769c07fc3203e0","visibility":"public"},"client":{"type":"RabbitMqClient","clientId":"testjan4","clientSecret":"1x1uktlroci"},"devices":[],"assets":[],"control":{"name":null,"widgetUrl":null}}]
+2016-04-28 15:35:48,471 - INFO     - root         - Authenticated
+2016-04-28 15:35:49,888 - INFO     - root         - loading processors
+2016-04-28 15:35:49,910 - INFO     - root         - loading modules
+2016-04-28 15:35:49,917 - INFO     - att_iot_gateway - Connected to mqtt broker with result code 0
+2016-04-28 15:35:49,938 - INFO     - att_iot_gateway - subscribing to: client/testjan4/in/gateway/VVyGO2Ba6LpuX6aU8snfOJ4c/#/command
+2016-04-28 15:35:49,941 - INFO     - root         - connecting test to gateway
+2016-04-28 15:35:49,946 - INFO     - att_iot_gateway - (0, 1)
+2016-04-28 15:35:49,946 - INFO     - root         - connecting watchdog to gateway
+2016-04-28 15:35:49,950 - INFO     - root         - connecting main to gateway
+2016-04-28 15:35:49,953 - INFO     - att_iot_gateway - HTTP GET: /gateway/VVyGO2Ba6LpuX6aU8snfOJ4c?includeDevices=True
+2016-04-28 15:35:49,956 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:35:49,986 - INFO     - att_iot_gateway - Subscribed to topic, receiving data from the cloud: qos=(0,)
+2016-04-28 15:35:50,006 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:35:50,007 - INFO     - att_iot_gateway - {"id":"VVyGO2Ba6LpuX6aU8snfOJ4c","key":"1x1uktlroci","uid":"0C8BFDD5A295","type":null,"name":"pyGate","description":null,"groundId":"n7v5NEWTfk6WEiulBgD80meA","ground":{"id":"n7v5NEWTfk6WEiulBgD80meA","name":"playground","title":"Playground","ownerId":"567441544e769c07fc3203e0","visibility":"public"},"client":{"type":"RabbitMqClient","clientId":"testjan4","clientSecret":"1x1uktlroci"},"devices":[],"assets":[],"control":{"name":null,"widgetUrl":null}}
+2016-04-28 15:35:50,010 - INFO     - root         - syncing gateway assets for test
+2016-04-28 15:35:50,012 - INFO     - att_iot_gateway - HTTP PUT: /asset/test_isScanning
+2016-04-28 15:35:50,013 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:35:50,016 - INFO     - att_iot_gateway - HTTP BODY:{"title":"test is scanning","description":"activate/stop scanning mode on mbus for discovering new devices", "style": "Undefined","is":"actuator","profile": {"type":"boolean" }}
+2016-04-28 15:35:50,062 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:35:50,065 - INFO     - att_iot_gateway - {"deviceId":"VVyGO2Ba6LpuX6aU8snfOJ4c","id":"DSodr8e499FJOSbFtezveIvY","name":"test_isScanning","title":"test is scanning","is":"actuator","description":"activate/stop scanning mode on mbus for discovering new devices","createdOn":"2016-04-28T13:31:37.266Z","createdBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","updatedOn":"2016-04-28T13:35:50.7358207Z","updatedBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","profile":{"type":"boolean"},"control":{"name":""},"state":{"at":"2016-04-28T13:31:36Z","value":false},"style":"undefined"}
+2016-04-28 15:35:50,066 - INFO     - root         - syncing gateway assets for watchdog
+2016-04-28 15:35:50,069 - INFO     - att_iot_gateway - HTTP PUT: /asset/watchdog_networkWatchDog
+2016-04-28 15:35:50,072 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:35:50,072 - INFO     - att_iot_gateway - HTTP BODY:{"title":"network watchdog","description":"monitor the network and restart if required", "style": "Undefined","is":"actuator","profile": {"type":"integer" }}
+2016-04-28 15:35:50,112 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:35:50,115 - INFO     - att_iot_gateway - {"deviceId":"VVyGO2Ba6LpuX6aU8snfOJ4c","id":"hs6xpAo0Hu4UWVu1wyZHgLxh","name":"watchdog_networkWatchDog","title":"network watchdog","is":"actuator","description":"monitor the network and restart if required","createdOn":"2016-04-28T13:31:37.329Z","createdBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","updatedOn":"2016-04-28T13:35:50.7827301Z","updatedBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","profile":{"type":"integer"},"control":{"name":""},"state":{"at":"2016-04-28T13:31:36Z","value":0},"style":"undefined"}
+2016-04-28 15:35:50,117 - INFO     - root         - syncing gateway assets for main
+2016-04-28 15:35:50,118 - INFO     - att_iot_gateway - HTTP PUT: /asset/main_1
+2016-04-28 15:35:50,121 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:35:50,122 - INFO     - att_iot_gateway - HTTP BODY:{"title":"refresh","description":"refresh all the devices and assets", "style": "Undefined","is":"actuator","profile": {"type":"boolean" }}
+2016-04-28 15:35:50,161 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:35:50,164 - INFO     - att_iot_gateway - {"deviceId":"VVyGO2Ba6LpuX6aU8snfOJ4c","id":"w6qMx9M9tknSca8XtBnIpvHk","name":"main_1","title":"refresh","is":"actuator","description":"refresh all the devices and assets","createdOn":"2016-04-28T13:31:37.391Z","createdBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","updatedOn":"2016-04-28T13:35:50.8296856Z","updatedBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","profile":{"type":"boolean"},"control":{"name":""},"state":null,"style":"undefined"}
+2016-04-28 15:35:50,164 - INFO     - att_iot_gateway - HTTP PUT: /asset/main_applicationId
+2016-04-28 15:35:50,167 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:35:50,168 - INFO     - att_iot_gateway - HTTP BODY:{"title":"application Id","description":"Identifies the software running on the gateway", "style": "Undefined","is":"sensor","profile": {"type":"string" }}
+2016-04-28 15:35:50,206 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:35:50,209 - INFO     - att_iot_gateway - {"deviceId":"VVyGO2Ba6LpuX6aU8snfOJ4c","id":"yNNHenlgqoHkwxqpJbLUdoCT","name":"main_applicationId","title":"application Id","is":"sensor","description":"Identifies the software running on the gateway","createdOn":"2016-04-28T13:31:37.438Z","createdBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","updatedOn":"2016-04-28T13:35:50.8765586Z","updatedBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","profile":{"type":"string"},"control":{"name":""},"state":{"at":"2016-04-28T13:31:36Z","value":"ATT-pyGate"},"style":"undefined"}
+2016-04-28 15:35:50,210 - INFO     - att_iot_gateway - HTTP PUT: /asset/modules_activeplugins
+2016-04-28 15:35:50,211 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:35:50,213 - INFO     - att_iot_gateway - HTTP BODY:{"title":"Active plugins","description":"The list of currently active plugins", "style": "Undefined","is":"actuator","profile":{"type": "array", "items":{"type":"string"}}}
+2016-04-28 15:35:50,252 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:35:50,255 - INFO     - att_iot_gateway - {"deviceId":"VVyGO2Ba6LpuX6aU8snfOJ4c","id":"CHcxa9eOYmwKyYNNOExr1yYo","name":"modules_activeplugins","title":"Active plugins","is":"actuator","description":"The list of currently active plugins","createdOn":"2016-04-28T13:31:37.503Z","createdBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","updatedOn":"2016-04-28T13:35:50.9234269Z","updatedBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","profile":{"type":"array","items":{"type":"string"}},"control":{"name":""},"state":{"at":"2016-04-28T13:31:36.874Z","value":["main","watchdog","test"]},"style":"undefined"}
+2016-04-28 15:35:50,256 - INFO     - root         - syncing gateway assets for associations
+2016-04-28 15:35:50,257 - INFO     - att_iot_gateway - HTTP PUT: /asset/associations_assiociationdefs
+2016-04-28 15:35:50,259 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:35:50,262 - INFO     - att_iot_gateway - HTTP BODY:{"title":"associations","description":"The list of currently active associations", "style": "Config","is":"actuator","profile": {"type":"object" }}
+2016-04-28 15:35:50,301 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:35:50,302 - INFO     - att_iot_gateway - {"deviceId":"VVyGO2Ba6LpuX6aU8snfOJ4c","id":"QdYPlJIR6Og5Ujc3ELdpPK62","name":"associations_assiociationdefs","title":"associations","is":"actuator","description":"The list of currently active associations","createdOn":"2016-04-28T13:31:37.548Z","createdBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","updatedOn":"2016-04-28T13:35:50.9703205Z","updatedBy":"VVyGO2Ba6LpuX6aU8snfOJ4c","profile":{"type":"object"},"control":{"name":""},"state":null,"style":"undefined"}
+2016-04-28 15:35:50,305 - INFO     - root         - syncing devices for test
+2016-04-28 15:35:50,308 - INFO     - root         - waiting for mqtt connection before starting all plugins
+2016-04-28 15:35:50,311 - INFO     - att_iot_gateway - Publishing message - topic: client/testjan4/out/gateway/VVyGO2Ba6LpuX6aU8snfOJ4c/asset/modules_activeplugins/state, payload: {"at": "2016-04-28T13:35:50.310000Z", "value": ["main", "watchdog", "test"]}
+2016-04-28 15:35:50,313 - INFO     - root         - running processor associations
+2016-04-28 15:35:50,316 - INFO     - root         - running processor groups
+2016-04-28 15:35:50,319 - INFO     - root         - starting up all plugins
+2016-04-28 15:35:50,346 - INFO     - att_iot_gateway - Publishing message - topic: client/testjan4/out/gateway/VVyGO2Ba6LpuX6aU8snfOJ4c/asset/test_isScanning/state, payload: 1461850550|false
+2016-04-28 15:35:50,351 - INFO     - root         - running processor associations
+2016-04-28 15:35:50,358 - INFO     - root         - running processor groups
+2016-04-28 15:35:50,401 - INFO     - att_iot_gateway - Publishing message - topic: client/testjan4/in/gateway/VVyGO2Ba6LpuX6aU8snfOJ4c/asset/watchdog_networkWatchDog/command, payload: 0
+2016-04-28 15:35:50,410 - INFO     - att_iot_gateway - Publishing message - topic: client/testjan4/out/gateway/VVyGO2Ba6LpuX6aU8snfOJ4c/asset/main_applicationId/state, payload: 1461850550|ATT-pyGate
+2016-04-28 15:35:50,414 - INFO     - root         - running processor associations
+2016-04-28 15:35:50,415 - INFO     - root         - running processor groups
+2016-04-28 15:35:50,763 - INFO     - att_iot_gateway - Incoming message - topic: client/testjan4/in/gateway/VVyGO2Ba6LpuX6aU8snfOJ4c/asset/watchdog_networkWatchDog/command, payload: 0
+2016-04-28 15:35:50,766 - INFO     - watchdog     - received ping: 0
+2016-04-28 15:35:50,769 - INFO     - att_iot_gateway - Publishing message - topic: client/testjan4/out/gateway/VVyGO2Ba6LpuX6aU8snfOJ4c/asset/watchdog_networkWatchDog/state, payload: 1461850550|0
+2016-04-28 15:35:50,770 - INFO     - root         - running processor associations
+2016-04-28 15:35:50,773 - INFO     - root         - running processor groups
+2016-04-28 15:35:58,131 - INFO     - att_iot_gateway - Incoming message - topic: client/testjan4/in/gateway/VVyGO2Ba6LpuX6aU8snfOJ4c/asset/test_isScanning/command, payload: false
+2016-04-28 15:36:00,809 - INFO     - att_iot_gateway - Incoming message - topic: client/testjan4/in/gateway/VVyGO2Ba6LpuX6aU8snfOJ4c/asset/test_isScanning/command, payload: true
+2016-04-28 15:36:07,500 - INFO     - att_iot_gateway - HTTP PUT: /device/test_1
+2016-04-28 15:36:07,502 - INFO     - att_iot_gateway - HTTP HEADER: {'Auth-GatewayKey': '1x1uktlroci', 'Content-type': 'application/json', 'Auth-GatewayId': 'VVyGO2Ba6LpuX6aU8snfOJ4c'}
+2016-04-28 15:36:07,503 - INFO     - att_iot_gateway - HTTP BODY:{"type":"ABB-269622-32" }
+2016-04-28 15:36:08,969 - INFO     - att_iot_gateway - (200, 'OK')
+2016-04-28 15:36:08,971 - INFO     - att_iot_gateway - {"id":"YJYnYtGnOEJVs8VVXt5o1VN2","gatewayId":"VVyGO2Ba6LpuX6aU8snfOJ4c","name":"test_1","domain":"smartliving","title":"ABB-B23 meter","description":"electrical meter","type":"ABB-269622-32","profile":null,"control":null,"createdOn":"2016-04-28T13:36:08.9355302Z","lastActiveAt":null,"createdBy":"567441544e769c07fc3203e0","ownerId":"567441544e769c07fc3203e0","meta":null,"client":null,"authClientId":null,"updatedOn":"2016-04-28T13:36:08.9355302Z","updatedBy":"567441544e769c07fc3203e0","assets":null,"activityEnabled":true,"groundId":"n7v5NEWTfk6WEiulBgD80meA","ground":{"id":"n7v5NEWTfk6WEiulBgD80meA","name":"playground","title":"Playground","ownerId":"567441544e769c07fc3203e0","visibility":"public"},"servesAGround":true,"isOrphan":false,"identity":{"deviceId":"YJYnYtGnOEJVs8VVXt5o1VN2","name":"test_1"}}
+2016-04-28 15:36:20,056 - INFO     - test         - {u'control': None, u'domain': u'smartliving', u'authClientId': None, u'meta': None, u'id': u'YJYnYtGnOEJVs8VVXt5o1VN2', u'ground': {u'ownerId': u'567441544e769c07fc3203e0', u'title': u'Playground', u'id': u'n7v5NEWTfk6WEiulBgD80meA', u'visibility': u'public', u'name': u'playground'}, u'servesAGround': True, u'title': u'ABB-B23 meter', u'lastActiveAt': None, u'groundId': u'n7v5NEWTfk6WEiulBgD80meA', u'gatewayId': u'VVyGO2Ba6LpuX6aU8snfOJ4c', u'type': u'ABB-269622-32', u'profile': None, u'description': u'electrical meter', u'isOrphan': False, u'createdBy': u'567441544e769c07fc3203e0', u'updatedBy': u'567441544e769c07fc3203e0', u'identity': {u'deviceId': u'YJYnYtGnOEJVs8VVXt5o1VN2', u'name': u'test_1'}, u'name': u'test_1', u'assets': None, u'createdOn': u'2016-04-28T13:36:08.9355302Z', u'updatedOn': u'2016-04-28T13:36:08.9355302Z', u'client': None, u'ownerId': u'567441544e769c07fc3203e0', u'activityEnabled': True}
+2016-04-28 15:40:50,421 - INFO     - att_iot_gateway - Publishing message - topic: client/testjan4/in/gateway/VVyGO2Ba6LpuX6aU8snfOJ4c/asset/watchdog_networkWatchDog/command, payload: 1
+2016-04-28 15:45:50,464 - ERROR    - root         - ping didn't arrive in time, resetting connection
+2016-04-28 15:46:10,601 - ERROR    - root         - ping didn't arrive in time, resetting connection
+2016-04-28 15:46:30,703 - ERROR    - root         - ping didn't arrive in time, resetting connection
+2016-04-28 15:46:50,832 - ERROR    - root         - ping didn't arrive in time, resetting connection
+2016-04-28 15:47:10,948 - ERROR    - root         - ping didn't arrive in time, resetting connection
+2016-04-28 15:47:31,112 - ERROR    - root         - ping didn't arrive in time, resetting connection
+2016-04-28 15:47:51,220 - ERROR    - root         - ping didn't arrive in time, resetting connection
+2016-04-28 15:48:11,335 - ERROR    - root         - ping didn't arrive in time, resetting connection
+2016-04-28 15:48:31,479 - ERROR    - root         - ping didn't arrive in time, resetting connection
+2016-04-28 15:48:51,599 - ERROR    - root         - ping didn't arrive in time, resetting connection
+2016-04-28 15:49:11,734 - ERROR    - root         - ping didn't arrive in time, resetting connection

@@ -16,7 +16,7 @@ command="$INSTALL_PATH/launcher.sh"
 job="@reboot sh $command"
 
 #not yet working:
-# cat <(fgrep -i -v $command <(crontab -l)) <(echo "$job") | sudo crontab -
+# cat <(fgrep -i -v $command <(crontab -l)) <(echo "$job") | sudo crontab -e
 
 ##################################
 

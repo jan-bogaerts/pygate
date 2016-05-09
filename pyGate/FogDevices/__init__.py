@@ -4,8 +4,8 @@ import json
 from flask import Flask, render_template, Response, request
 import paho.mqtt.client as mqtt                # provides publish-subscribe messaging support
 import logging
-import os
-import subprocess
+#import os
+#import subprocess
 
 import webServer
 from gateway import Gateway

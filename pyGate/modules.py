@@ -37,10 +37,10 @@ def load(moduleNames):
 
 def syncGateway(full = False):
     content = cloud.getGateway()
-    syncGatewayAssets(content['assets'], full)
+    syncGatewayAssets(content['assets'])
     syncDevices(content['devices'], full)
 
-def syncGatewayAssets(currentAssets, full = False):
+def syncGatewayAssets(currentAssets):
     '''allows the modules to sync with the cloud, the assets that should come at the level of the gateway
     :param full: recreate all assets,
     '''
@@ -54,8 +54,8 @@ def syncGatewayAssets(currentAssets, full = False):
                     value.syncGatewayAssets()
                 except:
                     logging.exception('failed to sync gateway assets for module {}.'.format(key))
-        cloud.addGatewayAsset(_modulesName, _activepluginsName, 'Active plugins', 'The list of currently active plugins', True, '{"type": "array", "items":{"type":"string"}}')
-        processors.syncGatewayAssets(full)
+        cloud.addGatewayAsset(_modulesName, _activepluginsName, 'active plugins', 'The list of currently active plugins', True, '{"type": "array", "items":{"type":"string"}}')
+        processors.syncGatewayAssets()
         for key, value in assetsDict:
             cloud.deleteGatewayAsset(key)
     except:
@@ -85,19 +85,14 @@ def syncDevices(devices, full = False):
         except:
             logging.exception('failed to clean up device with unrelated module: ' + str(x))
 
-def runModule(module):
-    """executes the run method of a single module, in a safe manner"""
-    try:
-        thread.start_new_thread(module.run, ())
-    except:
-        logging.exception('error while running module')
-
 def run():
     """run the main function of each module in it's own thread"""
+    cloud.send(_modulesName, None, _activepluginsName, config.modules)      # we are only now certain of the network connection, so let cloud know current state of settings.
     logging.info("starting up all plugins")
     if modules:
         #map(lambda x:thread.start_new_thread(x.run, ()), [mod for key, mod in modules.iteritems() if hasattr(mod, 'run')])
-        map(lambda x: x.run(), [RunModule(mod, key) for key, mod in modules.iteritems() if hasattr(mod, 'run')])
+        for x in [RunModule(mod, key) for key, mod in modules.iteritems() if hasattr(mod, 'run')]:
+            x.start()
 
 def stop():
     """lets every module that wants to, perform the necessary cleanups."""
@@ -125,7 +120,7 @@ def Actuate(module, device, actuator, value):
         elif module in processors.processors:
             mod = processors.processors[module]
         else:
-            logging.error('actuator request for unknown module: %s, dev: %s, actuator: %s, value: %s' % str(module), str(device), str(actuator), str(value))
+            logging.error('actuator request for unknown module: {}, dev: {}, actuator: {}, value: {}'.format(module, device, actuator, value))
             return
     else:
         mod = module
@@ -141,14 +136,14 @@ def Actuate(module, device, actuator, value):
         if device:
             logging.exception('error processing actuator request: module: {}, dev: {}, actuator: {}, value: {}'.format(str(module), str(device), str(actuator), str(value)))
         else:
-            logging.exception('error processing actuator request: module: %s, dev: none, actuator: %s, value: %s' % str(module), str(actuator), str(value))
+            logging.exception('error processing actuator request: module: {}, dev: none, actuator: {}, value: {}'.format(module, actuator, value))
 
 
 def switchPlugins(newModules):
     logging.warning("list of plugins has been modified to: {}, stopping system, the shell should restart the application".format(newModules))
     config.configs.set('general', 'modules', ';'.join(newModules))
     config.save()
-    sys.exit()
+    thread.interrupt_main()
 
 def stripDeviceIds(list):
     '''goes over the list items and converts the 'deviceIds' to local versions (strip module '''

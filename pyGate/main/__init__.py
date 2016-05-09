@@ -36,7 +36,7 @@ def syncGatewayAssets():
 #callback: handles values sent from the cloudapp to the device
 def onActuate(id, value):
     if id == refreshGatewayId:
-        modules.syncGatewayAssets(True)
+        modules.syncGatewayAssets()
         modules.syncDevices(True)
     else:
         logger.error("unknown actuator: " + id)

@@ -13,12 +13,10 @@ def syncDevices(existing, Full = False):
        update all, including assets
     '''
 
-def syncGatewayAssets(Full = False):
+def syncGatewayAssets():
     '''
     optional. Allows a module to synchronize with the cloud, all the assets that should come at the level
     of the gateway.
-    :param Full: when false, if device already exists, don't update, including assets. When true,
-    update all, including assets
     '''
 
 def run():

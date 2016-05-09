@@ -13,7 +13,7 @@ writelog() {
 
 while true ; do
   #check for network connectivity
-  wget -q --tries=10 --timeout=99 --spider http://google.com
+  wget -q --timeout=99 --spider http://google.com  #--tries=10  tries does not appear to be supported on all platforms (fifthplay gateway)
   sleep 1
   if [ $? -eq 0 ]; then
         ntpdate -b -s -u pool.ntp.org   # update the time, bb has not external clock

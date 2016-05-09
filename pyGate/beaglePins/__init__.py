@@ -17,7 +17,7 @@ def connectToGateway(moduleName):
     _pinLayouts = configs['pinLayouts']
     setupGPIO()
 
-def syncDevices(existing):
+def syncDevices(existing, full=False):
     '''optional
        allows a module to synchronize it's device list. 
        existing: the list of devices that are already known in the cloud for this module.'''

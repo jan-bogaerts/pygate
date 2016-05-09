@@ -32,7 +32,7 @@ def onAssetValueChanged(module, device, asset, value):
             except:
                 logging.exception('failed to run procesor ' + key + ' to gateway.')
 
-def syncGatewayAssets(full=False):
+def syncGatewayAssets():
     for key, mod in processors.iteritems():
         if hasattr(mod, 'syncGatewayAssets'):
             logging.info("syncing gateway assets for " + key)
