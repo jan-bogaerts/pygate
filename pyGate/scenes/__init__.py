@@ -79,7 +79,7 @@ def loadScenes(value, syncCloud):
                 _actuators[actName] = [toAdd]
         if syncCloud:
             if scene['id'] not in _scenes:
-                _device.addAsset(scene['id'], scene['name'], scene['description'], True, str(scene['profile']))
+                _device.addAsset(scene['id'], scene['name'], scene['description'], True, "boolean")
             else:
                 _scenes.pop(scene['id'])  # the group still exists, so remove it from the old list (otherwise it gets deleted from the clodu)
     if syncCloud:
@@ -88,16 +88,16 @@ def loadScenes(value, syncCloud):
     _scenes = newScenes
 
 
-def onAssetValueChanged(module, device, asset, value):
-    """callback for the processor part: check if the value of an actuator has changed, if so, update the group's value"""
-    name = cloud.getUniqueName(module, device, asset)
-    if name in _actuators:
-        scenes = _actuators[name]
-        for scene in scenes:
-            newVal = scene.getValueFromActuators()
-            if newVal != scene.value:
-                scene.value = newVal
-                _device.send(scene.value, scene.id)
+#def onAssetValueChanged(module, device, asset, value):
+#    """callback for the processor part: check if the value of an actuator has changed, if so, update the group's value"""
+#    name = cloud.getUniqueName(module, device, asset)
+#    if name in _actuators:
+#        scenes = _actuators[name]
+#        for scene in scenes:
+#            newVal = scene.getValueFromActuators()
+#            if newVal != scene.value:
+#                scene.value = newVal
+#                _device.send(scene.value, scene.id)
 
 def _activateScene(id, scene):
     """send the new value to each actuator. Make certain that the electrical system doesn't get over burndend, so pause a little betweeen each actuator."""
@@ -107,7 +107,7 @@ def _activateScene(id, scene):
     _device.send('true', id)
 
 def saveScenes(value):
-    """save the groups back to the config"""
+    """save the scenes back to the config"""
     with open(config.configPath + SCENEDEF_FILE, 'w') as f:
         f.write(value)
 

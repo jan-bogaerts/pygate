@@ -1,0 +1,36 @@
+[
+  { "id": "EveningTVLights",
+    "actuators":[
+      { "module": "zwave",
+        "device": "18",
+        "asset": "72057594344734721",
+        "value": 15
+      },
+      { "module": "zwave",
+        "device": "20",
+        "asset": "72057594378289153",
+        "value": 15
+      }
+    ],
+    "name": "Evening TV lights",
+    "description": "Set the lights in the living & bureau for watching tv.",
+    "sleep": 0.01
+  },
+   { "id": "GoToBed",
+    "actuators":[
+      { "module": "zwave",
+        "device": "18",
+        "asset": "72057594344734721",
+        "value": 0
+      },
+      { "module": "zwave",
+        "device": "20",
+        "asset": "72057594378289153",
+        "value": 0
+      }
+    ],
+    "name": "Go to bed",
+    "description": "Turn lights off to go to bed",
+    "sleep": 0.01
+  }
+]

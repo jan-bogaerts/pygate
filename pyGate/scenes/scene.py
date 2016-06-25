@@ -12,15 +12,3 @@ class Scene:
         self.id = id
         self.acuators = actuators
         self.sleep = sleep
-        self.value = self.getValueFromActuators()
-
-    def getValueFromActuators(self):
-        """walk over each actuator, request it's value (from the cloud?), check if it's the same as the value in the scene.
-         If all actuator values match that of the scene, then the scene is active, and True is returned, otherwise 'false'"""
-
-        for actuator in self.acuators:
-            value = cloud.getAssetState(actuator['module'], actuator['device'], actuator['asset'])
-            # note: if this is not correct, then the implementation in groups is also incorrect.
-            if value != actuator['value']:
-                return False
-        return True

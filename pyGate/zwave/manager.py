@@ -44,7 +44,7 @@ def syncDevices(existing, Full):
             else:
                 existing.remove(found)              # so we know at the end which ones have to be removed.
                 if Full:
-                    addDevice(node)                # this will also refresh it
+                    addDevice(node, False)                # this will also refresh it
     for dev in existing:                        # all the items that remain in the 'existing' list, are no longer devices in this network, so remove them
         gateway.deleteDevice(dev['id'])
 
