@@ -68,19 +68,21 @@ def loadScenes(value, syncCloud):
     global _scenes
     newScenes = {}
     _actuators.clear()
-    for scene in value:
-        toAdd = Scene(scene['id'], scene['actuators'], scene['sleep'])        # also calculates the value for the group and builds the reverese list
-        newScenes[scene['id']] = toAdd
-        for actuator in scene['actuators']:                     # build the reverse map, for fast changing of group values.
-            actName = cloud.getUniqueName(actuator['module'], actuator['device'], actuator['asset'])
-            if actName in _actuators:
-                _actuators[actName].add(toAdd)
-            else:
-                _actuators[actName] = [toAdd]
-        if syncCloud:
-            if scene['id'] not in _scenes:
+    if value:
+        for scene in value:
+            toAdd = Scene(scene['id'], scene['actuators'], scene['sleep'])        # also calculates the value for the group and builds the reverese list
+            newScenes[scene['id']] = toAdd
+            for actuator in scene['actuators']:                     # build the reverse map, for fast changing of group values.
+                actName = cloud.getUniqueName(actuator['module'], actuator['device'], actuator['asset'])
+                if actName in _actuators:
+                    _actuators[actName].append(toAdd)
+                else:
+                    _actuators[actName] = [toAdd]
+            if scene['id'] not in _scenes:                          # new scene, always let cloud know
                 _device.addAsset(scene['id'], scene['name'], scene['description'], True, "boolean")
             else:
+                if syncCloud:                                       # existing scene, only update cloud if explicitely told to refresh all.
+                    _device.addAsset(scene['id'], scene['name'], scene['description'], True, "boolean")
                 _scenes.pop(scene['id'])  # the group still exists, so remove it from the old list (otherwise it gets deleted from the clodu)
     if syncCloud:
         for key, value in _scenes:
@@ -102,7 +104,7 @@ def loadScenes(value, syncCloud):
 def _activateScene(id, scene):
     """send the new value to each actuator. Make certain that the electrical system doesn't get over burndend, so pause a little betweeen each actuator."""
     for actuator in scene.acuators:
-        modules.Actuate(actuator['module'], actuator['device'], actuator['asset'], actuator['value'])
+        modules.Actuate(actuator['module'], actuator['device'], actuator['asset'], str(actuator['value'])) # send the actuator value as string cause all the mqtt handlers also pass in a string if it's a basic type.
         sleep(scene.sleep)
     _device.send('true', id)
 

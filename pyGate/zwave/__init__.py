@@ -92,8 +92,13 @@ def onDeviceActuate(device, actuator, value):
             val = node.values[long(actuator)]
             if val:
                 dataType = str(val.type)
-                if dataType == 'Bool' or dataType == "Button":
+                if dataType == 'Bool':
                     value = value.lower() == 'true'
+                if dataType == "Button":
+                    if value.lower() == 'true':
+                        manager.network._manager.pressButton(val.value_id)
+                    else:
+                        manager.network._manager.releaseButton(val.value_id)
                 elif dataType == 'Decimal':
                     value = float(value)
                 elif dataType == 'Integer':
