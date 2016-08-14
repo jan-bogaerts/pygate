@@ -5,6 +5,9 @@ __maintainer__ = "Jan Bogaerts"
 __email__ = "jb@allthingstalk.com"
 __status__ = "Prototype"  # "Development", or "Production"
 
+#provies support for the xml file tat contains extra features
+
+
 import xml.etree.ElementTree
 import logging
 import os.path

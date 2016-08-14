@@ -18,6 +18,7 @@ gateway = None                             # provides access to the cloud
 network = None                             # provides access to the zwave network
 
 _CC_Battery = 0x80
+_CC_Wakeup = 0x84
 _CC_MultiLevelSwitch = 0x26
 controllerStateId = 'controllerState'
 discoveryStateId = 'discoverState'   #id of asset
@@ -43,8 +44,7 @@ def syncDevices(existing, Full):
                 addDevice(node)
             else:
                 existing.remove(found)              # so we know at the end which ones have to be removed.
-                if Full:
-                    addDevice(node, False)                # this will also refresh it
+                addDevice(node, Full)                # this will also refresh it
     for dev in existing:                        # all the items that remain in the 'existing' list, are no longer devices in this network, so remove them
         gateway.deleteDevice(dev['id'])
 
@@ -72,12 +72,17 @@ def addDevice(node, createDevice = True):
                 logger.exception('failed to sync device ' + str(node.node_id) + ' for module ' + gateway._moduleName + ', asset: ' + str(key) + '.')
         if _CC_Battery in node.command_classes:
             gateway.addAsset('failed', node.node_id, 'failed', 'true when the battery device is no longer responding and the controller has labeled it as a failed device.', False, 'boolean', 'Secondary')
+            gateway.addAsset('failed', node.node_id, 'failed',
+                             'true when the battery device is no longer responding and the controller has labeled it as a failed device.',
+                             False, 'boolean', 'Secondary')
             # todo: potential issue: upon startup, there might not yet be an mqtt connection, send may fail
-            gateway.send(node.is_failed(), 'failed', node.node_id)
+            gateway.send(node.is_failed, 'failed', node.node_id)
         gateway.addAsset(refreshDeviceId, node.node_id, 'refresh', 'Refresh all the assets and their values', True, 'boolean', 'Undefined')
         gateway.addAsset('manufacturer_name', node.node_id, 'manufacturer name', 'The name of the manufacturer', False, 'string', 'Undefined')
+        gateway.addAsset('product_name', node.node_id, 'product name', 'The name of the product', False, 'string', 'Undefined')
         #todo: potential issue: upon startup, there might not yet be an mqtt connection, send may fail
         gateway.send(node.manufacturer_name, 'manufacturer_name', node.node_id)
+        gateway.send(node.product_name, 'product_name', node.node_id)
     except:
         logger.exception('error while adding device: ' + str(node))
 
@@ -116,6 +121,8 @@ def _getAssetType(node, val):
 def addMinMax(type, node, val):
     if val.command_class == _CC_MultiLevelSwitch:
         return type + ', "maximum": 99, "minimum": 0'
+    elif val.command_class == _CC_Wakeup:
+        return type + ', "maximum": 16777215, "minimum": 0'
     else:
         return type + ', "maximum": ' + str(val.max) + ', "minimum": ' + str(val.min)
 

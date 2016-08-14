@@ -79,7 +79,7 @@ def _nodeNaming(node):
     try:
         global sendOnDone
         if node.node_id != 1:
-            if manager._discoveryMode == 'Include' and node.node_id != 1:
+            if manager._discoveryMode == 'Include':
                 logger.info('node renamed: ' + str(node))
                 manager.addDevice(node)                         #we add here again, cause it seems that from this point on, we have enough info to create the object completely. Could be that 'nodeAdded' was not called?
                 _stopDiscovery()                                # if not already done

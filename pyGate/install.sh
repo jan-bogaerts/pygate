@@ -51,7 +51,7 @@ chmod "$INSTALL_PATH"/FogDevices/launcher.sh 775
 
 # zwave
 #######
-apt-get install -y git make
+sudo apt-get install -y git make
 git clone https://github.com/OpenZWave/python-openzwave
 cd python-openzwave
 sudo apt-get update
