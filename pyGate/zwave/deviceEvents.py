@@ -14,6 +14,9 @@ import networkMonitor
 
 logger = logging.getLogger('zwave')
 
+_includedDevices = set()
+"""keeps track of devices that are currently being included. This allows us to determin when to send add-update Device commands"""
+
 class DataMessage:
     """use this class to create objects for sendAfterWaiting and sendAfterDone"""
     def __init__(self, value, asset, device = None):
@@ -33,6 +36,9 @@ def _queriesDone(node):
     if manager._discoveryMode == 'Include' and node.node_id != 1:          # when the controller is restarted, all devices are also queried, at that time, we don't need to add devices, it is already added during the sync period, and all assets have also been refreshed already. This call is only needed for adding devices (in case some assets were missed during discovery)
         manager.addDevice(node)                             #make certain that when the query is done, everything gets loaded again, it could be that we misssed some.
         _stopDiscovery()
+    elif node.node_id in _includedDevices:                  # the device
+        manager.addDevice(node)
+    _includedDevices.remove(node.node_id)  # the query is done, we are no longer including this device.
     # don't try to stop any discovery mode at this stage, the query can potentially take hours (for battery devices),
     # by that time, the user might be doing another include already.
 
@@ -72,6 +78,9 @@ def _nodeAdded(node):
             logger.info('node added: ' + str(node))
             manager.addDevice(node)                                                         # add from here, could be that we never get 'nodeNaming' event and that this is the only 'addDevice' that gets called
             _stopDiscovery()
+            _includedDevices.add(node.node_id)
+        elif node.node_id in _includedDevices:  # the device
+            manager.addDevice(node)
     except:
         logger.exception('failed to add node ' + str(node) )
 
@@ -83,10 +92,13 @@ def _nodeNaming(node):
                 logger.info('node renamed: ' + str(node))
                 manager.addDevice(node)                         #we add here again, cause it seems that from this point on, we have enough info to create the object completely. Could be that 'nodeAdded' was not called?
                 _stopDiscovery()                                # if not already done
+                _includedDevices.add(node.node_id)
             elif sendOnDone:                                    # when the location asset has changed, we get this event, so let the cloud know that it was updated ok.
                 logger.info('node prop changed: ' + str(node))
                 manager.gateway.send(sendOnDone.value, sendOnDone.device, sendOnDone.asset)
                 sendOnDone = None
+            elif node.node_id in _includedDevices:              # in case we are including a new device, which already geneated a 1st event 'nodeAdded', but only now can we know the name and the valule for product-name
+                manager.addDevice(node)                         # this will also update the asset values.
             else:
                 logger.info('node props queried (should only be during start): ' + str(node))
 

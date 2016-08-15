@@ -70,13 +70,11 @@ def addDevice(node, createDevice = True):
                     addAsset(node, val)
             except:
                 logger.exception('failed to sync device ' + str(node.node_id) + ' for module ' + gateway._moduleName + ', asset: ' + str(key) + '.')
-        if _CC_Battery in node.command_classes:
-            gateway.addAsset('failed', node.node_id, 'failed', 'true when the battery device is no longer responding and the controller has labeled it as a failed device.', False, 'boolean', 'Secondary')
-            gateway.addAsset('failed', node.node_id, 'failed',
-                             'true when the battery device is no longer responding and the controller has labeled it as a failed device.',
-                             False, 'boolean', 'Secondary')
-            # todo: potential issue: upon startup, there might not yet be an mqtt connection, send may fail
-            gateway.send(node.is_failed, 'failed', node.node_id)
+        #if _CC_Battery in node.command_classes:
+        #    gateway.addAsset('failed', node.node_id, 'failed', 'true when the battery device is no longer responding and the controller has labeled it as a failed device.', False, 'boolean', 'Secondary')
+        gateway.addAsset('failed', node.node_id, 'failed', 'true when the device is no longer responding and the controller has labeled it as a failed device.', False, 'boolean', 'Secondary')
+        # todo: potential issue: upon startup, there might not yet be an mqtt connection, send may fail
+        gateway.send(node.is_failed, 'failed', node.node_id)
         gateway.addAsset(refreshDeviceId, node.node_id, 'refresh', 'Refresh all the assets and their values', True, 'boolean', 'Undefined')
         gateway.addAsset('manufacturer_name', node.node_id, 'manufacturer name', 'The name of the manufacturer', False, 'string', 'Undefined')
         gateway.addAsset('product_name', node.node_id, 'product name', 'The name of the product', False, 'string', 'Undefined')
