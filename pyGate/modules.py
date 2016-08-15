@@ -12,7 +12,7 @@ __status__ = "Prototype"  # "Development", or "Production"
 import logging
 import thread
 import threading
-import sys
+import json
 
 import cloud
 import config
@@ -141,6 +141,7 @@ def Actuate(module, device, actuator, value):
 
 def switchPlugins(newModules):
     logging.warning("list of plugins has been modified to: {}, stopping system, the shell should restart the application".format(newModules))
+    newModules = json.loads(newModules)
     config.configs.set('general', 'modules', ';'.join(newModules))
     config.save()
     thread.interrupt_main()

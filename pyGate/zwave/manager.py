@@ -44,7 +44,8 @@ def syncDevices(existing, Full):
                 addDevice(node)
             else:
                 existing.remove(found)              # so we know at the end which ones have to be removed.
-                addDevice(node, Full)                # this will also refresh it
+                if Full:                            # don't refresh upon startup, this only slows it down, no need.
+                    addDevice(node, Full)                # this will also refresh it
     for dev in existing:                        # all the items that remain in the 'existing' list, are no longer devices in this network, so remove them
         gateway.deleteDevice(dev['id'])
 
@@ -66,21 +67,25 @@ def addDevice(node, createDevice = True):
         gateway.addAsset('location', node.node_id, 'location', 'the physical location of the device', True, 'string', 'Config')
         for key, val in items.iteritems():
             try:
-                if val.command_class and not str(val.genre).lower() == 'system':                # if not related to a command class, then all other fields are 'none' as well, can't t much with them. System values are not interesting, it's about frames and such (possibly for future debugging...)
+                if val.command_class:                # if not related to a command class, then all other fields are 'none' as well, can't t much with them.
+                    # and not str(val.genre).lower() == 'system':    # old: System values are not interesting, it's about frames and such (possibly for future debugging...)
                     addAsset(node, val)
+                    buildValueId(val)
             except:
                 logger.exception('failed to sync device ' + str(node.node_id) + ' for module ' + gateway._moduleName + ', asset: ' + str(key) + '.')
         #if _CC_Battery in node.command_classes:
         #    gateway.addAsset('failed', node.node_id, 'failed', 'true when the battery device is no longer responding and the controller has labeled it as a failed device.', False, 'boolean', 'Secondary')
         gateway.addAsset('failed', node.node_id, 'failed', 'true when the device is no longer responding and the controller has labeled it as a failed device.', False, 'boolean', 'Secondary')
         # todo: potential issue: upon startup, there might not yet be an mqtt connection, send may fail
-        gateway.send(node.is_failed, 'failed', node.node_id)
+        gateway.send(node.is_failed, node.node_id, 'failed')
         gateway.addAsset(refreshDeviceId, node.node_id, 'refresh', 'Refresh all the assets and their values', True, 'boolean', 'Undefined')
         gateway.addAsset('manufacturer_name', node.node_id, 'manufacturer name', 'The name of the manufacturer', False, 'string', 'Undefined')
         gateway.addAsset('product_name', node.node_id, 'product name', 'The name of the product', False, 'string', 'Undefined')
+        #gateway.addAsset('discovery_state', node.node_id, 'discovery state', 'details on the progress of the currently running discovery process for this device.', False, '{"type": "object", "properties": {"complete": {"type": "number", "unit":"%" }, "command classes": {"type": "array", "items": {"type": "object" }}  } }', 'Undefined')
+        gateway.addAsset('query_state', node.node_id, 'query state', 'details on the progress of the currently running discovery process for this device.', False, '{"type": "object"}', 'Undefined')
         #todo: potential issue: upon startup, there might not yet be an mqtt connection, send may fail
-        gateway.send(node.manufacturer_name, 'manufacturer_name', node.node_id)
-        gateway.send(node.product_name, 'product_name', node.node_id)
+        gateway.send(node.manufacturer_name, node.node_id, 'manufacturer_name')
+        gateway.send(node.product_name, node.node_id, 'product_name')
     except:
         logger.exception('error while adding device: ' + str(node))
 
@@ -122,7 +127,11 @@ def addMinMax(type, node, val):
     elif val.command_class == _CC_Wakeup:
         return type + ', "maximum": 16777215, "minimum": 0'
     else:
-        return type + ', "maximum": ' + str(val.max) + ', "minimum": ' + str(val.min)
+        if val.min == 4294934528 and val.min > val.max:         # for cc 115, 112
+            min = 0
+        else:
+            min = val.min
+        return type + ', "maximum": ' + str(val.max) + ', "minimum": ' + str(min)
 
 def _getStyle(node, val):
     '''check the value type, if it is the primary cc for the device, set is primary, if it is battery...'''
@@ -137,3 +146,48 @@ def _getStyle(node, val):
                 return 'Primary'
             return 'Secondary'
     return "Undefined"                  # if we get here, we don't know, so it is undefined.
+
+
+
+
+###################
+#test
+
+def getValueTypeInt(valueStr):
+    if valueStr == "Bool": return 0
+    elif valueStr == "Byte": return 1
+    elif valueStr == "Decimal":
+        return 2
+    elif valueStr == "Int":
+        return 3
+    elif valueStr == "List":
+        return 4
+    elif valueStr == "Schedule":
+        return 5
+    elif valueStr == "Short":
+        return 6
+    elif valueStr == "String":
+        return 7
+    elif valueStr == "Button":
+        return 8
+    elif valueStr == "Raw":
+        return 9
+    elif valueStr == "Max":
+        return 9
+
+def getGenreInt(genre):
+    if genre == "Basic": return 0
+    elif genre == "User": return 1
+    elif genre == "Config":
+        return 2
+    elif genre == "System":
+        return 3
+    elif genre == "Count":
+        return 4
+
+def buildValueId(value):
+    """create a value Id"""
+    node = value.node
+
+    m_id = ( node.node_id << 24) | (getGenreInt(value.genre) << 22) | (value.command_class << 14) | (value.index << 4) | getValueTypeInt(value.type);
+    return m_id

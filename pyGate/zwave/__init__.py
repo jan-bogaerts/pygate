@@ -87,7 +87,9 @@ def onDeviceActuate(device, actuator, value):
             node.location = value
             events.sendOnDone = events.DataMessage(value, 'location', device)               # when the operation is done, we get an event from the controller, when this happened, update the cloud
         elif actuator == manager.refreshDeviceId:
-            manager.addDevice(node)                                                   # update the node and it's values
+            #todo: test if request_state really asks the device to refresh all command classes.
+            manager.addDevice(node)  # update the node and it's values
+            node.request_state()
         else:
             val = node.values[long(actuator)]
             if val:

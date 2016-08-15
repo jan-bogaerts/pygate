@@ -21,7 +21,8 @@ def sigterm_handler(_signo, _stack_frame):
 
 
 def on_connected():
-    _connectedEvent.set()
+    if _connectedEvent:                         # if we reconnect during runtime, there is no more connected event.
+        _connectedEvent.set()
 
 _connectedEvent = Event()
 

@@ -8,13 +8,14 @@ __status__ = "Prototype"  # "Development", or "Production"
 import logging
 from louie import dispatcher #, All
 from openzwave.network import ZWaveNetwork
+import json
 
 import manager
 import networkMonitor
 
 logger = logging.getLogger('zwave')
 
-_includedDevices = set()
+_includedDevices = {}
 """keeps track of devices that are currently being included. This allows us to determin when to send add-update Device commands"""
 
 class DataMessage:
@@ -38,7 +39,8 @@ def _queriesDone(node):
         _stopDiscovery()
     elif node.node_id in _includedDevices:                  # the device
         manager.addDevice(node)
-    _includedDevices.remove(node.node_id)  # the query is done, we are no longer including this device.
+    _updateDiscoveryState(node)                             # before deleting the internal object, update the cloud with the latest state of the query
+    del _includedDevices[node.node_id]                      # the query is done, we are no longer including this device.
     # don't try to stop any discovery mode at this stage, the query can potentially take hours (for battery devices),
     # by that time, the user might be doing another include already.
 
@@ -72,15 +74,51 @@ def _stopDiscovery():
         manager.network.controller.cancel_command()                                     # we need to stop the include process cause a device has been added
     manager._discoveryMode = "Off"
 
+
+def _updateDiscoveryState(node):
+    """extracts all the required info from the node to build a discovery state report and sends this to the cloud.
+    The discovery state is stored in a dictionary so that it can be updated.
+    """
+    if node.node_id in _includedDevices:
+        value = _includedDevices[node.node_id]
+        ccs = value['command classes']
+    else:
+        value = {}
+        _includedDevices[node.node_id] = value
+        ccs = {}
+        value['command classes'] = ccs
+        for cc in node.command_classes:
+            ccs[cc] = False
+    items = dict(node.values)  # take a copy of the list cause if the network is still refreshing/loading, the list could get updated while in the loop
+    count = 0
+    for key, val in items.iteritems():
+        ccs[val.command_class] = True               # this command class has already been processed
+        count += 1
+    value['complete'] = count / len(node.command_classes)
+    manager.gateway.send(json.dumps(value), node.node_id, "query_state")
+
+
+
+def _updateDiscoveryStateCCs(node, cc):
+    if node.node_id in _includedDevices:
+        value = _includedDevices[node.node_id]
+        ccs = value['command classes']
+        if ccs[cc] == False:
+            ccs[cc] == True
+            count = len( [x for x in ccs.values if x == True]  )
+            value['complete'] = count / len(node.command_classes)
+            manager.gateway.send(json.dumps(value), node.node_id, "query_state")
+
+
 def _nodeAdded(node):
     try:
         if manager._discoveryMode == 'Include' and node.node_id != 1:                                                               # after a hard reset, an event is raised to add the 1st node, which is the controller, we don't add that as a device, too confusing for the user, that is the gateway.
             logger.info('node added: ' + str(node))
             manager.addDevice(node)                                                         # add from here, could be that we never get 'nodeNaming' event and that this is the only 'addDevice' that gets called
             _stopDiscovery()
-            _includedDevices.add(node.node_id)
         elif node.node_id in _includedDevices:  # the device
             manager.addDevice(node)
+        _updateDiscoveryState(node)
     except:
         logger.exception('failed to add node ' + str(node) )
 
@@ -92,13 +130,14 @@ def _nodeNaming(node):
                 logger.info('node renamed: ' + str(node))
                 manager.addDevice(node)                         #we add here again, cause it seems that from this point on, we have enough info to create the object completely. Could be that 'nodeAdded' was not called?
                 _stopDiscovery()                                # if not already done
-                _includedDevices.add(node.node_id)
+                _updateDiscoveryState(node)
             elif sendOnDone:                                    # when the location asset has changed, we get this event, so let the cloud know that it was updated ok.
                 logger.info('node prop changed: ' + str(node))
                 manager.gateway.send(sendOnDone.value, sendOnDone.device, sendOnDone.asset)
                 sendOnDone = None
             elif node.node_id in _includedDevices:              # in case we are including a new device, which already geneated a 1st event 'nodeAdded', but only now can we know the name and the valule for product-name
                 manager.addDevice(node)                         # this will also update the asset values.
+                _updateDiscoveryState(node)
             else:
                 logger.info('node props queried (should only be during start): ' + str(node))
 
@@ -122,6 +161,11 @@ def _assetAdded(node, value):
         if node.is_ready == False and manager.network.state >= ZWaveNetwork.STATE_AWAKED:          # when starting, don't need to add assets of known devices. only when the device is not yet fully queried (ready) and when the network has started. Note battery devices take a long time before they report in, so don't wait for them, otherwise we can't include easy.
             logger.info('asset added: ' + str(value))
             manager.addAsset(node, value)
+
+            # test to see if we can build bette asset id's
+            buildValueId(value)
+
+            _updateDiscoveryStateCCs(node, value.command_class)
         else:
             logger.info('asset found: ' + str(value) + ", should only happen during startup, controller state: " + str(_controllerState) + ", node.isReady =" + str(node.is_ready))
     except:
@@ -129,9 +173,10 @@ def _assetAdded(node, value):
 
 def _assetRemoved(node, value):
     try:
-        logger.info('asset removed: ' + str(value.value_id))
-        # dump(node)
-        manager.gateway.deleteAsset(node.node_id, value)
+        if value:
+            logger.info('asset removed: ' + str(value.value_id))
+            # dump(node)
+            manager.gateway.deleteAsset(node.node_id, value)
     except:
         logger.exception('failed to remove asset for node: ' + str(node) + ', asset: ' + str(value) )
 
@@ -200,3 +245,32 @@ def _getData(cc):
     else:
         return cc.data_as_string
 
+
+def getValueTypeInt(valueStr):
+    if valueStr == "Bool": return 0
+    elif valueStr == "Byte": return 1
+    elif valueStr == "Decimal":
+        return 2
+    elif valueStr == "Int":
+        return 3
+    elif valueStr == "List":
+        return 4
+    elif valueStr == "Schedule":
+        return 5
+    elif valueStr == "Short":
+        return 6
+    elif valueStr == "String":
+        return 7
+    elif valueStr == "Button":
+        return 8
+    elif valueStr == "Raw":
+        return 9
+    elif valueStr == "Max":
+        return 9
+
+def buildValueId(value):
+    """create a value Id"""
+    node = value.node
+
+    m_id = ( node.node_id << 24) | (value.genre << 22) | (value.command_class << 14) | (value.index << 4) | getValueTypeInt(value.type);
+    return m_id
