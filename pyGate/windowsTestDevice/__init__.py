@@ -31,14 +31,14 @@ def connectToGateway(moduleName):
     global _device
     _device = device.Device(moduleName, 'windowsTest1')
 
-def syncDevices(existing):
+def syncDevices(existing, Full):
     '''optional
        allows a module to synchronize it's device list. 
        existing: the list of devices that are already known in the cloud for this module.'''
-    if not existing:
-        _device.createDevice('windows test device', 'just something to test the framework')
-        _device.addAsset(In1Id, In1Name, "put your description here", False, "boolean")
-        _device.addAsset(Out1Id, Out1Name, "put your description here", True, "boolean")
+    #if not existing:
+        #_device.createDevice('windows test device', 'just something to test the framework')
+    _device.addAsset(In1Id, In1Name, "put your description here", False, "boolean")
+    _device.addAsset(Out1Id, Out1Name, "put your description here", True, "boolean")
 
 
 def run():

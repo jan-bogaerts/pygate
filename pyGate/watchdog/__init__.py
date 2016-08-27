@@ -57,6 +57,7 @@ def checkPing():
     if _nextPingAt <= datetime.datetime.now():
         if _lastReceived != _pingCounter:
             logging.error("ping didn't arrive in time, resetting connection")
+            cloud.IOT._mqttClient.close()               # make certain taht the connection is closed
             cloud.IOT._mqttClient.reconnect()
             return False
         else:
