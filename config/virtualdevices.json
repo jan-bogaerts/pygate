@@ -1,0 +1,10 @@
+[
+  {
+    "comment": "a list of virtual device definitions that are used by the virtualDevices plugin. Each v-device is defined by a service, the v-device declares the params for that service",
+    "name": "weather station Temse",
+    "service": "weather service",
+    "params": {
+      "location": "Temse"
+    }
+  }
+]

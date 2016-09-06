@@ -1,0 +1,166 @@
+{
+	"name" : "weather service",
+	"author" : "Jan bogaerts",
+	"refresh rate" : "0:4:0",
+	"variables" : [{
+			"name" : "location",
+			"type" : "string",
+			"scope" : "service"
+		}
+	],
+	"data sources" : [{
+			"name" : "data",
+			"uri" : "http://api.worldweatheronline.com/free/v1/weather.ashx?q={{location}}&format=json&num_of_days=5&key=741d5a6a86a1fd53579a9b2183664a67a7d78582",
+			"method" : "get"
+		}
+	],
+	"queries" : [
+		{
+			"name" : "temperature",
+			"value" : "datasource[data].data.current_condition[0].temp_C"
+		},
+		{
+			"name" : "cloudcover",
+			"value" : "datasource[data].data.current_condition[0].cloudcover"
+		},
+		{
+			"name" : "humidity",
+			"value" : "datasource[data].data.current_condition[0].humidity"
+		},
+		{
+			"name" : "precipMM",
+			"value" : "datasource[data].data.current_condition[0].precipMM"
+		},
+		{
+			"name" : "pressure",
+			"value" : "datasource[data].data.current_condition[0].pressure"
+		},
+		{
+			"name" : "visibility",
+			"value" : "datasource[data].data.current_condition[0].visibility"
+		},
+		{
+			"name" : "weather description",
+			"value" : "datasource[data].data.current_condition[0].weatherDesc[0].value"
+		},
+		{
+			"name" : "weather icon",
+			"value" : "datasource[data].data.current_condition[0].weatherIconUrl[0].value"
+		},
+		{
+			"name" : "wind direction",
+			"value" : "datasource[data].data.current_condition[0].winddir16Point"
+		},
+		{
+			"name" : "wind speed",
+			"value" : "datasource[data].data.current_condition[0].windspeedKmph"
+		},
+		{
+			"name" : "tomorow-temp-max",
+			"value" : "datasource[data].data.weather[1].tempMaxC"
+		},
+		{
+			"name" : "tomorow-temp-min",
+			"value" : "datasource[data].data.weather[1].tempMinC"
+		},
+		{
+			"name" : "tomorow-precipMM",
+			"value" : "datasource[data].data.weather[1].precipMM"
+		},
+		{
+			"name" : "tomorow-weather description",
+			"value" : "datasource[data].data.weather[1].weatherDesc[0].value"
+		},
+		{
+			"name" : "tomorow-weather icon",
+			"value" : "datasource[data].data.weather[1].weatherIconUrl[0].value"
+		},
+		{
+			"name" : "tomorow-wind direction",
+			"value" : "datasource[data].data.weather[1].winddir16Point"
+		},
+		{
+			"name" : "tomorow-wind speed",
+			"value" : "datasource[data].data.weather[1].windspeedKmph"
+		}
+	],
+	"values" : [
+		{
+			"asset" : "temperature",
+			"type" : "number",
+			"value": {"query": "temperature"}
+		},
+		{
+			"asset" : "cloudcover",
+			"type" : "number",
+			"value": {"query": "cloudcover"}
+		},
+		{
+			"asset" : "humidity",
+			"type" : "number",
+			"value": {"query": "humidity"}
+		},
+		{
+			"asset" : "pressure",
+			"type" : "number",
+			"value": {"query": "pressure"}
+		},
+		{
+			"asset" : "visibility",
+			"type" : "number",
+			"value": {"query": "visibility"}
+		},
+		{
+			"asset" : "weather description",
+			"type" : "string",
+			"value": {"query": "weather description"}
+		},
+		{
+			"asset" : "weather icon",
+			"type" : "string",
+			"value": {"query": "weather icon"}
+		},
+		{
+			"asset" : "wind direction",
+			"type" : "string",
+			"value": {"query": "wind direction"}
+		},
+		{
+			"asset" : "wind speed (kmh)",
+			"type" : "number",
+			"value": {"query": "wind speed"}
+		},
+		{
+			"asset" : "precipMM",
+			"type" : "number",
+			"value": {"query": "precipMM"}
+		},
+		{
+			"asset": "tomorow",
+			"type":{"title": "weather forecast",
+					"type": "object",
+					"properties": {
+						"temp-max": {"type": "number"},
+						"temp-min": {"type": "number"},
+						"precipMM": {"type": "number"},
+						"weather description": {"type": "string"},
+						"weather icon": {"type": "string"},
+						"wind direction": {"type": "string"},
+						"wind speed": {"type": "number"}
+					},
+					"required": ["temp-max", "temp-min", "precipMM", "wind direction", "wind speed"]
+				   },
+			"asset": {"object":
+			{
+				"temp-max": {"query": "tomorow-temp-max"},
+				"temp-min": {"query": "tomorow-temp-min"},
+				"precipMM": {"query": "tomorow-precipMM"},
+				"weather description": {"query": "tomorow-weather description"},
+				"weather icon": {"query": "tomorow-weather icon"},
+				"wind direction": {"query": "tomorow-wind direction"},
+				"wind speed": {"query": "tomorow-wind speed"} }
+			}
+			
+		}
+	]
+}
