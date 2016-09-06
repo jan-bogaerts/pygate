@@ -10,6 +10,7 @@ __status__ = "Prototype"  # "Development", or "Production"
 # This module is responsible for keeping the last known state of assets, so that the system doesn't always
 # have to request it from the cloud, but can update the value from it's internal engine.
 # only assets who's state has previously been requested, are buffered.
+# this is used by modules such as groups or liato
 ###############################################
 
 import att_iot_gateway.att_iot_gateway as IOT                              #provide cloud support
