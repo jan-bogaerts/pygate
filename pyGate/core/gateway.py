@@ -1,6 +1,7 @@
 ﻿#allows a gateway plugin to manage it's cloud presence.
 
-import cloud
+from core import cloud
+
 
 class Gateway(object):
     '''allows a gateway to manage it's cloud presence'''
@@ -20,9 +21,9 @@ class Gateway(object):
     def addGatewayAsset(self, id, name, description, isActuator, assetType, style = "Undefined"):
         cloud.addGatewayAsset(self._moduleName, id, name, description, isActuator, assetType, style)
 
-    def addDevice(self, deviceId, name, description):
+    def addDevice(self, deviceId, name, description, storeHistory = True):
         """add device"""
-        cloud.addDevice(self._moduleName, deviceId, name, description)
+        cloud.addDevice(self._moduleName, deviceId, name, description, storeHistory)
 
     def addDeviceFromTemplate(self, deviceId, templateId):
         """add a device from template"""

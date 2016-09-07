@@ -1,6 +1,5 @@
 ﻿## main file for the gateway application that manages the plugins.
 
-import logging                                                                         #before doing anything else, set the desired logging level, so all modules log correctly.
 import logging.config
 logging.config.fileConfig('../config/logging.config')
 
@@ -9,10 +8,7 @@ import signal
 import sys
 from threading import Event
 
-import config
-import modules
-import cloud
-import processors
+from core import config, webServer, processors, cloud, modules
 import att_iot_gateway.att_iot_gateway as IOT                              #provide cloud support
 
 def sigterm_handler(_signo, _stack_frame):
@@ -39,7 +35,7 @@ try:
     _connectedEvent = None  # when we are done we no longer need this event, so remove.Only needed to wait, so plugins can send init values
     modules.run()
     if config.configs.has_option('webServer', 'enabled') and config.configs.get('webServer', 'enabled') == True:    # only load webserver if activated. Not all plugins need this, not all gateways want have a webserver running ex: fifthplay
-        import webServer
+        import core.webServer
         webServer.run()
     while 1:
         time.sleep(3)

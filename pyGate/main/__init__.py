@@ -13,8 +13,7 @@ __status__ = "Prototype"  # "Development", or "Production"
 
 import logging
 
-import cloud
-import modules
+from core import cloud, modules
 
 _moduleName = None
 refreshGatewayId = '1'
@@ -30,8 +29,8 @@ def connectToGateway(moduleName):
 
 
 def syncGatewayAssets():
-    cloud.addGatewayAsset(_moduleName, refreshGatewayId , 'refresh', 'refresh all the devices and assets', True, 'boolean')
-    cloud.addGatewayAsset(_moduleName, ApplicationId , 'application Id', 'Identifies the software running on the gateway', False, 'string')
+    cloud.addGatewayAsset(_moduleName, refreshGatewayId, 'refresh', 'refresh all the devices and assets', True, 'boolean')
+    cloud.addGatewayAsset(_moduleName, ApplicationId, 'application Id', 'Identifies the software running on the gateway', False, 'string')
 
 #callback: handles values sent from the cloudapp to the device
 def onActuate(id, value):

@@ -1,17 +1,16 @@
 # main entry for the pyGate plugin that provides support for zwave devices
 
+import json
 import logging
-import thread
+
+from louie import dispatcher
 from openzwave.network import ZWaveNetwork
 from openzwave.option import ZWaveOption
-from louie import dispatcher
 
-import json
-
-import config
 import deviceEvents as events
 import manager
 import networkMonitor
+from core import config
 
 #_readyEvent = threading.Event()             # signaled when the zwave network has been fully started.
 

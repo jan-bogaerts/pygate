@@ -15,7 +15,7 @@ from mbus.MBusFrameData import MBusFrameData
 import mbus.MBusLowLevel as mbusLow
 import datetime
 
-import config
+from core import config
 import ctypes
 import binConverter
 

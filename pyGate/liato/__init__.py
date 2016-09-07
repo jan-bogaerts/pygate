@@ -9,13 +9,11 @@ __status__ = "Prototype"  # "Development", or "Production"
 import logging
 logger = logging.getLogger('liato')
 
-from gateway import Gateway
-import config
+from core import config
+import engine
 
 BLE = None
-
-_gateway = None
-
+_isRunning = True
 
 def connectToGateway(moduleName):
     """
@@ -35,6 +33,7 @@ def connectToGateway(moduleName):
 
     BLE.loadBLESettings()
     BLE.connect()
+    engine.connect(moduleName)
 
 def syncDevices(existing, full=False):
     """
@@ -47,25 +46,44 @@ def syncDevices(existing, full=False):
     :param full: Should there be a full refresh or just a quick scan that all is ok.
     :return:
     """
+    engine.storeDevices(existing)
 
 def syncGatewayAssets():
     '''
     optional. Allows a module to synchronize with the cloud, all the assets that should come at the level
     of the gateway.
     '''
+    engine.createGatewayAssets()
 
 def run():
     ''' optional
         main function of the plugin module'''
+    while _isRunning:
+        try:
+            ob = BLE.get_report()
+            if ob is not None:
+                engine.procLine(ob)
+            error = BLE.get_error()
+            if error:
+                engine.sendError(error)
+                while error:
+                    error = BLE.get_error()
+        except Exception as e:
+            logging.exception("failed to process incoming BLE line")
+            engine.sendError(str(e))
 
 def stop():
     """ optional
         called when the application is stopped. Perform all the necessary cleanup here"""
+    global _isRunning
+    _isRunning = False
 
 def onActuate(actuator, value):
     '''optional
     callback routine for plugins that behave as devices or for plugins that behave as gateways, when the actuator is on the gateway itself.'''
+    logger.error("actuators not yet supported: {}, value: {}".format(actuator, value))
 
 
 def onDeviceActuate(device, actuator, value):
     '''optional callback routine for plugins that behave as gateways'''
+    logger.error("actuators not yet supported on devices: {}, actuator: {},  value: {}".format(device, actuator, value))

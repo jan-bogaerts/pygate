@@ -1030,3 +1030,34 @@ TypeError: not enough arguments for format string
 2016-04-28 15:48:31,479 - ERROR    - root         - ping didn't arrive in time, resetting connection
 2016-04-28 15:48:51,599 - ERROR    - root         - ping didn't arrive in time, resetting connection
 2016-04-28 15:49:11,734 - ERROR    - root         - ping didn't arrive in time, resetting connection
+2016-09-07 20:59:53,582 - INFO     - root         - loading ../config/pyGate.config
+2016-09-07 20:59:53,592 - INFO     - root         - modules: main; watchdog; test
+2016-09-07 20:59:53,594 - INFO     - root         - processors: associations; groups
+2016-09-07 20:59:53,595 - INFO     - root         - gatewayId: 
+2016-09-07 20:59:53,595 - INFO     - root         - clientId: 
+2016-09-07 20:59:53,595 - INFO     - root         - clientKey: 
+2016-09-07 20:59:53,595 - INFO     - root         - api server: api.smartliving.io
+2016-09-07 20:59:53,595 - INFO     - root         - broker: broker.smartliving.io
+2016-09-07 20:59:53,595 - INFO     - root         - secure: True
+2016-09-07 20:59:53,596 - INFO     - att_iot_gateway - connected with http server
+2016-09-07 20:59:53,596 - INFO     - root         - mac address: 3CA9F4991850
+2016-09-07 20:59:53,598 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-09-07 20:59:53,598 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-09-07 20:59:53,598 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"3CA9F4991850","name":"pyGate", "assets":[] }
+2016-09-07 20:59:53,753 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-09-07 20:59:53,756 - INFO     - att_iot_gateway - 
+2016-09-07 20:59:53,757 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-09-07 20:59:53,759 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-09-07 20:59:53,762 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"3CA9F4991850","name":"pyGate" , "assets":[]}
+2016-09-07 20:59:53,798 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-09-07 20:59:53,799 - INFO     - att_iot_gateway - 
+2016-09-07 20:59:54,799 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-09-07 20:59:54,799 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-09-07 20:59:54,799 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"3CA9F4991850","name":"pyGate" , "assets":[]}
+2016-09-07 20:59:54,898 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-09-07 20:59:54,901 - INFO     - att_iot_gateway - 
+2016-09-07 20:59:55,901 - INFO     - att_iot_gateway - HTTP POST: /gateway
+2016-09-07 20:59:55,903 - INFO     - att_iot_gateway - HTTP HEADER: {'Content-type': 'application/json'}
+2016-09-07 20:59:55,904 - INFO     - att_iot_gateway - HTTP BODY:{"uid":"3CA9F4991850","name":"pyGate" , "assets":[]}
+2016-09-07 20:59:55,937 - INFO     - att_iot_gateway - (204, 'No Content')
+2016-09-07 20:59:55,937 - INFO     - att_iot_gateway - 

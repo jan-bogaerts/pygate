@@ -5,12 +5,13 @@ __maintainer__ = "Jan Bogaerts"
 __email__ = "jb@allthingstalk.com"
 __status__ = "Prototype"  # "Development", or "Production"
 
-import serial
-from xbee import ZigBee
 import logging
 
-from gateway import Gateway
-import config
+import serial
+from xbee import ZigBee
+
+from core import config
+from core.gateway import Gateway
 
 logger = logging.getLogger('zigbee')
 serial_port = None

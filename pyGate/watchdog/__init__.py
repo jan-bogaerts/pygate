@@ -5,13 +5,13 @@ __maintainer__ = "Jan Bogaerts"
 __email__ = "jb@allthingstalk.com"
 __status__ = "Prototype"  # "Development", or "Production"
 
-import logging
 import datetime
+import logging
+
 logger = logging.getLogger('watchdog')
 from threading import Event
 
-import cloud
-import config
+from core import config, cloud
 
 WatchDogAssetId = 'networkWatchDog'    #the asset id used by the watchdog. Change this if it interfers with your own asset id's.
 PingFrequency = 300                 #the frequency in seconds, that a ping is sent out (and that the system expects a ping back)
@@ -49,7 +49,7 @@ def ping():
     """send a ping to the server"""
     global _nextPingAt
     _nextPingAt = datetime.datetime.now() + datetime.timedelta(0, PingFrequency)
-    cloud.sendCommand(config.gatewayId,  _moduleName, None, WatchDogAssetId, _pingCounter)
+    cloud.sendCommand(config.gatewayId, _moduleName, None, WatchDogAssetId, _pingCounter)
 
 def checkPing():
     """check if we need to resend a ping and if we received the previous ping in time"""
@@ -80,5 +80,5 @@ def run():
         while _isRunning:
             checkPing()
             _wakeUpEvent.wait(PingFrequency / 15)      # ping every x minutes, so check every x/15 minutes
-    except Exception as e:  # in case of an xbee error: print it and try to continue
+    except Exception as e:
         logger.exception("watchdog failure")

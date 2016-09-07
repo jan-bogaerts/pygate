@@ -8,11 +8,11 @@ __status__ = "Prototype"  # "Development", or "Production"
 #provies support for the xml file tat contains extra features
 
 
-import xml.etree.ElementTree
 import logging
 import os.path
+import xml.etree.ElementTree
 
-import config
+from core import config
 
 _devClasses = {}
 logger = logging.getLogger('zwave')

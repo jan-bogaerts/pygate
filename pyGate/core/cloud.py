@@ -1,11 +1,11 @@
 ﻿import logging
-import att_iot_gateway.att_iot_gateway as IOT                              #provide cloud support
 import threading
 import time
 from uuid import getnode as get_mac
 
-import config
-import assetStateCache as valueCache
+import att_iot_gateway.att_iot_gateway as IOT                              #provide cloud support
+
+from core import assetStateCache as valueCache, config
 
 existingGatewayAssets = {}                                                      # used during sync of asset gateways: contains all the existing assets, when a new asset is created, the ref is remvoed from this list.
 _sensorCallback = None                                                          #callback for pyGate module, called when sensor data is sent out.
@@ -100,16 +100,20 @@ def _storeConfig():
     config.clientKey = IOT.ClientKey
     config.save()
 
-def addAsset(module, deviceId, id, name, description, isActuator, assetType, style = "Undefined"):
+def addAsset(module, deviceId, id, name, description, type, profile, style = "Undefined"):
     """add asset"""
     devId = getDeviceId(module, deviceId)
     if len(name) > 140:
         newName = name[:140]
         logging.warning('length of asset name too long, max 140 chars allowed: ' + name + ", truncated to: :" + newName)
         name = newName
+    if type == True:                        # do a small conversion of old plugins that were still using true for actuators and False for sensors.
+        type = 'actuator'
+    elif type == False:
+        type = 'sensor'
     _httpLock.acquire()
     try:
-        return IOT.addAsset(id, devId, name, description, isActuator, assetType, style)
+        return IOT.addAsset(id, devId, name, description, type, profile, style)
     finally:
         _httpLock.release()
 
@@ -152,12 +156,12 @@ def addGatewayAsset(module, id, name, description, isActuator, assetType, style 
     finally:
         _httpLock.release()
 
-def addDevice(module, deviceId, name, description):
+def addDevice(module, deviceId, name, description, storeHistory = True):
     """add device"""
     devId = getDeviceId(module, deviceId)
     _httpLock.acquire()
     try:
-        IOT.addDevice(devId, name, description)
+        IOT.addDevice(devId, name, description, storeHistory)
     finally:
         _httpLock.release()
 

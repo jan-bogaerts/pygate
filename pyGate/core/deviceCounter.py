@@ -5,11 +5,12 @@ __maintainer__ = "Jan Bogaerts"
 __email__ = "jb@allthingstalk.com"
 __status__ = "Prototype"  # "Development", or "Production"
 
-import os.path
 import logging
+import os.path
 import threading
 
-import config
+from core import config
+
 
 class DeviceCounter:
     """provides an application secure counter for gateways"""

@@ -11,10 +11,8 @@ __status__ = "Prototype"  # "Development", or "Production"
 import logging
 logger = logging.getLogger('test')
 from threading import Event
-from datetime import datetime
 
-from gateway import Gateway
-import config
+from core.gateway import Gateway
 import csv
 from mbus.MBusFrame import MBusFrame
 from mbus.MBusFrameData import MBusFrameData

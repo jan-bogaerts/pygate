@@ -12,8 +12,7 @@ __status__ = "Prototype"  # "Development", or "Production"
 
 import logging
 
-import cloud
-import modules
+from core import cloud, modules
 
 _moduleName = None
 conversationId = '1'
@@ -28,7 +27,7 @@ def connectToGateway(moduleName):
 
 
 def syncGatewayAssets():
-    cloud.addGatewayAsset(_moduleName, conversationId , 'conversation', 'talk to the gateway', True, 'string')
+    cloud.addGatewayAsset(_moduleName, conversationId, 'conversation', 'talk to the gateway', True, 'string')
 
 #callback: handles values sent from the cloudapp to the device
 def onActuate(id, value):

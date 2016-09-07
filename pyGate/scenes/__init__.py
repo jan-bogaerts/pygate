@@ -7,12 +7,9 @@ __status__ = "Prototype"  # "Development", or "Production"
 
 import json
 from time import sleep                             #pause the app
-from scene import Scene
 
-import device
-import cloud
-import modules
-import config
+from core import config, cloud, device, modules
+from scene import Scene
 
 SCENEDEF_ID = 'sceneDefs'                                                            #the id of the button, don't uses spaces. required for the att platform
 SCENEDEF_FILE = 'scenes.json'

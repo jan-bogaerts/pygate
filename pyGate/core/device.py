@@ -1,6 +1,7 @@
 ﻿#allows a device to manage it's cloud presence.
 
-import cloud
+from core import cloud
+
 
 class Device(object):
     '''allows a device to manage it's cloud presence'''

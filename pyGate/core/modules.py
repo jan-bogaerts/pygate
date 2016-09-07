@@ -9,14 +9,12 @@ __maintainer__ = "Jan Bogaerts"
 __email__ = "jb@allthingstalk.com"
 __status__ = "Prototype"  # "Development", or "Production"
 
+import json
 import logging
 import thread
 import threading
-import json
 
-import cloud
-import config
-import processors
+from core import config, processors, cloud
 
 modules = {}                                    # the list of dynamically loaded modules.
 _modulesName = 'modules'

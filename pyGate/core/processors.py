@@ -10,7 +10,8 @@ __email__ = "jb@allthingstalk.com"
 __status__ = "Prototype"  # "Development", or "Production"
 
 import logging
-import assetStateCache as cache
+
+from core import assetStateCache as cache
 
 processors = {}
 

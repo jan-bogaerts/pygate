@@ -1,17 +1,16 @@
 #!/usr/bin/env python
-import paho.mqtt.client as mqtt                # provides publish-subscribe messaging support
 import json
-from flask import Flask, render_template, Response, request
-import paho.mqtt.client as mqtt                # provides publish-subscribe messaging support
 import logging
+
+import paho.mqtt.client as mqtt                # provides publish-subscribe messaging support
+from flask import request
+
 #import os
 #import subprocess
 
-import webServer
-from gateway import Gateway
-from deviceCounter import DeviceCounter
-import config
-import cloud
+from core.gateway import Gateway
+from core.deviceCounter import DeviceCounter
+from core import config, webServer, cloud
 
 logger = logging.getLogger('main')
 

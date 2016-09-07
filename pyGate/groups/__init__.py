@@ -8,10 +8,7 @@ __status__ = "Prototype"  # "Development", or "Production"
 import json
 from time import sleep                             #pause the app
 
-import device
-import cloud
-import modules
-import config
+from core import config, cloud, device, modules
 
 GROUPDEF_ID = 'groupDefs'                                                            #the id of the button, don't uses spaces. required for the att platform
 GROUPDEF_FILE = 'groups.json'

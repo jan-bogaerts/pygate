@@ -1,9 +1,9 @@
 # this plugin module provides access to the pins of a beaglebone
 # the config file 'beaglePins.config' defines which pins should be used and how.
 
-import config
-import device
 import Adafruit_BBIO.GPIO as GPIO
+
+from core import config, device
 
 _device = None                                          # we are a single device, not a full gateway, so use this wrapper to manage
 _pinLayouts = None

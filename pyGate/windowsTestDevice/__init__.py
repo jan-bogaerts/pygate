@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-import device
 from time import sleep                             #pause the app
+
+from core import device
 
 In1Name = "Put the name of your sensor"                                #name of the button
 In1Id = 1                                                            #the id of the button, don't uses spaces. required for the att platform

@@ -2,13 +2,12 @@
 # the config file 'beaglePins.config' defines which pins should be used and how.
 
 import logging
-import Adafruit_BBIO.GPIO as GPIO
+
 import Adafruit_BBIO.ADC as ADC
+import Adafruit_BBIO.GPIO as GPIO
 
-import config
-import device
+from core import config, device
 from inputProcessors import *
-
 
 _device = None                                          # we are a single device, not a full gateway, so use this wrapper to manage
 _pinLayouts = None

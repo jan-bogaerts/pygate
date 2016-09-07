@@ -2,9 +2,7 @@
 import logging
 logger = logging.getLogger('associations')
 import json
-import config
-import modules
-import cloud
+from core import config, cloud, modules
 
 _associations = {}
 

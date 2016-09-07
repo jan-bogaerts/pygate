@@ -8,13 +8,11 @@ __status__ = "Prototype"  # "Development", or "Production"
 import logging
 logger = logging.getLogger('mbus')
 from threading import Event
-from datetime import datetime
 from meterbus import Mbus, MBusScanner
 import thread                                   # to stop the application
 
-from gateway import Gateway
-import config
-
+from core.gateway import Gateway
+from core import config
 
 _gateway = None
 _mbus = None
@@ -30,7 +28,8 @@ def connectToGateway(moduleName):
     global _gateway, _mbus
     _gateway = Gateway(moduleName)
     _mbus = Mbus(_gateway)
-    meterbus.DefaultSamplingFrequency = int(config.getConfig("mbus", "sample frequency", meterbus.DefaultSamplingFrequency))
+    meterbus.DefaultSamplingFrequency = int(
+        config.getConfig("mbus", "sample frequency", meterbus.DefaultSamplingFrequency))
     logger.info("using default sample frequency: {}".format(meterbus.DefaultSamplingFrequency))
 
 def syncDevices(existing, full=False):

@@ -5,12 +5,10 @@ __maintainer__ = "Jan Bogaerts"
 __email__ = "jb@allthingstalk.com"
 __status__ = "Prototype"  # "Development", or "Production"
 
-
 import logging
-import time
 
-from gateway import Gateway
 import deviceClasses
+from core.gateway import Gateway
 
 logger = logging.getLogger('zwave')
 
