@@ -1,5 +1,3 @@
 att-iot-gateway
 paho-mqtt
 PyYAML==3.11
-Louie==1.1
-Flask

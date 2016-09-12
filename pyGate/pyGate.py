@@ -8,7 +8,7 @@ import signal
 import sys
 from threading import Event
 
-from core import config, webServer, processors, cloud, modules
+from core import config, processors, cloud, modules
 import att_iot_gateway.att_iot_gateway as IOT                              #provide cloud support
 
 def sigterm_handler(_signo, _stack_frame):
