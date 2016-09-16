@@ -3,7 +3,7 @@
 # navigate to home directory, then to this directory, then execute python script, then back home
 
 
-LOGFILE=/root/pygate/logs/restart.log
+LOGFILE=/home/pi/pygate/logs/restart.log
 
 writelog() {
   now=`date`
@@ -16,8 +16,7 @@ while true ; do
   wget -q --timeout=99 --spider http://google.com  #--tries=10  tries does not appear to be supported on all platforms (fifthplay gateway)
   sleep 1
   if [ $? -eq 0 ]; then
-        ntpdate -b -s -u pool.ntp.org   # update the time, bb has not external clock
-        cd /root/pygate/pyGate
+        cd /home/pi/pygate/pyGate
         # pause a little, if we don't then the zwave stack crashes cause it's started too fast. With the delay, everything is ok.
         sleep 1
         writelog "Starting"
