@@ -35,7 +35,7 @@ try:
     _connectedEvent = None  # when we are done we no longer need this event, so remove.Only needed to wait, so plugins can send init values
     modules.run()
     if config.configs.has_option('webServer', 'enabled') and config.configs.get('webServer', 'enabled') == True:    # only load webserver if activated. Not all plugins need this, not all gateways want have a webserver running ex: fifthplay
-        import core.webServer
+        import pygate_core.webServer as webServer
         webServer.run()
     while 1:
         time.sleep(3)
