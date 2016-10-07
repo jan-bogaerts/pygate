@@ -24,7 +24,7 @@ The following plugins are currently supported:
 
 ### Installation
 - downoad the application
-- install the requirements (pip install -r requirements.txt)
+- install the requirements, found in the pyGate subfolder (pip install -r requirements.txt)
 - update pyGate\launcher.sh so that it points to the correct path.
 - to start the application automatically, you can use launcher.sh and start it from the cron:
 	- edit the cron: `sudo crontab -e`
