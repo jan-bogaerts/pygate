@@ -1,3 +1,4 @@
 att-iot-gateway
+pygate-core
 paho-mqtt
 PyYAML==3.11
